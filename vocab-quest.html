@@ -710,6 +710,23 @@ body{
   background:radial-gradient(circle,rgba(255,215,0,0.18) 20%,rgba(255,180,0,0.06) 50%,transparent 70%);
 }
 
+/* Celestial Hanbok (mythic) — rainbow aurora shifting glow */
+.outfit-celestial .wizard-body{
+  filter:drop-shadow(0 0 35px rgba(255,100,200,0.5)) drop-shadow(0 0 70px rgba(100,100,255,0.3));
+  animation:celestialBody 3s ease-in-out infinite;
+}
+@keyframes celestialBody{
+  0%,100%{filter:drop-shadow(0 0 35px rgba(255,100,200,0.5)) drop-shadow(0 0 70px rgba(100,100,255,0.3))}
+  33%{filter:drop-shadow(0 0 40px rgba(100,100,255,0.5)) drop-shadow(0 0 80px rgba(54,214,195,0.3))}
+  66%{filter:drop-shadow(0 0 40px rgba(255,215,0,0.5)) drop-shadow(0 0 80px rgba(255,100,200,0.3))}
+}
+.outfit-celestial .wizard-outfit-fx{
+  background:radial-gradient(circle at 30% 30%,rgba(255,100,200,0.15),transparent 50%),
+             radial-gradient(circle at 70% 70%,rgba(100,100,255,0.15),transparent 50%),
+             radial-gradient(circle at 50% 50%,rgba(255,215,0,0.1),transparent 60%);
+  animation:galaxySpin 6s linear infinite;
+}
+
 /* === CSS sparkle particles for Sparkle Suit === */
 .wizard-sparkles{position:absolute;inset:-20px;z-index:5;pointer-events:none;overflow:visible}
 .w-spark{
@@ -733,6 +750,17 @@ body{
 .wizard-frame.rf-epic{border-color:var(--purple);box-shadow:0 0 25px var(--purple-glow)}
 .wizard-frame.rf-legendary{border-color:var(--gold);box-shadow:0 0 35px rgba(255,215,0,0.3);animation:legendGlow 2s ease-in-out infinite}
 @keyframes legendGlow{0%,100%{box-shadow:0 0 25px rgba(255,215,0,0.2)}50%{box-shadow:0 0 50px rgba(255,215,0,0.5)}}
+.wizard-frame.rf-mythic{
+  border:2px solid transparent;position:relative;
+  box-shadow:0 0 40px rgba(255,100,200,0.25),0 0 60px rgba(100,100,255,0.15);
+  animation:mythicGlow 2.5s ease-in-out infinite;
+}
+.wizard-frame.rf-mythic::before{
+  content:'';position:absolute;inset:-3px;border-radius:24px;z-index:-1;
+  background:linear-gradient(135deg,#ff6ec7,#7b4fcf,#36d6c3,#ffd700,#ff6ec7);
+  background-size:300% 300%;
+  animation:divineBorder 3s ease-in-out infinite;
+}
 
 /* Gacha Pull Buttons */
 .gacha-pulls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:16px 0}
@@ -749,6 +777,23 @@ body{
 .pull-super{background:rgba(54,214,195,0.08);border-color:var(--teal);color:var(--teal)}
 .pull-mega{background:rgba(255,215,0,0.06);border-color:var(--gold);color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,0.12)}
 .pull-mega::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(255,215,0,0.1),transparent,rgba(255,215,0,0.1));border-radius:16px;animation:shimmer 3s ease-in-out infinite}
+.pull-divine{
+  background:linear-gradient(135deg,rgba(255,50,150,0.08),rgba(100,100,255,0.08),rgba(255,215,0,0.08));
+  border-color:transparent;color:#fff;
+  box-shadow:0 0 25px rgba(255,100,200,0.15),0 0 50px rgba(100,100,255,0.1);
+  position:relative;
+}
+.pull-divine::before{
+  content:'';position:absolute;inset:-2px;border-radius:18px;z-index:-1;
+  background:linear-gradient(135deg,#ff6ec7,#7b4fcf,#36d6c3,#ffd700,#ff6ec7);
+  background-size:300% 300%;
+  animation:divineBorder 3s ease-in-out infinite;
+}
+.pull-divine::after{
+  content:'';position:absolute;inset:0;border-radius:16px;
+  background:rgba(11,6,24,0.92);z-index:-1;
+}
+@keyframes divineBorder{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .pull-cost{font-size:.85rem;opacity:.7;margin-top:4px}
 .pull-odds{font-size:.65rem;opacity:.4;margin-top:2px}
 
@@ -776,6 +821,24 @@ body{
 .gr-rare .gacha-card{background:linear-gradient(145deg,#0d2e2e,#1a2e3e);border:2px solid var(--teal);box-shadow:0 0 30px rgba(54,214,195,0.2)}
 .gr-epic .gacha-card{background:linear-gradient(145deg,#2d1a4e,#1a0d3e);border:2px solid var(--purple);box-shadow:0 0 35px var(--purple-glow)}
 .gr-legendary .gacha-card{background:linear-gradient(145deg,#3e2e0d,#2e1a00);border:2px solid var(--gold);box-shadow:0 0 45px rgba(255,215,0,0.35);animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1),legendGlow 2s ease-in-out infinite}
+.gr-mythic .gacha-card{
+  background:linear-gradient(145deg,#1a0d2e,#0d1a2e,#2e0d1a);
+  border:2px solid transparent;
+  box-shadow:0 0 50px rgba(255,100,200,0.3),0 0 80px rgba(100,100,255,0.2),0 0 30px rgba(255,215,0,0.2);
+  animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1),mythicGlow 2.5s ease-in-out infinite;
+  position:relative;
+}
+.gr-mythic .gacha-card::before{
+  content:'';position:absolute;inset:-3px;border-radius:26px;z-index:-1;
+  background:linear-gradient(135deg,#ff6ec7,#7b4fcf,#36d6c3,#ffd700,#ff6ec7);
+  background-size:300% 300%;
+  animation:divineBorder 3s ease-in-out infinite;
+}
+@keyframes mythicGlow{
+  0%,100%{box-shadow:0 0 40px rgba(255,100,200,0.25),0 0 60px rgba(100,100,255,0.15)}
+  33%{box-shadow:0 0 50px rgba(100,100,255,0.3),0 0 80px rgba(54,214,195,0.2)}
+  66%{box-shadow:0 0 50px rgba(255,215,0,0.3),0 0 80px rgba(255,100,200,0.2)}
+}
 
 .gacha-item-emoji{font-size:4.5rem;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 16px rgba(255,215,0,0.3))}
 .gacha-item-name{font-family:'Cinzel Decorative',serif;font-size:1.15rem;font-weight:700;margin-bottom:6px}
@@ -788,6 +851,8 @@ body{
 .rt-rare{background:rgba(54,214,195,0.12);color:var(--teal)}
 .rt-epic{background:rgba(123,79,207,0.15);color:#b794f6}
 .rt-legendary{background:rgba(255,215,0,0.12);color:var(--gold)}
+.rt-mythic{background:linear-gradient(135deg,rgba(255,100,200,0.15),rgba(100,100,255,0.15));color:#ff9de0;animation:mythicTagPulse 2s ease-in-out infinite}
+@keyframes mythicTagPulse{0%,100%{color:#ff9de0}33%{color:#9db4ff}66%{color:#ffd700}}
 .gacha-power{font-family:'Fredoka',sans-serif;font-size:.88rem;color:var(--pink);margin-bottom:8px;font-weight:600}
 .gacha-desc{font-family:'Fredoka',sans-serif;font-size:.88rem;color:var(--text-dim);line-height:1.5}
 .gacha-dupe{font-family:'Fredoka',sans-serif;font-size:.85rem;color:var(--gold);margin-top:10px;font-style:italic}
@@ -811,6 +876,9 @@ body{
 .inv-item.equipped.ir-rare{border-color:var(--teal);box-shadow:0 0 12px rgba(54,214,195,0.15)}
 .inv-item.equipped.ir-epic{border-color:var(--purple);box-shadow:0 0 12px var(--purple-glow)}
 .inv-item.equipped.ir-legendary{border-color:var(--gold);box-shadow:0 0 15px rgba(255,215,0,0.2)}
+.inv-item.ir-mythic{border-color:rgba(255,100,200,0.3);background:linear-gradient(135deg,rgba(255,100,200,0.05),rgba(100,100,255,0.05))}
+.inv-item.equipped.ir-mythic{border-color:#ff6ec7;box-shadow:0 0 20px rgba(255,100,200,0.25),0 0 40px rgba(100,100,255,0.1);animation:mythicInvPulse 2s ease-in-out infinite}
+@keyframes mythicInvPulse{0%,100%{border-color:#ff6ec7}33%{border-color:#7b4fcf}66%{border-color:#ffd700}}
 .inv-emoji{font-size:1.8rem;margin-bottom:4px}
 .inv-name{font-family:'Fredoka',sans-serif;font-size:.65rem;text-align:center;color:var(--text-dim);line-height:1.2}
 
@@ -1029,6 +1097,11 @@ body{
           <div class="pull-cost">&#11088; 100 pts</div>
           <div class="pull-odds">epic &amp; legendary!</div>
         </button>
+        <button class="pull-btn pull-divine" onclick="gachaPull('divine')">
+          <div>&#10024; DIVINE Pull &#10024;</div>
+          <div class="pull-cost">&#11088; 250 pts</div>
+          <div class="pull-odds">mythic chance!</div>
+        </button>
       </div>
     </div>
 
@@ -1224,17 +1297,19 @@ const GACHA_ITEMS={
     {id:'hat_crown',name:'Royal Crown',emoji:'\uD83D\uDC51',rarity:'epic',power:'restoreHeart',desc:'Royal healing! +1 heart at round start'},
     {id:'hat_catears',name:'Neko Ears',emoji:'\uD83D\uDC31',rarity:'epic',power:null,desc:'Kawaii overload! UwU energy'},
     {id:'hat_flame',name:'Flame Crown',emoji:'\uD83D\uDD25',rarity:'legendary',power:'eliminate',desc:'Burns away wrong answers! Removes 2 options once per round'},
-    {id:'hat_galaxy',name:'Galaxy Tiara',emoji:'\u2728\uD83D\uDC8E',rarity:'legendary',power:'doublePoints',desc:'Written in the stars! Double ALL points'}
+    {id:'hat_galaxy',name:'Galaxy Tiara',emoji:'\u2728\uD83D\uDC8E',rarity:'legendary',power:'doublePoints',desc:'Written in the stars! Double ALL points'},
+    {id:'hat_aurora',name:'Aurora Crown',emoji:'\uD83C\uDF0C\uD83D\uDC51',rarity:'mythic',power:'mythicWisdom',desc:'The Library itself bows to you! Free hints + eliminate + double points ALL at once'}
   ],
   pets:[
-    {id:'pet_chick',name:'Baby Chick',emoji:'\uD83D\uDC25',rarity:'common',power:null,desc:'Cheeps encouragement! So smol!'},
-    {id:'pet_bunny',name:'Snow Bunny',emoji:'\uD83D\uDC30',rarity:'common',power:null,desc:'Hops when you get it right!'},
+    {id:'pet_chick',name:'Baby Chick',emoji:'\uD83D\uDC25',rarity:'common',power:'cheerBoost',desc:'Cheeps encouragement! Praise lasts longer so you can vibe'},
+    {id:'pet_bunny',name:'Snow Bunny',emoji:'\uD83D\uDC30',rarity:'common',power:'softLanding',desc:'Cushions your fall! First wrong answer costs no heart'},
     {id:'pet_cat',name:'Lucky Cat',emoji:'\uD83D\uDC31',rarity:'rare',power:'bonusScore',desc:'+2 bonus points per correct answer!'},
-    {id:'pet_fox',name:'Mystic Fox',emoji:'\uD83E\uDD8A',rarity:'rare',power:null,desc:'A wise and sly companion'},
+    {id:'pet_fox',name:'Mystic Fox',emoji:'\uD83E\uDD8A',rarity:'rare',power:'foxReveal',desc:'Sly hint! Shows the first letter of the answer at round start'},
     {id:'pet_dragon',name:'Baby Dragon',emoji:'\uD83D\uDC09',rarity:'epic',power:'streakShield',desc:'Protects your streak once per round!'},
     {id:'pet_unicorn',name:'Sparkle Unicorn',emoji:'\uD83E\uDD84',rarity:'epic',power:'restoreHeart',desc:'Magical healing! +1 heart at round start'},
     {id:'pet_phoenix',name:'Phoenix',emoji:'\uD83D\uDD25\uD83E\uDD85',rarity:'legendary',power:'revive',desc:'Revives ALL hearts once per round!'},
-    {id:'pet_stardragon',name:'Celestial Dragon',emoji:'\uD83C\uDF1F\uD83D\uDC32',rarity:'legendary',power:'eliminate',desc:'Cosmic fire eliminates wrong answers!'}
+    {id:'pet_stardragon',name:'Celestial Dragon',emoji:'\uD83C\uDF1F\uD83D\uDC32',rarity:'legendary',power:'eliminate',desc:'Cosmic fire eliminates wrong answers!'},
+    {id:'pet_kitsune',name:'Nine-Tail Kitsune',emoji:'\uD83E\uDD8A\uD83D\uDD25\u2728',rarity:'mythic',power:'mythicGuardian',desc:'Ancient guardian spirit! Revive + streak shield + bonus score ALL at once'}
   ],
   outfits:[
     {id:'out_hoodie',name:'Cozy Hoodie',emoji:'\uD83E\uDDE5',rarity:'common',power:null,desc:'Comfy and cute!'},
@@ -1244,17 +1319,19 @@ const GACHA_ITEMS={
     {id:'out_sparkle',name:'Sparkle Suit',emoji:'\uD83D\uDC8E',rarity:'epic',power:'bonusScore',desc:'+3 bonus points per correct answer!'},
     {id:'out_hanbok',name:'Magic Hanbok',emoji:'\uD83D\uDC58',rarity:'epic',power:null,desc:'Traditional K-power!'},
     {id:'out_galaxy',name:'Galaxy Robe',emoji:'\uD83C\uDF0C',rarity:'legendary',power:'doublePoints',desc:'Cosmic drip! Double ALL points!'},
-    {id:'out_gold',name:'Golden Armor',emoji:'\u2694\uFE0F\u2728',rarity:'legendary',power:'eliminate',desc:'Deflects wrong answers away!'}
+    {id:'out_gold',name:'Golden Armor',emoji:'\u2694\uFE0F\u2728',rarity:'legendary',power:'eliminate',desc:'Deflects wrong answers away!'},
+    {id:'out_celestial',name:'Celestial Hanbok',emoji:'\uD83C\uDF1F\uD83D\uDC58\u2728',rarity:'mythic',power:'mythicAura',desc:'Woven from starlight! +1 heart + eliminate + streak shield ALL at once'}
   ]
 };
 
 const PULL_ODDS={
-  basic: {common:55,rare:30,epic:13,legendary:2},
-  super: {common:20,rare:40,epic:30,legendary:10},
-  mega:  {common:0,rare:15,epic:50,legendary:35}
+  basic:  {common:55,rare:30,epic:13,legendary:2,mythic:0},
+  super:  {common:20,rare:40,epic:30,legendary:10,mythic:0},
+  mega:   {common:0,rare:15,epic:50,legendary:35,mythic:0},
+  divine: {common:0,rare:0,epic:20,legendary:55,mythic:25}
 };
-const PULL_COST={basic:20,super:50,mega:100};
-const DUPE_REFUND={common:5,rare:15,epic:30,legendary:60};
+const PULL_COST={basic:20,super:50,mega:100,divine:250};
+const DUPE_REFUND={common:5,rare:15,epic:30,legendary:60,mythic:125};
 
 // ===== STATE =====
 const S={
@@ -1286,6 +1363,7 @@ const S={
   streakShielded:false,// streak shield used?
   reviveUsed:false,   // phoenix revive used?
   eliminateUsed:false, // eliminate used this round?
+  softLandingUsed:false, // soft landing used?
   returnTo:'sumScreen' // where to go back from shop
 };
 
@@ -1433,6 +1511,16 @@ function showQuestion(){
   if(S.round===0) renderR1(card,entry);
   else if(S.round===1) renderR2(card,entry);
   else renderR3(card,entry);
+
+  // Fox Reveal: show a subtle hint with first letter of answer
+  if(hasPower('foxReveal')&&S.round!==2){
+    const answer=S.round===0?entry.def:entry.word;
+    const hint=document.createElement('div');
+    hint.className='hint-text';
+    hint.style.marginTop='6px';hint.style.fontSize='.85rem';
+    hint.textContent=`\uD83E\uDD8A Fox whispers: starts with "${answer[0].toUpperCase()}..."`;
+    card.appendChild(hint);
+  }
 }
 
 // Round 1: Word shown, pick the definition (5 options)
@@ -1797,7 +1885,13 @@ function processAnswer(isCorrect){
     } else {
       S.streak=0;
     }
-    S.hearts=Math.max(0,S.hearts-1);
+    // Soft landing: first wrong answer costs no heart
+    if(hasPower('softLanding')&&!S.softLandingUsed){
+      S.softLandingUsed=true;
+      // heart preserved!
+    } else {
+      S.hearts=Math.max(0,S.hearts-1);
+    }
     // Revive: restore hearts when they hit 0
     if(S.hearts===0)applyRevive();
     showFB(false);
@@ -1823,8 +1917,9 @@ function showFB(good){
     t.className='feedback-text fb-bad';
     t.textContent=ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)];
   }
+  const cheerTime=hasPower('cheerBoost')?2500:1800;
   ov.classList.add('show');
-  setTimeout(()=>ov.classList.remove('show'),good?1800:2700);
+  setTimeout(()=>ov.classList.remove('show'),good?cheerTime:2700);
 }
 
 function spawnSparkles(){
@@ -1971,7 +2066,12 @@ function getActivePowers(){
   const powers=[];
   ['hat','pet','outfit'].forEach(slot=>{
     const item=getEquippedItem(slot);
-    if(item&&item.power)powers.push(item.power);
+    if(!item||!item.power)return;
+    // Mythic items grant multiple powers
+    if(item.power==='mythicWisdom'){powers.push('freeHint','eliminate','doublePoints')}
+    else if(item.power==='mythicGuardian'){powers.push('revive','streakShield','bonusScore')}
+    else if(item.power==='mythicAura'){powers.push('restoreHeart','eliminate','streakShield')}
+    else powers.push(item.power);
   });
   return powers;
 }
@@ -1989,7 +2089,8 @@ function updateMiniWizard(){
 // Map outfit IDs to CSS class suffixes
 const OUTFIT_FX={
   out_hoodie:'hoodie',out_tshirt:'tshirt',out_jacket:'jacket',out_cape:'cape',
-  out_sparkle:'sparkle',out_hanbok:'hanbok',out_galaxy:'galaxy',out_gold:'gold'
+  out_sparkle:'sparkle',out_hanbok:'hanbok',out_galaxy:'galaxy',out_gold:'gold',
+  out_celestial:'celestial'
 };
 
 function updateShopWizard(){
@@ -2033,6 +2134,17 @@ function updateShopWizard(){
     galaxyHTML+='</div>';
   }
 
+  // Celestial Hanbok (mythic): rainbow aurora particles
+  let celestialHTML='';
+  if(outfit&&outfit.id==='out_celestial'){
+    celestialHTML='<div class="wizard-sparkles">';
+    const cc=['#ff6ec7','#7b4fcf','#36d6c3','#ffd700','#fff','#64c8ff'];
+    for(let i=0;i<18;i++){
+      celestialHTML+='<div class="w-spark" style="left:'+(5+Math.random()*90)+'%;top:'+(5+Math.random()*90)+'%;--dur:'+(1+Math.random()*2.5)+'s;animation-delay:'+(Math.random()*2.5)+'s;background:'+cc[Math.floor(Math.random()*cc.length)]+';width:'+(3+Math.random()*6)+'px;height:'+(3+Math.random()*6)+'px"></div>';
+    }
+    celestialHTML+='</div>';
+  }
+
   // Golden Armor: gold particles
   let goldHTML='';
   if(outfit&&outfit.id==='out_gold'){
@@ -2048,7 +2160,7 @@ function updateShopWizard(){
     ${hat?`<div class="wizard-hat">${hat.emoji}</div>`:''}
     <div class="wizard-body">\uD83E\uDDD9\u200D\u2642\uFE0F</div>
     ${pet?`<div class="wizard-pet">${pet.emoji}</div>`:''}
-    ${sparkleHTML}${galaxyHTML}${goldHTML}
+    ${sparkleHTML}${galaxyHTML}${goldHTML}${celestialHTML}
   `;
 
   document.getElementById('shopScore').textContent=S.score;
@@ -2058,7 +2170,8 @@ function updateShopWizard(){
   const puDiv=document.getElementById('shopPowerups');
   if(powers.length){
     const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Pts',restoreHeart:'\u2764\uFE0F +1 Heart',
-      eliminate:'\uD83D\uDD25 Eliminate',doublePoints:'\uD83D\uDCAB 2x Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All'};
+      eliminate:'\uD83D\uDD25 Eliminate',doublePoints:'\uD83D\uDCAB 2x Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All',
+      cheerBoost:'\uD83D\uDC25 Cheer Boost',softLanding:'\uD83D\uDC30 Soft Landing',foxReveal:'\uD83E\uDD8A Fox Hint'};
     puDiv.innerHTML=`<div class="powerups-bar">${powers.map(p=>`<span class="pu-badge">${labels[p]||p}</span>`).join('')}</div>`;
   } else puDiv.innerHTML='';
 }
@@ -2069,7 +2182,8 @@ function updatePowerupsBar(){
   const powers=S.activePowers;
   if(!powers.length){bar.innerHTML='';return}
   const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 +Pts',restoreHeart:'\u2764\uFE0F +Heart',
-    eliminate:'\uD83D\uDD25 Elim',doublePoints:'\uD83D\uDCAB 2x Pts',streakShield:'\uD83D\uDEE1\uFE0F Shield',revive:'\uD83D\uDD25 Revive'};
+    eliminate:'\uD83D\uDD25 Elim',doublePoints:'\uD83D\uDCAB 2x Pts',streakShield:'\uD83D\uDEE1\uFE0F Shield',revive:'\uD83D\uDD25 Revive',
+    cheerBoost:'\uD83D\uDC25 Cheer',softLanding:'\uD83D\uDC30 Shield',foxReveal:'\uD83E\uDD8A Hint'};
   bar.innerHTML=powers.map(p=>`<span class="pu-badge">${labels[p]||p}</span>`).join('');
 }
 
@@ -2135,9 +2249,10 @@ function gachaPull(tier){
   const odds=PULL_ODDS[tier];
   const roll=Math.random()*100;
   let rarity;
-  if(roll<odds.legendary)rarity='legendary';
-  else if(roll<odds.legendary+odds.epic)rarity='epic';
-  else if(roll<odds.legendary+odds.epic+odds.rare)rarity='rare';
+  if(roll<odds.mythic)rarity='mythic';
+  else if(roll<odds.mythic+odds.legendary)rarity='legendary';
+  else if(roll<odds.mythic+odds.legendary+odds.epic)rarity='epic';
+  else if(roll<odds.mythic+odds.legendary+odds.epic+odds.rare)rarity='rare';
   else rarity='common';
 
   // Pick random item of that rarity
@@ -2165,7 +2280,9 @@ function showGachaResult(item,isDupe,rarity){
   const card=document.getElementById('gachaCard');
 
   const powerLabels={freeHint:'\uD83D\uDCA1 Free Hint (1/round)',bonusScore:'\u2B50 Bonus Points',restoreHeart:'\u2764\uFE0F +1 Heart',
-    eliminate:'\uD83D\uDD25 Eliminate Wrong Answers',doublePoints:'\uD83D\uDCAB Double Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All Hearts'};
+    eliminate:'\uD83D\uDD25 Eliminate Wrong Answers',doublePoints:'\uD83D\uDCAB Double Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All Hearts',
+    cheerBoost:'\uD83D\uDC25 Praise Lasts Longer',softLanding:'\uD83D\uDC30 First Miss Costs No Heart',foxReveal:'\uD83E\uDD8A Shows First Letter',
+    mythicWisdom:'\uD83C\uDF0C Free Hints + Eliminate + 2x Points!',mythicGuardian:'\uD83E\uDD8A Revive + Shield + Bonus Pts!',mythicAura:'\uD83C\uDF1F +Heart + Eliminate + Shield!'};
 
   card.innerHTML=`
     <span class="gacha-item-emoji">${item.emoji}</span>
@@ -2183,6 +2300,7 @@ function showGachaResult(item,isDupe,rarity){
   if(rarity!=='common'){
     spawnSparkles();
     if(rarity==='legendary')spawnLegendaryRain();
+    if(rarity==='mythic'){spawnLegendaryRain();setTimeout(spawnLegendaryRain,500);setTimeout(spawnSparkles,300)}
   }
 }
 
@@ -2212,7 +2330,7 @@ function closeGachaResult(){
 
 function updatePullButtons(){
   document.querySelectorAll('.pull-btn').forEach(btn=>{
-    const tier=btn.classList.contains('pull-basic')?'basic':btn.classList.contains('pull-super')?'super':'mega';
+    const tier=btn.classList.contains('pull-basic')?'basic':btn.classList.contains('pull-super')?'super':btn.classList.contains('pull-mega')?'mega':'divine';
     btn.disabled=S.score<PULL_COST[tier];
   });
   document.getElementById('shopScore').textContent=S.score;
@@ -2244,13 +2362,11 @@ function exitShop(){
 // ===== POWER-UP HOOKS =====
 function applyRoundStartPowers(){
   S.activePowers=getActivePowers();
-  S.freeHints=0;S.streakShielded=false;S.reviveUsed=false;S.eliminateUsed=false;
+  S.freeHints=0;S.streakShielded=false;S.reviveUsed=false;S.eliminateUsed=false;S.softLandingUsed=false;
 
   if(hasPower('restoreHeart'))S.hearts=Math.min(S.hearts+1,4);
-  if(hasPower('freeHint'))S.freeHints++;
-  // Count if multiple sources grant same power
-  const powers=S.activePowers;
-  S.freeHints=powers.filter(p=>p==='freeHint').length;
+  // Count if multiple sources grant freeHint
+  S.freeHints=S.activePowers.filter(p=>p==='freeHint').length;
 
   updatePowerupsBar();
 }
