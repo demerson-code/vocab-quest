@@ -623,15 +623,102 @@ body{
 /* Wizard Avatar */
 .wizard-avatar{
   position:relative;
-  width:180px;height:200px;
+  width:220px;height:240px;
   margin:0 auto 16px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-.wizard-hat{font-size:2.8rem;line-height:1;z-index:3;position:relative;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 2px 8px rgba(255,215,0,0.3))}
-.wizard-body{font-size:4.5rem;line-height:1;z-index:2;margin-top:-12px;filter:drop-shadow(0 4px 12px rgba(123,79,207,0.4))}
-.wizard-outfit{font-size:2rem;position:absolute;bottom:12px;left:12px;z-index:4;filter:drop-shadow(0 2px 6px rgba(244,114,182,0.4))}
-.wizard-pet{font-size:2.2rem;position:absolute;bottom:8px;right:-5px;z-index:4;animation:petBounce 1.5s ease-in-out infinite;filter:drop-shadow(0 2px 8px rgba(54,214,195,0.4))}
+.wizard-hat{font-size:3.2rem;line-height:1;z-index:3;position:relative;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 2px 10px rgba(255,215,0,0.3))}
+.wizard-body{
+  font-size:5.5rem;line-height:1;z-index:2;margin-top:-14px;
+  filter:drop-shadow(0 4px 12px rgba(123,79,207,0.4));
+  transition:filter .5s,transform .5s;
+  position:relative;
+}
+.wizard-pet{font-size:2.6rem;position:absolute;bottom:5px;right:-15px;z-index:4;animation:petBounce 1.5s ease-in-out infinite;filter:drop-shadow(0 2px 8px rgba(54,214,195,0.4))}
 @keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* Outfit FX layer — sits behind wizard body */
+.wizard-outfit-fx{
+  position:absolute;inset:0;z-index:1;
+  border-radius:50%;
+  pointer-events:none;
+  transition:all .5s;
+}
+
+/* === OUTFIT VISUAL EFFECTS === */
+/* Cozy Hoodie — warm orange aura */
+.outfit-hoodie .wizard-body{filter:drop-shadow(0 0 18px rgba(255,160,60,0.5)) drop-shadow(0 4px 12px rgba(255,120,20,0.3))}
+.outfit-hoodie .wizard-outfit-fx{background:radial-gradient(circle,rgba(255,160,60,0.15) 30%,transparent 70%)}
+
+/* Fan T-Shirt — colorful pulsing border */
+.outfit-tshirt .wizard-body{filter:drop-shadow(0 0 12px rgba(244,114,182,0.4)) drop-shadow(0 0 24px rgba(54,214,195,0.2))}
+.outfit-tshirt .wizard-outfit-fx{background:radial-gradient(circle,rgba(244,114,182,0.1) 30%,transparent 70%);animation:tshirtPulse 2s ease-in-out infinite}
+@keyframes tshirtPulse{0%,100%{opacity:.6}50%{opacity:1}}
+
+/* Idol Jacket — golden sparkle glow */
+.outfit-jacket .wizard-body{filter:drop-shadow(0 0 20px rgba(255,215,0,0.45)) drop-shadow(0 0 40px rgba(255,215,0,0.15))}
+.outfit-jacket .wizard-outfit-fx{
+  background:radial-gradient(circle,rgba(255,215,0,0.12) 20%,transparent 65%);
+  box-shadow:inset 0 0 30px rgba(255,215,0,0.08);
+}
+
+/* Wizard Cape — flowing purple aura */
+.outfit-cape .wizard-body{filter:drop-shadow(0 0 22px rgba(155,111,224,0.5)) drop-shadow(0 8px 20px rgba(123,79,207,0.3))}
+.outfit-cape .wizard-outfit-fx{
+  background:radial-gradient(ellipse 80% 120% at 50% 60%,rgba(123,79,207,0.2) 20%,transparent 70%);
+  animation:capeFlow 3s ease-in-out infinite;
+}
+@keyframes capeFlow{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.08)}}
+
+/* Sparkle Suit — diamond sparkle particles */
+.outfit-sparkle .wizard-body{
+  filter:drop-shadow(0 0 25px rgba(180,220,255,0.5)) drop-shadow(0 0 50px rgba(100,200,255,0.2));
+  animation:sparkleBody 1.5s ease-in-out infinite;
+}
+@keyframes sparkleBody{0%,100%{filter:drop-shadow(0 0 25px rgba(180,220,255,0.5))}50%{filter:drop-shadow(0 0 35px rgba(200,240,255,0.7)) drop-shadow(0 0 60px rgba(100,200,255,0.3))}}
+.outfit-sparkle .wizard-outfit-fx{
+  background:radial-gradient(circle,rgba(180,220,255,0.15) 20%,transparent 65%);
+}
+
+/* Magic Hanbok — pink/red traditional glow */
+.outfit-hanbok .wizard-body{filter:drop-shadow(0 0 20px rgba(255,80,120,0.4)) drop-shadow(0 0 40px rgba(255,150,180,0.15))}
+.outfit-hanbok .wizard-outfit-fx{
+  background:radial-gradient(circle,rgba(255,100,140,0.12) 25%,rgba(255,200,100,0.05) 60%,transparent 75%);
+}
+
+/* Galaxy Robe — animated space background */
+.outfit-galaxy .wizard-body{
+  filter:drop-shadow(0 0 30px rgba(100,100,255,0.5)) drop-shadow(0 0 60px rgba(200,100,255,0.25));
+  animation:galaxyPulse 3s ease-in-out infinite;
+}
+@keyframes galaxyPulse{0%,100%{filter:drop-shadow(0 0 30px rgba(100,100,255,0.5))}50%{filter:drop-shadow(0 0 45px rgba(180,100,255,0.6)) drop-shadow(0 0 80px rgba(255,100,200,0.2))}}
+.outfit-galaxy .wizard-outfit-fx{
+  background:radial-gradient(circle at 30% 40%,rgba(100,100,255,0.2),transparent 50%),
+             radial-gradient(circle at 70% 60%,rgba(255,100,200,0.15),transparent 50%),
+             radial-gradient(circle at 50% 50%,rgba(54,214,195,0.1),transparent 60%);
+  animation:galaxySpin 8s linear infinite;
+}
+@keyframes galaxySpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+/* Golden Armor — metallic gold shimmer */
+.outfit-gold .wizard-body{
+  filter:drop-shadow(0 0 30px rgba(255,215,0,0.6)) drop-shadow(0 0 60px rgba(255,180,0,0.25));
+  animation:goldShimmer 2s ease-in-out infinite;
+}
+@keyframes goldShimmer{0%,100%{filter:drop-shadow(0 0 30px rgba(255,215,0,0.5))}50%{filter:drop-shadow(0 0 50px rgba(255,230,50,0.8)) drop-shadow(0 0 80px rgba(255,200,0,0.3))}}
+.outfit-gold .wizard-outfit-fx{
+  background:radial-gradient(circle,rgba(255,215,0,0.18) 20%,rgba(255,180,0,0.06) 50%,transparent 70%);
+}
+
+/* === CSS sparkle particles for Sparkle Suit === */
+.wizard-sparkles{position:absolute;inset:-20px;z-index:5;pointer-events:none;overflow:visible}
+.w-spark{
+  position:absolute;width:6px;height:6px;
+  background:white;border-radius:50%;
+  animation:wSparkle var(--dur) ease-in-out infinite;
+  opacity:0;
+}
+@keyframes wSparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1.2)}}
 
 .wizard-frame{
   background:rgba(22,12,50,0.6);
@@ -1899,6 +1986,12 @@ function updateMiniWizard(){
   el.innerHTML=`${hat?`<span class="hw-hat">${hat.emoji}</span>`:''}<span class="hw-body">\uD83E\uDDD9\u200D\u2642\uFE0F</span>${pet?`<span class="hw-pet">${pet.emoji}</span>`:''}`;
 }
 
+// Map outfit IDs to CSS class suffixes
+const OUTFIT_FX={
+  out_hoodie:'hoodie',out_tshirt:'tshirt',out_jacket:'jacket',out_cape:'cape',
+  out_sparkle:'sparkle',out_hanbok:'hanbok',out_galaxy:'galaxy',out_gold:'gold'
+};
+
 function updateShopWizard(){
   const frame=document.getElementById('shopWizFrame');
   const wiz=document.getElementById('shopWizard');
@@ -1914,11 +2007,48 @@ function updateShopWizard(){
   [hat,pet,outfit].forEach(i=>{if(i&&rarities.indexOf(i.rarity)>rarities.indexOf(best))best=i.rarity});
   frame.className='wizard-frame rf-'+best;
 
+  // Outfit FX class on the avatar container
+  const outfitClass=outfit?'outfit-'+(OUTFIT_FX[outfit.id]||''):'';
+  wiz.className='wizard-avatar'+(outfitClass?' '+outfitClass:'');
+
+  // Build sparkle particles for Sparkle Suit
+  let sparkleHTML='';
+  if(outfit&&outfit.id==='out_sparkle'){
+    sparkleHTML='<div class="wizard-sparkles">';
+    const colors=['#b4dcff','#fff','#64c8ff','#e0f0ff','#ffd700','#f472b6'];
+    for(let i=0;i<12;i++){
+      sparkleHTML+=`<div class="w-spark" style="left:${10+Math.random()*80}%;top:${10+Math.random()*80}%;--dur:${1+Math.random()*2}s;animation-delay:${Math.random()*2}s;background:${colors[Math.floor(Math.random()*colors.length)]};width:${3+Math.random()*5}px;height:${3+Math.random()*5}px"></div>`;
+    }
+    sparkleHTML+='</div>';
+  }
+
+  // Galaxy Robe: add tiny star dots
+  let galaxyHTML='';
+  if(outfit&&outfit.id==='out_galaxy'){
+    galaxyHTML='<div class="wizard-sparkles">';
+    const starColors=['#fff','#b794f6','#64c8ff','#f472b6','#ffd700'];
+    for(let i=0;i<15;i++){
+      galaxyHTML+=`<div class="w-spark" style="left:${5+Math.random()*90}%;top:${5+Math.random()*90}%;--dur:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*2.5}s;background:${starColors[Math.floor(Math.random()*starColors.length)]};width:${2+Math.random()*4}px;height:${2+Math.random()*4}px"></div>`;
+    }
+    galaxyHTML+='</div>';
+  }
+
+  // Golden Armor: gold particles
+  let goldHTML='';
+  if(outfit&&outfit.id==='out_gold'){
+    goldHTML='<div class="wizard-sparkles">';
+    for(let i=0;i<10;i++){
+      goldHTML+=`<div class="w-spark" style="left:${10+Math.random()*80}%;top:${15+Math.random()*70}%;--dur:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*2}s;background:#ffd700;width:${3+Math.random()*5}px;height:${3+Math.random()*5}px"></div>`;
+    }
+    goldHTML+='</div>';
+  }
+
   wiz.innerHTML=`
-    ${hat?`<div class="wizard-hat">${hat.emoji}</div>`:'<div class="wizard-hat" style="opacity:.3">\uD83E\uDDE2</div>'}
+    <div class="wizard-outfit-fx"></div>
+    ${hat?`<div class="wizard-hat">${hat.emoji}</div>`:''}
     <div class="wizard-body">\uD83E\uDDD9\u200D\u2642\uFE0F</div>
-    ${outfit?`<div class="wizard-outfit">${outfit.emoji}</div>`:''}
     ${pet?`<div class="wizard-pet">${pet.emoji}</div>`:''}
+    ${sparkleHTML}${galaxyHTML}${goldHTML}
   `;
 
   document.getElementById('shopScore').textContent=S.score;
@@ -1963,7 +2093,8 @@ function renderInventory(){
       const div=document.createElement('div');
       const isEquipped=S.equipped[slot]===id;
       div.className=`inv-item ir-${item.rarity}${isEquipped?' equipped':''}`;
-      div.innerHTML=`<span class="inv-emoji">${item.emoji}</span><span class="inv-name">${item.name}</span>`;
+      const powerIcons={freeHint:'\uD83D\uDCA1',bonusScore:'\u2B50',restoreHeart:'\u2764\uFE0F',eliminate:'\uD83D\uDD25',doublePoints:'\uD83D\uDCAB',streakShield:'\uD83D\uDEE1\uFE0F',revive:'\uD83D\uDD25'};
+      div.innerHTML=`<span class="inv-emoji">${item.emoji}</span><span class="inv-name">${item.name}</span>${item.power?`<span style="font-size:.65rem;margin-top:2px">${powerIcons[item.power]||''}</span>`:''}${isEquipped?'<span style="font-size:.6rem;color:var(--teal);margin-top:2px">EQUIPPED</span>':''}`;
       div.title=item.desc+(item.power?` (${item.power})`:'');
       div.onclick=()=>{
         if(isEquipped){S.equipped[slot]=null} else {S.equipped[slot]=id}
