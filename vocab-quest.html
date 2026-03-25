@@ -617,12 +617,166 @@ body{
 .wl-item{font-family:'Fredoka',sans-serif;font-size:.88rem;padding:3px 0;line-height:1.4}
 .wl-item strong{color:var(--gold)}
 
+/* ===== GACHA SHOP ===== */
+.gacha-screen{justify-content:center;gap:20px;padding:36px 16px}
+
+/* Wizard Avatar */
+.wizard-avatar{
+  position:relative;
+  width:180px;height:200px;
+  margin:0 auto 16px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.wizard-hat{font-size:2.8rem;line-height:1;z-index:3;position:relative;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 2px 8px rgba(255,215,0,0.3))}
+.wizard-body{font-size:4.5rem;line-height:1;z-index:2;margin-top:-12px;filter:drop-shadow(0 4px 12px rgba(123,79,207,0.4))}
+.wizard-outfit{font-size:2rem;position:absolute;bottom:12px;left:12px;z-index:4;filter:drop-shadow(0 2px 6px rgba(244,114,182,0.4))}
+.wizard-pet{font-size:2.2rem;position:absolute;bottom:8px;right:-5px;z-index:4;animation:petBounce 1.5s ease-in-out infinite;filter:drop-shadow(0 2px 8px rgba(54,214,195,0.4))}
+@keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+.wizard-frame{
+  background:rgba(22,12,50,0.6);
+  border:2px solid var(--card-border);
+  border-radius:22px;
+  padding:20px;
+  position:relative;
+  overflow:visible;
+}
+.wizard-frame.rf-common{border-color:rgba(255,255,255,0.2)}
+.wizard-frame.rf-rare{border-color:var(--teal);box-shadow:0 0 20px rgba(54,214,195,0.2)}
+.wizard-frame.rf-epic{border-color:var(--purple);box-shadow:0 0 25px var(--purple-glow)}
+.wizard-frame.rf-legendary{border-color:var(--gold);box-shadow:0 0 35px rgba(255,215,0,0.3);animation:legendGlow 2s ease-in-out infinite}
+@keyframes legendGlow{0%,100%{box-shadow:0 0 25px rgba(255,215,0,0.2)}50%{box-shadow:0 0 50px rgba(255,215,0,0.5)}}
+
+/* Gacha Pull Buttons */
+.gacha-pulls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.pull-btn{
+  font-family:'Fredoka',sans-serif;font-weight:700;
+  padding:18px 20px;border-radius:16px;border:2px solid;
+  cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;min-width:150px;
+  position:relative;overflow:hidden;
+}
+.pull-btn:hover:not(:disabled){transform:translateY(-3px) scale(1.03)}
+.pull-btn:disabled{opacity:.35;cursor:default;transform:none!important}
+.pull-basic{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.25);color:var(--text)}
+.pull-super{background:rgba(54,214,195,0.08);border-color:var(--teal);color:var(--teal)}
+.pull-mega{background:rgba(255,215,0,0.06);border-color:var(--gold);color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,0.12)}
+.pull-mega::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(255,215,0,0.1),transparent,rgba(255,215,0,0.1));border-radius:16px;animation:shimmer 3s ease-in-out infinite}
+.pull-cost{font-size:.85rem;opacity:.7;margin-top:4px}
+.pull-odds{font-size:.65rem;opacity:.4;margin-top:2px}
+
+/* Gacha Result Overlay */
+.gacha-result{
+  position:fixed;inset:0;z-index:200;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(6,3,14,0.92);padding:20px;
+}
+.gacha-result.show{display:flex}
+.gacha-card{
+  width:280px;
+  border-radius:24px;
+  padding:32px 24px;
+  text-align:center;
+  animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+@keyframes gachaReveal{
+  0%{opacity:0;transform:scale(.3) rotateY(180deg)}
+  50%{transform:scale(1.08) rotateY(0deg)}
+  100%{opacity:1;transform:scale(1) rotateY(0deg)}
+}
+.gr-common .gacha-card{background:linear-gradient(145deg,#2a2a3e,#1a1a2e);border:2px solid rgba(255,255,255,0.15)}
+.gr-rare .gacha-card{background:linear-gradient(145deg,#0d2e2e,#1a2e3e);border:2px solid var(--teal);box-shadow:0 0 30px rgba(54,214,195,0.2)}
+.gr-epic .gacha-card{background:linear-gradient(145deg,#2d1a4e,#1a0d3e);border:2px solid var(--purple);box-shadow:0 0 35px var(--purple-glow)}
+.gr-legendary .gacha-card{background:linear-gradient(145deg,#3e2e0d,#2e1a00);border:2px solid var(--gold);box-shadow:0 0 45px rgba(255,215,0,0.35);animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1),legendGlow 2s ease-in-out infinite}
+
+.gacha-item-emoji{font-size:4.5rem;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 16px rgba(255,215,0,0.3))}
+.gacha-item-name{font-family:'Cinzel Decorative',serif;font-size:1.15rem;font-weight:700;margin-bottom:6px}
+.gacha-rarity-tag{
+  display:inline-block;font-family:'Fredoka',sans-serif;
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  padding:4px 14px;border-radius:20px;margin-bottom:10px;
+}
+.rt-common{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)}
+.rt-rare{background:rgba(54,214,195,0.12);color:var(--teal)}
+.rt-epic{background:rgba(123,79,207,0.15);color:#b794f6}
+.rt-legendary{background:rgba(255,215,0,0.12);color:var(--gold)}
+.gacha-power{font-family:'Fredoka',sans-serif;font-size:.88rem;color:var(--pink);margin-bottom:8px;font-weight:600}
+.gacha-desc{font-family:'Fredoka',sans-serif;font-size:.88rem;color:var(--text-dim);line-height:1.5}
+.gacha-dupe{font-family:'Fredoka',sans-serif;font-size:.85rem;color:var(--gold);margin-top:10px;font-style:italic}
+
+/* Inventory */
+.inv-section{margin:14px 0}
+.inv-section h4{font-family:'Fredoka',sans-serif;font-size:.9rem;color:var(--teal);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.inv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.inv-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 4px;border-radius:14px;
+  cursor:pointer;transition:all .25s;
+  border:2px solid transparent;
+  background:rgba(45,27,105,0.15);
+}
+.inv-item:hover{background:rgba(123,79,207,0.15);transform:translateY(-2px)}
+.inv-item.equipped{border-color:var(--teal);background:rgba(54,214,195,0.08)}
+.inv-item.ir-rare{border-color:rgba(54,214,195,0.3)}
+.inv-item.ir-epic{border-color:rgba(123,79,207,0.3)}
+.inv-item.ir-legendary{border-color:rgba(255,215,0,0.3)}
+.inv-item.equipped.ir-rare{border-color:var(--teal);box-shadow:0 0 12px rgba(54,214,195,0.15)}
+.inv-item.equipped.ir-epic{border-color:var(--purple);box-shadow:0 0 12px var(--purple-glow)}
+.inv-item.equipped.ir-legendary{border-color:var(--gold);box-shadow:0 0 15px rgba(255,215,0,0.2)}
+.inv-emoji{font-size:1.8rem;margin-bottom:4px}
+.inv-name{font-family:'Fredoka',sans-serif;font-size:.65rem;text-align:center;color:var(--text-dim);line-height:1.2}
+
+/* Power-up badges */
+.powerups-bar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.pu-badge{
+  font-family:'Fredoka',sans-serif;font-size:.72rem;font-weight:600;
+  padding:3px 10px;border-radius:12px;
+  background:rgba(244,114,182,0.1);
+  border:1px solid rgba(244,114,182,0.25);
+  color:var(--pink);
+  animation:fadeUp .35s ease-out;
+}
+
+/* Mini wizard in HUD */
+.hud-wizard{
+  display:flex;align-items:center;gap:1px;
+  font-size:1.1rem;
+  padding:3px 6px;
+  border-radius:10px;
+  background:rgba(45,27,105,0.3);
+  cursor:pointer;
+  transition:all .25s;
+  line-height:1;
+}
+.hud-wizard:hover{background:rgba(45,27,105,0.5);transform:scale(1.08)}
+.hud-wizard .hw-hat{font-size:.9rem;margin-bottom:-4px}
+.hud-wizard .hw-body{font-size:1.3rem}
+.hud-wizard .hw-pet{font-size:.85rem;margin-left:1px}
+
+/* Gacha sparkle rain for legendary */
+.legendary-rain{position:fixed;inset:0;z-index:199;pointer-events:none;overflow:hidden}
+.g-sparkle{
+  position:absolute;
+  font-size:1.2rem;
+  animation:sparkleRain 1.5s ease-out forwards;
+  opacity:0;
+}
+@keyframes sparkleRain{
+  0%{opacity:0;transform:translateY(-20px) rotate(0deg)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(100vh) rotate(360deg)}
+}
+
 @media(max-width:600px){
   .ch-grid{grid-template-columns:repeat(2,1fr)}
   .sum-stats{grid-template-columns:1fr 1fr}
   .hud{padding:10px 12px}
   .q-card{padding:20px 16px}
   .parent-panel{width:270px}
+  .gacha-pulls{flex-direction:column;align-items:center}
+  .pull-btn{min-width:200px}
+  .inv-grid{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
@@ -728,11 +882,13 @@ body{
 <div class="screen" id="gameScreen" style="padding-top:12px;gap:10px">
   <div class="container">
     <div class="hud">
+      <div class="hud-wizard" id="hudWizard" onclick="openShopFromGame()" title="Your Wizard!"></div>
       <div class="hud-score"><span class="icon">&#11088;</span><span class="val" id="hudScore">0</span></div>
       <div class="hud-hearts" id="hudHearts"></div>
       <div class="hud-streak" id="hudStreak"></div>
       <div class="hud-rank" id="hudRank">Trainee</div>
     </div>
+    <div class="powerups-bar" id="puBar"></div>
     <div class="progress">
       <div class="progress-bar" id="progBar" style="width:0%"></div>
       <div class="progress-label" id="progLabel">1 / 18</div>
@@ -745,6 +901,58 @@ body{
 <!-- ===== SUMMARY SCREEN ===== -->
 <div class="screen summary-screen" id="sumScreen">
   <div class="sum-card" id="sumCard"></div>
+</div>
+
+<!-- Gacha Result Overlay -->
+<div class="gacha-result" id="gachaResult">
+  <div class="gacha-card" id="gachaCard"></div>
+</div>
+<div class="legendary-rain" id="legendRain"></div>
+
+<!-- ===== GACHA SHOP SCREEN ===== -->
+<div class="screen gacha-screen" id="shopScreen">
+  <div class="container" style="text-align:center">
+    <div class="title" style="font-size:clamp(1.5rem,4.5vw,2.4rem);margin-bottom:4px">Wizard Drip Shop</div>
+    <div class="subtitle">spend your points, get that glow-up &#10024;</div>
+
+    <div class="card card-glow" style="margin-bottom:18px">
+      <div style="font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--text-dim);margin-bottom:8px">Your Points</div>
+      <div style="font-family:Fredoka,sans-serif;font-size:2rem;font-weight:700;color:var(--gold)" id="shopScore">0</div>
+      <div class="wizard-frame" id="shopWizFrame">
+        <div class="wizard-avatar" id="shopWizard"></div>
+      </div>
+      <div id="shopPowerups" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="chapter-title">&#127922; Pull for Items</div>
+      <div class="gacha-pulls">
+        <button class="pull-btn pull-basic" onclick="gachaPull('basic')">
+          <div>Basic Pull</div>
+          <div class="pull-cost">&#11088; 20 pts</div>
+          <div class="pull-odds">mostly common</div>
+        </button>
+        <button class="pull-btn pull-super" onclick="gachaPull('super')">
+          <div>Super Pull</div>
+          <div class="pull-cost">&#11088; 50 pts</div>
+          <div class="pull-odds">rare+ odds up!</div>
+        </button>
+        <button class="pull-btn pull-mega" onclick="gachaPull('mega')">
+          <div>MEGA Pull</div>
+          <div class="pull-cost">&#11088; 100 pts</div>
+          <div class="pull-odds">epic &amp; legendary!</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="chapter-title">&#128092; Your Collection</div>
+      <div id="inventoryArea"></div>
+      <div style="font-family:Fredoka,sans-serif;font-size:.8rem;color:var(--text-dim);margin-top:10px">Tap an item to equip it!</div>
+    </div>
+
+    <button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="exitShop()">Back to Quest &#9889;</button>
+  </div>
 </div>
 
 <script>
@@ -919,6 +1127,48 @@ const ROUND_INFO=[
   }
 ];
 
+// ===== GACHA ITEMS =====
+const GACHA_ITEMS={
+  hats:[
+    {id:'hat_cap',name:'Trainee Cap',emoji:'\uD83E\uDDE2',rarity:'common',power:null,desc:'Standard issue trainee cap. Cute but basic!'},
+    {id:'hat_bow',name:'Ribbon Bow',emoji:'\uD83C\uDF80',rarity:'common',power:null,desc:'A cute ribbon bow. Debut-ready!'},
+    {id:'hat_headphones',name:'Studio Headphones',emoji:'\uD83C\uDFA7',rarity:'rare',power:'freeHint',desc:'Whispers hints! 1 free hint per round'},
+    {id:'hat_tophat',name:'Fancy Top Hat',emoji:'\uD83C\uDFA9',rarity:'rare',power:null,desc:'Classy vibes only, bestie!'},
+    {id:'hat_crown',name:'Royal Crown',emoji:'\uD83D\uDC51',rarity:'epic',power:'restoreHeart',desc:'Royal healing! +1 heart at round start'},
+    {id:'hat_catears',name:'Neko Ears',emoji:'\uD83D\uDC31',rarity:'epic',power:null,desc:'Kawaii overload! UwU energy'},
+    {id:'hat_flame',name:'Flame Crown',emoji:'\uD83D\uDD25',rarity:'legendary',power:'eliminate',desc:'Burns away wrong answers! Removes 2 options once per round'},
+    {id:'hat_galaxy',name:'Galaxy Tiara',emoji:'\u2728\uD83D\uDC8E',rarity:'legendary',power:'doublePoints',desc:'Written in the stars! Double ALL points'}
+  ],
+  pets:[
+    {id:'pet_chick',name:'Baby Chick',emoji:'\uD83D\uDC25',rarity:'common',power:null,desc:'Cheeps encouragement! So smol!'},
+    {id:'pet_bunny',name:'Snow Bunny',emoji:'\uD83D\uDC30',rarity:'common',power:null,desc:'Hops when you get it right!'},
+    {id:'pet_cat',name:'Lucky Cat',emoji:'\uD83D\uDC31',rarity:'rare',power:'bonusScore',desc:'+2 bonus points per correct answer!'},
+    {id:'pet_fox',name:'Mystic Fox',emoji:'\uD83E\uDD8A',rarity:'rare',power:null,desc:'A wise and sly companion'},
+    {id:'pet_dragon',name:'Baby Dragon',emoji:'\uD83D\uDC09',rarity:'epic',power:'streakShield',desc:'Protects your streak once per round!'},
+    {id:'pet_unicorn',name:'Sparkle Unicorn',emoji:'\uD83E\uDD84',rarity:'epic',power:'restoreHeart',desc:'Magical healing! +1 heart at round start'},
+    {id:'pet_phoenix',name:'Phoenix',emoji:'\uD83D\uDD25\uD83E\uDD85',rarity:'legendary',power:'revive',desc:'Revives ALL hearts once per round!'},
+    {id:'pet_stardragon',name:'Celestial Dragon',emoji:'\uD83C\uDF1F\uD83D\uDC32',rarity:'legendary',power:'eliminate',desc:'Cosmic fire eliminates wrong answers!'}
+  ],
+  outfits:[
+    {id:'out_hoodie',name:'Cozy Hoodie',emoji:'\uD83E\uDDE5',rarity:'common',power:null,desc:'Comfy and cute!'},
+    {id:'out_tshirt',name:'Fan T-Shirt',emoji:'\uD83D\uDC55',rarity:'common',power:null,desc:'Rep your fave group!'},
+    {id:'out_jacket',name:'Idol Jacket',emoji:'\uD83E\uDDE5\u2728',rarity:'rare',power:'freeHint',desc:'Stylish AND smart! 1 free hint per round'},
+    {id:'out_cape',name:'Wizard Cape',emoji:'\uD83E\uDDB8',rarity:'rare',power:null,desc:'Swoosh! Main character vibes'},
+    {id:'out_sparkle',name:'Sparkle Suit',emoji:'\uD83D\uDC8E',rarity:'epic',power:'bonusScore',desc:'+3 bonus points per correct answer!'},
+    {id:'out_hanbok',name:'Magic Hanbok',emoji:'\uD83D\uDC58',rarity:'epic',power:null,desc:'Traditional K-power!'},
+    {id:'out_galaxy',name:'Galaxy Robe',emoji:'\uD83C\uDF0C',rarity:'legendary',power:'doublePoints',desc:'Cosmic drip! Double ALL points!'},
+    {id:'out_gold',name:'Golden Armor',emoji:'\u2694\uFE0F\u2728',rarity:'legendary',power:'eliminate',desc:'Deflects wrong answers away!'}
+  ]
+};
+
+const PULL_ODDS={
+  basic: {common:55,rare:30,epic:13,legendary:2},
+  super: {common:20,rare:40,epic:30,legendary:10},
+  mega:  {common:0,rare:15,epic:50,legendary:35}
+};
+const PULL_COST={basic:20,super:50,mega:100};
+const DUPE_REFUND={common:5,rare:15,epic:30,legendary:60};
+
 // ===== STATE =====
 const S={
   chapters:[7,8,9],
@@ -940,7 +1190,16 @@ const S={
   roundTotal:0,
   sessionStart:null,
   totalQs:0,
-  midStoryShown:false
+  midStoryShown:false,
+  // Gacha
+  inventory:[],       // array of item ids
+  equipped:{hat:null,pet:null,outfit:null},
+  activePowers:[],    // powers active this round
+  freeHints:0,        // free hints available this round
+  streakShielded:false,// streak shield used?
+  reviveUsed:false,   // phoenix revive used?
+  eliminateUsed:false, // eliminate used this round?
+  returnTo:'sumScreen' // where to go back from shop
 };
 
 // ===== INIT =====
@@ -951,6 +1210,7 @@ function init(){
   document.getElementById('storyBtn').onclick=dismissStory;
   document.getElementById('parentBtn').onclick=()=>{document.getElementById('parentPanel').classList.toggle('open');updateParent()};
   document.getElementById('parentClose').onclick=()=>document.getElementById('parentPanel').classList.remove('open');
+  updateMiniWizard();
 }
 
 function makeStars(){
@@ -1010,6 +1270,8 @@ function buildRound(roundNum){
   S.totalQs=pool.length;
 
   showScreen('gameScreen');
+  applyRoundStartPowers();
+  updateMiniWizard();
   // Show round story
   const info=ROUND_INFO[roundNum];
   const story=info.stories[0];
@@ -1064,17 +1326,6 @@ function showQuestion(){
     showRoundSummary();
     return;
   }
-  // Mid-round story (only show once)
-  if(!S.midStoryShown&&S.qIndex>0&&S.qIndex===Math.floor(S.queue.length/2)){
-    const info=ROUND_INFO[S.round];
-    if(info.stories[1]){
-      S.midStoryShown=true;
-      const st=info.stories[1];
-      showStory(st.emoji,st.room,st.text);
-      return;
-    }
-  }
-
   showRoundBanner();
   updateHUD();
 
@@ -1349,7 +1600,18 @@ function renderOptions(card,options,correctAnswer){
   const optDiv=document.createElement('div');
   optDiv.className='opts';
   const letters=['A','B','C','D','E'];
+
+  // Eliminate power-up: hide 2 wrong options (once per round)
+  let eliminated=[];
+  if(hasPower('eliminate')&&!S.eliminateUsed){
+    S.eliminateUsed=true;
+    const wrongOpts=options.filter(o=>o!==correctAnswer);
+    shuffle(wrongOpts);
+    eliminated=wrongOpts.slice(0,2);
+  }
+
   options.forEach((o,i)=>{
+    if(eliminated.includes(o))return; // skip eliminated options
     const btn=document.createElement('button');
     btn.className='opt';
     btn._answer=o;
@@ -1380,12 +1642,14 @@ function handleAnswer(btn,selected,correct,container){
 function addHint(card,entry){
   const btn=document.createElement('button');
   btn.className='hint-btn';
-  btn.textContent='\uD83D\uDCA1 Hint (-5 pts)';
+  const isFree=S.freeHints>0;
+  btn.textContent=isFree?'\uD83D\uDCA1 Free Hint!':'\uD83D\uDCA1 Hint (-5 pts)';
+  if(isFree)btn.style.borderColor='var(--teal)';
   let used=false;
   btn.onclick=()=>{
     if(used)return;
     used=true;
-    S.score=Math.max(0,S.score-5);
+    if(isFree){S.freeHints--}else{S.score=Math.max(0,S.score-5)}
     btn.disabled=true;btn.textContent='Hint used!';
     const ht=document.createElement('div');
     ht.className='hint-text';
@@ -1428,6 +1692,8 @@ function processAnswer(isCorrect){
     let pts=10;
     if(S.streak>=3)pts+=5;
     if(S.round===2)pts+=5; // bonus for harder round
+    pts+=getBonusScoreFromPowers();
+    pts*=getPointsMultiplier();
     S.score+=pts;
 
     const s=S.wordStats[word];
@@ -1436,8 +1702,17 @@ function processAnswer(isCorrect){
     showFB(true);
     spawnSparkles();
   } else {
-    S.wrong++;S.streak=0;S.wrongRow++;
+    S.wrong++;S.wrongRow++;
+    // Streak shield: protect streak once per round
+    if(hasPower('streakShield')&&!S.streakShielded){
+      S.streakShielded=true;
+      // streak preserved!
+    } else {
+      S.streak=0;
+    }
     S.hearts=Math.max(0,S.hearts-1);
+    // Revive: restore hearts when they hit 0
+    if(S.hearts===0)applyRevive();
     showFB(false);
     document.getElementById('gameScreen').classList.add('shake');
     setTimeout(()=>document.getElementById('gameScreen').classList.remove('shake'),400);
@@ -1524,6 +1799,9 @@ function showRoundSummary(){
     ${practice.length?`<div class="words-section"><h4 style="color:var(--gold)">\uD83D\uDCDD Needs Practice</h4><div>${practice.map(w=>`<span class="tag tag-bad">${w}</span>`).join('')}</div></div>`:''}
 
     <div class="sum-actions">
+      <button class="btn btn-purple" style="font-size:1.1rem;padding:16px 36px;background:linear-gradient(135deg,#9b6fe0,var(--gold));color:#1a0a2e" onclick="openShop('sumScreen')">
+        \uD83C\uDFB0 Wizard Drip Shop \u2728
+      </button>
       ${nextRound?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="buildRound(${S.round+1})">Next Round: ${ROUND_INFO[S.round+1].title} \u2192</button>`:''}
       ${practice.length?`<button class="btn btn-go" onclick="practiceMissed()">Comeback Era (Practice Missed) \uD83D\uDD04</button>`:''}
       ${!nextRound?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="buildRound(0)">Play Again! \uD83D\uDD01</button>`:''}
@@ -1587,6 +1865,286 @@ function updateParent(){
 
 // ===== UTILS =====
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+// ===== GACHA SYSTEM =====
+function getItem(id){
+  for(const cat of Object.values(GACHA_ITEMS)){
+    const found=cat.find(i=>i.id===id);
+    if(found)return found;
+  }
+  return null;
+}
+
+function getEquippedItem(slot){
+  if(!S.equipped[slot])return null;
+  return getItem(S.equipped[slot]);
+}
+
+function getActivePowers(){
+  const powers=[];
+  ['hat','pet','outfit'].forEach(slot=>{
+    const item=getEquippedItem(slot);
+    if(item&&item.power)powers.push(item.power);
+  });
+  return powers;
+}
+
+function hasPower(name){return S.activePowers.includes(name)}
+
+function updateMiniWizard(){
+  const el=document.getElementById('hudWizard');
+  if(!el)return;
+  const hat=getEquippedItem('hat');
+  const pet=getEquippedItem('pet');
+  el.innerHTML=`${hat?`<span class="hw-hat">${hat.emoji}</span>`:''}<span class="hw-body">\uD83E\uDDD9\u200D\u2642\uFE0F</span>${pet?`<span class="hw-pet">${pet.emoji}</span>`:''}`;
+}
+
+function updateShopWizard(){
+  const frame=document.getElementById('shopWizFrame');
+  const wiz=document.getElementById('shopWizard');
+  if(!wiz)return;
+
+  const hat=getEquippedItem('hat');
+  const pet=getEquippedItem('pet');
+  const outfit=getEquippedItem('outfit');
+
+  // Find best rarity among equipped
+  const rarities=['common','rare','epic','legendary'];
+  let best='common';
+  [hat,pet,outfit].forEach(i=>{if(i&&rarities.indexOf(i.rarity)>rarities.indexOf(best))best=i.rarity});
+  frame.className='wizard-frame rf-'+best;
+
+  wiz.innerHTML=`
+    ${hat?`<div class="wizard-hat">${hat.emoji}</div>`:'<div class="wizard-hat" style="opacity:.3">\uD83E\uDDE2</div>'}
+    <div class="wizard-body">\uD83E\uDDD9\u200D\u2642\uFE0F</div>
+    ${outfit?`<div class="wizard-outfit">${outfit.emoji}</div>`:''}
+    ${pet?`<div class="wizard-pet">${pet.emoji}</div>`:''}
+  `;
+
+  document.getElementById('shopScore').textContent=S.score;
+
+  // Show active powers
+  const powers=getActivePowers();
+  const puDiv=document.getElementById('shopPowerups');
+  if(powers.length){
+    const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Pts',restoreHeart:'\u2764\uFE0F +1 Heart',
+      eliminate:'\uD83D\uDD25 Eliminate',doublePoints:'\uD83D\uDCAB 2x Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All'};
+    puDiv.innerHTML=`<div class="powerups-bar">${powers.map(p=>`<span class="pu-badge">${labels[p]||p}</span>`).join('')}</div>`;
+  } else puDiv.innerHTML='';
+}
+
+function updatePowerupsBar(){
+  const bar=document.getElementById('puBar');
+  if(!bar)return;
+  const powers=S.activePowers;
+  if(!powers.length){bar.innerHTML='';return}
+  const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 +Pts',restoreHeart:'\u2764\uFE0F +Heart',
+    eliminate:'\uD83D\uDD25 Elim',doublePoints:'\uD83D\uDCAB 2x Pts',streakShield:'\uD83D\uDEE1\uFE0F Shield',revive:'\uD83D\uDD25 Revive'};
+  bar.innerHTML=powers.map(p=>`<span class="pu-badge">${labels[p]||p}</span>`).join('');
+}
+
+function renderInventory(){
+  const area=document.getElementById('inventoryArea');
+  area.innerHTML='';
+  const cats=[['hats','Hats \uD83C\uDFA9','hat'],['pets','Pets \uD83D\uDC3E','pet'],['outfits','Outfits \uD83D\uDC55','outfit']];
+
+  cats.forEach(([catKey,label,slot])=>{
+    const owned=S.inventory.filter(id=>GACHA_ITEMS[catKey].some(i=>i.id===id));
+    if(!owned.length)return;
+
+    const sec=document.createElement('div');
+    sec.className='inv-section';
+    sec.innerHTML=`<h4>${label} (${owned.length}/${GACHA_ITEMS[catKey].length})</h4>`;
+    const grid=document.createElement('div');
+    grid.className='inv-grid';
+
+    owned.forEach(id=>{
+      const item=getItem(id);
+      const div=document.createElement('div');
+      const isEquipped=S.equipped[slot]===id;
+      div.className=`inv-item ir-${item.rarity}${isEquipped?' equipped':''}`;
+      div.innerHTML=`<span class="inv-emoji">${item.emoji}</span><span class="inv-name">${item.name}</span>`;
+      div.title=item.desc+(item.power?` (${item.power})`:'');
+      div.onclick=()=>{
+        if(isEquipped){S.equipped[slot]=null} else {S.equipped[slot]=id}
+        S.activePowers=getActivePowers();
+        renderInventory();
+        updateShopWizard();
+        updateMiniWizard();
+      };
+      grid.appendChild(div);
+    });
+    sec.appendChild(grid);
+    area.appendChild(sec);
+  });
+
+  // Unequip buttons
+  if(S.equipped.hat||S.equipped.pet||S.equipped.outfit){
+    const ub=document.createElement('button');
+    ub.className='btn btn-outline';ub.style.marginTop='10px';ub.style.fontSize='.8rem';ub.style.padding='8px 16px';
+    ub.textContent='Unequip All';
+    ub.onclick=()=>{S.equipped={hat:null,pet:null,outfit:null};S.activePowers=[];renderInventory();updateShopWizard();updateMiniWizard()};
+    area.appendChild(ub);
+  }
+
+  if(!S.inventory.length){
+    area.innerHTML='<div style="font-family:Fredoka,sans-serif;font-size:1rem;color:var(--text-dim);padding:20px">No items yet! Pull to start your collection \uD83C\uDFB0</div>';
+  }
+}
+
+function gachaPull(tier){
+  const cost=PULL_COST[tier];
+  if(S.score<cost){
+    alert(`Not enough points! You need ${cost} but have ${S.score}. Keep playing to earn more! \u2728`);
+    return;
+  }
+  S.score-=cost;
+
+  // Pick rarity
+  const odds=PULL_ODDS[tier];
+  const roll=Math.random()*100;
+  let rarity;
+  if(roll<odds.legendary)rarity='legendary';
+  else if(roll<odds.legendary+odds.epic)rarity='epic';
+  else if(roll<odds.legendary+odds.epic+odds.rare)rarity='rare';
+  else rarity='common';
+
+  // Pick random item of that rarity
+  const allOfRarity=[];
+  Object.values(GACHA_ITEMS).forEach(cat=>{
+    cat.filter(i=>i.rarity===rarity).forEach(i=>allOfRarity.push(i));
+  });
+  const item=allOfRarity[Math.floor(Math.random()*allOfRarity.length)];
+
+  const isDupe=S.inventory.includes(item.id);
+  if(isDupe){
+    S.score+=DUPE_REFUND[rarity];
+  } else {
+    S.inventory.push(item.id);
+  }
+
+  showGachaResult(item,isDupe,rarity);
+  updateShopWizard();
+  updatePullButtons();
+}
+
+function showGachaResult(item,isDupe,rarity){
+  const ov=document.getElementById('gachaResult');
+  ov.className=`gacha-result show gr-${rarity}`;
+  const card=document.getElementById('gachaCard');
+
+  const powerLabels={freeHint:'\uD83D\uDCA1 Free Hint (1/round)',bonusScore:'\u2B50 Bonus Points',restoreHeart:'\u2764\uFE0F +1 Heart',
+    eliminate:'\uD83D\uDD25 Eliminate Wrong Answers',doublePoints:'\uD83D\uDCAB Double Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All Hearts'};
+
+  card.innerHTML=`
+    <span class="gacha-item-emoji">${item.emoji}</span>
+    <div class="gacha-rarity-tag rt-${rarity}">${rarity}</div>
+    <div class="gacha-item-name" style="color:${rarity==='legendary'?'var(--gold)':rarity==='epic'?'#b794f6':rarity==='rare'?'var(--teal)':'var(--text)'}">${item.name}</div>
+    ${item.power?`<div class="gacha-power">${powerLabels[item.power]||item.power}</div>`:''}
+    <div class="gacha-desc">${item.desc}</div>
+    ${isDupe?`<div class="gacha-dupe">Already owned! +${DUPE_REFUND[rarity]} pts refund \uD83D\uDCB0</div>`:''}
+    <button class="btn btn-hero" style="font-size:.95rem;padding:12px 28px;margin-top:16px" onclick="closeGachaResult()">
+      ${isDupe?'Nice! \uD83D\uDCB0':'Equip & Continue \u2728'}
+    </button>
+  `;
+
+  // Sparkle effects for rare+
+  if(rarity!=='common'){
+    spawnSparkles();
+    if(rarity==='legendary')spawnLegendaryRain();
+  }
+}
+
+function spawnLegendaryRain(){
+  const c=document.getElementById('legendRain');
+  c.innerHTML='';
+  const emojis=['\u2728','\uD83D\uDCAB','\u2B50','\uD83C\uDF1F','\uD83D\uDD25','\uD83D\uDC8E','\uD83D\uDC51','\uD83C\uDF89'];
+  for(let i=0;i<30;i++){
+    const s=document.createElement('span');
+    s.className='g-sparkle';
+    s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    s.style.left=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*1.2)+'s';
+    s.style.fontSize=(0.8+Math.random()*1.2)+'rem';
+    c.appendChild(s);
+  }
+  setTimeout(()=>c.innerHTML='',3000);
+}
+
+function closeGachaResult(){
+  document.getElementById('gachaResult').classList.remove('show');
+  document.getElementById('gachaResult').className='gacha-result';
+  renderInventory();
+  updateShopWizard();
+  updatePullButtons();
+}
+
+function updatePullButtons(){
+  document.querySelectorAll('.pull-btn').forEach(btn=>{
+    const tier=btn.classList.contains('pull-basic')?'basic':btn.classList.contains('pull-super')?'super':'mega';
+    btn.disabled=S.score<PULL_COST[tier];
+  });
+  document.getElementById('shopScore').textContent=S.score;
+}
+
+function openShop(returnTo){
+  S.returnTo=returnTo||'sumScreen';
+  S.activePowers=getActivePowers();
+  updateShopWizard();
+  renderInventory();
+  updatePullButtons();
+  showScreen('shopScreen');
+}
+
+function openShopFromGame(){
+  openShop('gameScreen');
+}
+
+function exitShop(){
+  S.activePowers=getActivePowers();
+  updateMiniWizard();
+  showScreen(S.returnTo);
+  if(S.returnTo==='gameScreen'){
+    updateHUD();
+    updatePowerupsBar();
+  }
+}
+
+// ===== POWER-UP HOOKS =====
+function applyRoundStartPowers(){
+  S.activePowers=getActivePowers();
+  S.freeHints=0;S.streakShielded=false;S.reviveUsed=false;S.eliminateUsed=false;
+
+  if(hasPower('restoreHeart'))S.hearts=Math.min(S.hearts+1,4);
+  if(hasPower('freeHint'))S.freeHints++;
+  // Count if multiple sources grant same power
+  const powers=S.activePowers;
+  S.freeHints=powers.filter(p=>p==='freeHint').length;
+
+  updatePowerupsBar();
+}
+
+function applyRevive(){
+  if(hasPower('revive')&&!S.reviveUsed&&S.hearts===0){
+    S.reviveUsed=true;
+    S.hearts=3;
+    updateHUD();
+    return true;
+  }
+  return false;
+}
+
+function getBonusScoreFromPowers(){
+  let bonus=0;
+  S.activePowers.forEach(p=>{
+    if(p==='bonusScore')bonus+=2;
+  });
+  return bonus;
+}
+
+function getPointsMultiplier(){
+  return hasPower('doublePoints')?2:1;
+}
 
 init();
 </script>
