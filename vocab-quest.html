@@ -1287,41 +1287,102 @@ const ROUND_INFO=[
   }
 ];
 
-// ===== GACHA ITEMS =====
+// ===== GACHA ITEMS (48 total: 16 per category) =====
+// Each item: {id, name, emoji, rarity, power, powerTier(1-4), set(null|string), desc}
 const GACHA_ITEMS={
   hats:[
-    {id:'hat_cap',name:'Trainee Cap',emoji:'\uD83E\uDDE2',rarity:'common',power:null,desc:'Standard issue trainee cap. Cute but basic!'},
-    {id:'hat_bow',name:'Ribbon Bow',emoji:'\uD83C\uDF80',rarity:'common',power:null,desc:'A cute ribbon bow. Debut-ready!'},
-    {id:'hat_headphones',name:'Studio Headphones',emoji:'\uD83C\uDFA7',rarity:'rare',power:'freeHint',desc:'Whispers hints! 1 free hint per round'},
-    {id:'hat_tophat',name:'Fancy Top Hat',emoji:'\uD83C\uDFA9',rarity:'rare',power:null,desc:'Classy vibes only, bestie!'},
-    {id:'hat_crown',name:'Royal Crown',emoji:'\uD83D\uDC51',rarity:'epic',power:'restoreHeart',desc:'Royal healing! +1 heart at round start'},
-    {id:'hat_catears',name:'Neko Ears',emoji:'\uD83D\uDC31',rarity:'epic',power:null,desc:'Kawaii overload! UwU energy'},
-    {id:'hat_flame',name:'Flame Crown',emoji:'\uD83D\uDD25',rarity:'legendary',power:'eliminate',desc:'Burns away wrong answers! Removes 2 options once per round'},
-    {id:'hat_galaxy',name:'Galaxy Tiara',emoji:'\u2728\uD83D\uDC8E',rarity:'legendary',power:'doublePoints',desc:'Written in the stars! Double ALL points'},
-    {id:'hat_aurora',name:'Aurora Crown',emoji:'\uD83C\uDF0C\uD83D\uDC51',rarity:'mythic',power:'mythicWisdom',desc:'The Library itself bows to you! Free hints + eliminate + double points ALL at once'}
+    // Common (4)
+    {id:'hat_cap',name:'Trainee Cap',emoji:'\uD83E\uDDE2',rarity:'common',power:'bonusScore',powerTier:1,set:null,desc:'Standard issue! +1 pt per correct'},
+    {id:'hat_bow',name:'Ribbon Bow',emoji:'\uD83C\uDF80',rarity:'common',power:'cheerBoost',powerTier:1,set:null,desc:'Cute bow! Praise lasts longer'},
+    {id:'hat_beanie',name:'Cozy Beanie',emoji:'\uD83E\uDDE2',rarity:'common',power:'softLanding',powerTier:1,set:null,desc:'Warm & safe! First miss costs no heart'},
+    {id:'hat_hairclip',name:'Star Hair Clip',emoji:'\u2B50',rarity:'common',power:'xpMultiplier',powerTier:1,set:null,desc:'Sparkly clip! +5% bonus points'},
+    // Rare (4)
+    {id:'hat_headphones',name:'K-pop Headphones',emoji:'\uD83C\uDFA7',rarity:'rare',power:'freeHint',powerTier:2,set:'kpop',desc:'Whispers hints! 1 free hint per round'},
+    {id:'hat_tophat',name:'Fancy Top Hat',emoji:'\uD83C\uDFA9',rarity:'rare',power:'bonusScore',powerTier:2,set:null,desc:'+2 pts per correct! Classy vibes'},
+    {id:'hat_flowercrown',name:'Flower Crown',emoji:'\uD83C\uDF3B',rarity:'rare',power:'restoreHeart',powerTier:2,set:'nature',desc:'Bloom power! +1 heart at round start'},
+    {id:'hat_beret',name:'Artist Beret',emoji:'\uD83C\uDFA8',rarity:'rare',power:'foxReveal',powerTier:2,set:null,desc:'Creative vision! Shows first letter'},
+    // Epic (4)
+    {id:'hat_crown',name:'Royal Crown',emoji:'\uD83D\uDC51',rarity:'epic',power:'restoreHeart',powerTier:3,set:'royal',desc:'Royal healing! +1 heart + heal on streak'},
+    {id:'hat_catears',name:'Neko Ears',emoji:'\uD83D\uDC31',rarity:'epic',power:'comboExtender',powerTier:3,set:null,desc:'Cat reflexes! Streak survives 2 misses'},
+    {id:'hat_astronaut',name:'Space Helmet',emoji:'\uD83D\uDE80',rarity:'epic',power:'eliminate',powerTier:3,set:'space',desc:'Scan & eliminate 2 wrong answers!'},
+    {id:'hat_pirate',name:'Pirate Bandana',emoji:'\uD83C\uDFF4\u200D\u2620\uFE0F',rarity:'epic',power:'streakShield',powerTier:3,set:'ocean',desc:'Pirate grit! Streak shield x2'},
+    // Legendary (3)
+    {id:'hat_flame',name:'Flame Crown',emoji:'\uD83D\uDD25',rarity:'legendary',power:'eliminate',powerTier:4,set:null,desc:'Burns away 3 wrong answers!'},
+    {id:'hat_galaxy',name:'Galaxy Tiara',emoji:'\u2728\uD83D\uDC8E',rarity:'legendary',power:'doublePoints',powerTier:4,set:null,desc:'Written in the stars! 2x ALL points'},
+    {id:'hat_icecrown',name:'Ice Crown',emoji:'\u2744\uFE0F\uD83D\uDC51',rarity:'legendary',power:'revive',powerTier:4,set:null,desc:'Frozen power! Full heart revive + bonus'},
+    // Mythic (1)
+    {id:'hat_aurora',name:'Aurora Crown',emoji:'\uD83C\uDF0C\uD83D\uDC51',rarity:'mythic',power:'mythicWisdom',powerTier:4,set:null,desc:'The Library bows to you! Free hints + eliminate + 2x points'}
   ],
   pets:[
-    {id:'pet_chick',name:'Baby Chick',emoji:'\uD83D\uDC25',rarity:'common',power:'cheerBoost',desc:'Cheeps encouragement! Praise lasts longer so you can vibe'},
-    {id:'pet_bunny',name:'Snow Bunny',emoji:'\uD83D\uDC30',rarity:'common',power:'softLanding',desc:'Cushions your fall! First wrong answer costs no heart'},
-    {id:'pet_cat',name:'Lucky Cat',emoji:'\uD83D\uDC31',rarity:'rare',power:'bonusScore',desc:'+2 bonus points per correct answer!'},
-    {id:'pet_fox',name:'Mystic Fox',emoji:'\uD83E\uDD8A',rarity:'rare',power:'foxReveal',desc:'Sly hint! Shows the first letter of the answer at round start'},
-    {id:'pet_dragon',name:'Baby Dragon',emoji:'\uD83D\uDC09',rarity:'epic',power:'streakShield',desc:'Protects your streak once per round!'},
-    {id:'pet_unicorn',name:'Sparkle Unicorn',emoji:'\uD83E\uDD84',rarity:'epic',power:'restoreHeart',desc:'Magical healing! +1 heart at round start'},
-    {id:'pet_phoenix',name:'Phoenix',emoji:'\uD83D\uDD25\uD83E\uDD85',rarity:'legendary',power:'revive',desc:'Revives ALL hearts once per round!'},
-    {id:'pet_stardragon',name:'Celestial Dragon',emoji:'\uD83C\uDF1F\uD83D\uDC32',rarity:'legendary',power:'eliminate',desc:'Cosmic fire eliminates wrong answers!'},
-    {id:'pet_kitsune',name:'Nine-Tail Kitsune',emoji:'\uD83E\uDD8A\uD83D\uDD25\u2728',rarity:'mythic',power:'mythicGuardian',desc:'Ancient guardian spirit! Revive + streak shield + bonus score ALL at once'}
+    // Common (4)
+    {id:'pet_chick',name:'Baby Chick',emoji:'\uD83D\uDC25',rarity:'common',power:'cheerBoost',powerTier:1,set:null,desc:'Cheeps encouragement! Praise lasts longer'},
+    {id:'pet_bunny',name:'Snow Bunny',emoji:'\uD83D\uDC30',rarity:'common',power:'softLanding',powerTier:1,set:null,desc:'Cushions your fall! First miss = no heart lost'},
+    {id:'pet_hamster',name:'Study Hamster',emoji:'\uD83D\uDC39',rarity:'common',power:'bonusScore',powerTier:1,set:null,desc:'Tiny helper! +1 pt per correct'},
+    {id:'pet_kitten',name:'Calico Kitten',emoji:'\uD83D\uDC08',rarity:'common',power:'xpMultiplier',powerTier:1,set:null,desc:'Purring luck! +5% bonus points'},
+    // Rare (4)
+    {id:'pet_cat',name:'Lucky Cat',emoji:'\uD83D\uDC31',rarity:'rare',power:'bonusScore',powerTier:2,set:'kpop',desc:'+2 bonus points per correct! Maneki-neko vibes'},
+    {id:'pet_fox',name:'Mystic Fox',emoji:'\uD83E\uDD8A',rarity:'rare',power:'foxReveal',powerTier:2,set:null,desc:'Sly hint! Shows the first letter'},
+    {id:'pet_owl',name:'Library Owl',emoji:'\uD83E\uDD89',rarity:'rare',power:'freeHint',powerTier:2,set:'nature',desc:'Wise companion! 1 free hint per round'},
+    {id:'pet_panda',name:'Bamboo Panda',emoji:'\uD83D\uDC3C',rarity:'rare',power:'wordMaster',powerTier:2,set:null,desc:'Zen focus! +4 pts for mastered words'},
+    // Epic (4)
+    {id:'pet_dragon',name:'Baby Dragon',emoji:'\uD83D\uDC09',rarity:'epic',power:'streakShield',powerTier:3,set:null,desc:'Protects your streak x2 per round!'},
+    {id:'pet_unicorn',name:'Sparkle Unicorn',emoji:'\uD83E\uDD84',rarity:'epic',power:'restoreHeart',powerTier:3,set:'royal',desc:'Magical healing! +1 heart at round start'},
+    {id:'pet_miniphoenix',name:'Mini Phoenix',emoji:'\uD83E\uDD85\u2728',rarity:'epic',power:'revive',powerTier:3,set:null,desc:'Fiery friend! Restores 3 hearts on KO'},
+    {id:'pet_crystalwolf',name:'Crystal Wolf',emoji:'\uD83D\uDC3A\uD83D\uDC8E',rarity:'epic',power:'eliminate',powerTier:3,set:null,desc:'Pack instinct! Eliminate 2 wrong answers'},
+    // Legendary (3)
+    {id:'pet_phoenix',name:'Phoenix',emoji:'\uD83D\uDD25\uD83E\uDD85',rarity:'legendary',power:'revive',powerTier:4,set:null,desc:'Full heart revive + streak bonus!'},
+    {id:'pet_stardragon',name:'Celestial Dragon',emoji:'\uD83C\uDF1F\uD83D\uDC32',rarity:'legendary',power:'eliminate',powerTier:4,set:'space',desc:'Cosmic fire eliminates 3 wrong answers!'},
+    {id:'pet_goldtiger',name:'Golden Tiger',emoji:'\uD83D\uDC2F\u2728',rarity:'legendary',power:'doublePoints',powerTier:4,set:null,desc:'Tiger power! 2x ALL points!'},
+    // Mythic (1)
+    {id:'pet_kitsune',name:'Nine-Tail Kitsune',emoji:'\uD83E\uDD8A\uD83D\uDD25\u2728',rarity:'mythic',power:'mythicGuardian',powerTier:4,set:null,desc:'Ancient spirit! Revive + streak shield + bonus score ALL at once'}
   ],
   outfits:[
-    {id:'out_hoodie',name:'Cozy Hoodie',emoji:'\uD83E\uDDE5',rarity:'common',power:null,desc:'Comfy and cute!'},
-    {id:'out_tshirt',name:'Fan T-Shirt',emoji:'\uD83D\uDC55',rarity:'common',power:null,desc:'Rep your fave group!'},
-    {id:'out_jacket',name:'Idol Jacket',emoji:'\uD83E\uDDE5\u2728',rarity:'rare',power:'freeHint',desc:'Stylish AND smart! 1 free hint per round'},
-    {id:'out_cape',name:'Wizard Cape',emoji:'\uD83E\uDDB8',rarity:'rare',power:null,desc:'Swoosh! Main character vibes'},
-    {id:'out_sparkle',name:'Sparkle Suit',emoji:'\uD83D\uDC8E',rarity:'epic',power:'bonusScore',desc:'+3 bonus points per correct answer!'},
-    {id:'out_hanbok',name:'Magic Hanbok',emoji:'\uD83D\uDC58',rarity:'epic',power:null,desc:'Traditional K-power!'},
-    {id:'out_galaxy',name:'Galaxy Robe',emoji:'\uD83C\uDF0C',rarity:'legendary',power:'doublePoints',desc:'Cosmic drip! Double ALL points!'},
-    {id:'out_gold',name:'Golden Armor',emoji:'\u2694\uFE0F\u2728',rarity:'legendary',power:'eliminate',desc:'Deflects wrong answers away!'},
-    {id:'out_celestial',name:'Celestial Hanbok',emoji:'\uD83C\uDF1F\uD83D\uDC58\u2728',rarity:'mythic',power:'mythicAura',desc:'Woven from starlight! +1 heart + eliminate + streak shield ALL at once'}
+    // Common (4)
+    {id:'out_hoodie',name:'Cozy Hoodie',emoji:'\uD83E\uDDE5',rarity:'common',power:'softLanding',powerTier:1,set:null,desc:'Comfy & safe! First miss costs no heart'},
+    {id:'out_tshirt',name:'Fan T-Shirt',emoji:'\uD83D\uDC55',rarity:'common',power:'cheerBoost',powerTier:1,set:null,desc:'Rep your fave! Praise lasts longer'},
+    {id:'out_uniform',name:'School Blazer',emoji:'\uD83D\uDC54',rarity:'common',power:'bonusScore',powerTier:1,set:null,desc:'Study hard! +1 pt per correct'},
+    {id:'out_pajamas',name:'Star Pajamas',emoji:'\uD83C\uDF1B',rarity:'common',power:'xpMultiplier',powerTier:1,set:null,desc:'Dreamy vibes! +5% bonus points'},
+    // Rare (4)
+    {id:'out_jacket',name:'Idol Jacket',emoji:'\uD83E\uDDE5\u2728',rarity:'rare',power:'freeHint',powerTier:2,set:'kpop',desc:'Stage-ready! 1 free hint per round'},
+    {id:'out_cape',name:'Wizard Cape',emoji:'\uD83E\uDDB8',rarity:'rare',power:'streakShield',powerTier:2,set:null,desc:'Swoosh! Streak shield x1'},
+    {id:'out_denim',name:'Denim Vest',emoji:'\uD83E\uDDE5',rarity:'rare',power:'comboExtender',powerTier:2,set:null,desc:'Cool vibes! Streak survives 1 miss'},
+    {id:'out_sailor',name:'Sailor Dress',emoji:'\u2693',rarity:'rare',power:'bonusScore',powerTier:2,set:'ocean',desc:'Anchors aweigh! +2 pts per correct'},
+    // Epic (4)
+    {id:'out_sparkle',name:'Sparkle Suit',emoji:'\uD83D\uDC8E',rarity:'epic',power:'bonusScore',powerTier:3,set:null,desc:'+3 bonus points per correct answer!'},
+    {id:'out_hanbok',name:'Magic Hanbok',emoji:'\uD83D\uDC58',rarity:'epic',power:'wordMaster',powerTier:3,set:null,desc:'Traditional power! +6 pts for mastered words'},
+    {id:'out_fairy',name:'Fairy Dress',emoji:'\uD83E\uDDDA',rarity:'epic',power:'freeHint',powerTier:3,set:'nature',desc:'Enchanted! 2 free hints per round'},
+    {id:'out_spacesuit',name:'Space Suit',emoji:'\uD83D\uDC69\u200D\uD83D\uDE80',rarity:'epic',power:'eliminate',powerTier:3,set:'space',desc:'Houston, eliminate 2 wrong answers!'},
+    // Legendary (3)
+    {id:'out_galaxy',name:'Galaxy Robe',emoji:'\uD83C\uDF0C',rarity:'legendary',power:'doublePoints',powerTier:4,set:null,desc:'Cosmic drip! 2x ALL points!'},
+    {id:'out_gold',name:'Golden Armor',emoji:'\u2694\uFE0F\u2728',rarity:'legendary',power:'eliminate',powerTier:4,set:null,desc:'Deflects 3 wrong answers away!'},
+    {id:'out_crystal',name:'Crystal Dress',emoji:'\uD83D\uDC8E\u2728',rarity:'legendary',power:'revive',powerTier:4,set:'royal',desc:'Crystalline magic! Full heart revive!'},
+    // Mythic (1)
+    {id:'out_celestial',name:'Celestial Hanbok',emoji:'\uD83C\uDF1F\uD83D\uDC58\u2728',rarity:'mythic',power:'mythicAura',powerTier:4,set:null,desc:'Woven from starlight! +Heart + eliminate + streak shield ALL at once'}
   ]
+};
+
+// ===== POWER SCALING =====
+const POWER_SCALES={
+  bonusScore:[1,2,3,5],
+  freeHint:[1,1,2,3],
+  eliminate:[1,2,2,3],
+  doublePoints:[1.25,1.5,1.75,2],
+  streakShield:[1,1,2,3],
+  restoreHeart:[1,1,1,2],
+  revive:[2,2,3,3], // hearts restored
+  xpMultiplier:[1.05,1.1,1.15,1.2],
+  wordMaster:[2,4,6,8], // bonus pts for mastered words
+  comboExtender:[1,1,2,2], // wrong answers before streak breaks
+  luckyPull:[2,5,8,12], // % added to rare+ odds
+};
+
+// ===== SET BONUSES =====
+const SET_BONUSES={
+  ocean:{name:'Ocean Set',items:['hat_pirate','out_sailor','pet_owl'],bonus:'comboExtender',tier:3,desc:'Waves carry your streak! \uD83C\uDF0A'},
+  space:{name:'Space Set',items:['hat_astronaut','out_spacesuit','pet_stardragon'],bonus:'xpMultiplier',tier:3,desc:'Cosmic knowledge boost! \uD83D\uDE80'},
+  kpop:{name:'K-pop Set',items:['hat_headphones','out_jacket','pet_cat'],bonus:'doublePoints',tier:2,desc:'Main character energy! \uD83C\uDFA4'},
+  royal:{name:'Royal Set',items:['hat_crown','out_crystal','pet_unicorn'],bonus:'restoreHeart',tier:4,desc:'Royal protection! \uD83D\uDC51'},
+  nature:{name:'Nature Set',items:['hat_flowercrown','out_fairy','pet_owl'],bonus:'luckyPull',tier:3,desc:'Nature\'s luck! \uD83C\uDF3F'}
 };
 
 const PULL_ODDS={
@@ -1868,7 +1929,11 @@ function processAnswer(isCorrect){
     if(S.streak>=3)pts+=5;
     if(S.round===2)pts+=5; // bonus for harder round
     pts+=getBonusScoreFromPowers();
-    pts*=getPointsMultiplier();
+    // Word master bonus for already-mastered words
+    if(hasPower('wordMaster')&&S.wordStats[word]&&S.wordStats[word].mastered){
+      pts+=getPowerScale('wordMaster');
+    }
+    pts=Math.round(pts*getPointsMultiplier());
     S.score+=pts;
 
     const s=S.wordStats[word];
@@ -1878,12 +1943,17 @@ function processAnswer(isCorrect){
     spawnSparkles();
   } else {
     S.wrong++;S.wrongRow++;
-    // Streak shield: protect streak once per round
-    if(hasPower('streakShield')&&!S.streakShielded){
-      S.streakShielded=true;
-      // streak preserved!
+    // Combo extender: streak survives X misses
+    if(hasPower('comboExtender')&&S.comboMisses<getPowerScale('comboExtender')){
+      S.comboMisses++;
+      // streak preserved via combo extender!
+    }
+    // Streak shield: protect streak X times per round
+    else if(hasPower('streakShield')&&S.streakShielded<S.streakShieldMax){
+      S.streakShielded++;
+      // streak preserved via shield!
     } else {
-      S.streak=0;
+      S.streak=0;S.comboMisses=0;
     }
     // Soft landing: first wrong answer costs no heart
     if(hasPower('softLanding')&&!S.softLandingUsed){
@@ -2067,16 +2137,40 @@ function getActivePowers(){
   ['hat','pet','outfit'].forEach(slot=>{
     const item=getEquippedItem(slot);
     if(!item||!item.power)return;
-    // Mythic items grant multiple powers
-    if(item.power==='mythicWisdom'){powers.push('freeHint','eliminate','doublePoints')}
-    else if(item.power==='mythicGuardian'){powers.push('revive','streakShield','bonusScore')}
-    else if(item.power==='mythicAura'){powers.push('restoreHeart','eliminate','streakShield')}
-    else powers.push(item.power);
+    // Mythic items grant multiple powers at tier 4
+    if(item.power==='mythicWisdom'){powers.push({name:'freeHint',tier:4},{name:'eliminate',tier:4},{name:'doublePoints',tier:4})}
+    else if(item.power==='mythicGuardian'){powers.push({name:'revive',tier:4},{name:'streakShield',tier:4},{name:'bonusScore',tier:4})}
+    else if(item.power==='mythicAura'){powers.push({name:'restoreHeart',tier:4},{name:'eliminate',tier:4},{name:'streakShield',tier:4})}
+    else powers.push({name:item.power,tier:item.powerTier||1});
   });
+  // Check set bonus
+  const activeSet=getActiveSetBonus();
+  if(activeSet)powers.push({name:activeSet.bonus,tier:activeSet.tier});
   return powers;
 }
 
-function hasPower(name){return S.activePowers.includes(name)}
+function getActiveSetBonus(){
+  const equipped=['hat','pet','outfit'].map(s=>S.equipped[s]).filter(Boolean);
+  for(const [key,set] of Object.entries(SET_BONUSES)){
+    if(set.items.every(id=>equipped.includes(id)))return set;
+  }
+  return null;
+}
+
+function getPowerTier(powerName){
+  // Get highest tier for a power among active powers
+  let best=0;
+  S.activePowers.forEach(p=>{if(p.name===powerName&&p.tier>best)best=p.tier});
+  return best;
+}
+
+function getPowerScale(powerName){
+  const tier=getPowerTier(powerName);
+  if(!tier||!POWER_SCALES[powerName])return 0;
+  return POWER_SCALES[powerName][tier-1]||0;
+}
+
+function hasPower(name){return S.activePowers.some(p=>p.name===name)}
 
 function updateMiniWizard(){
   const el=document.getElementById('hudWizard');
@@ -2090,7 +2184,9 @@ function updateMiniWizard(){
 const OUTFIT_FX={
   out_hoodie:'hoodie',out_tshirt:'tshirt',out_jacket:'jacket',out_cape:'cape',
   out_sparkle:'sparkle',out_hanbok:'hanbok',out_galaxy:'galaxy',out_gold:'gold',
-  out_celestial:'celestial'
+  out_celestial:'celestial',out_uniform:'tshirt',out_pajamas:'hoodie',
+  out_denim:'jacket',out_sailor:'cape',out_fairy:'sparkle',out_spacesuit:'galaxy',
+  out_crystal:'sparkle'
 };
 
 function updateShopWizard(){
@@ -2169,10 +2265,11 @@ function updateShopWizard(){
   const powers=getActivePowers();
   const puDiv=document.getElementById('shopPowerups');
   if(powers.length){
-    const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Pts',restoreHeart:'\u2764\uFE0F +1 Heart',
-      eliminate:'\uD83D\uDD25 Eliminate',doublePoints:'\uD83D\uDCAB 2x Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All',
-      cheerBoost:'\uD83D\uDC25 Cheer Boost',softLanding:'\uD83D\uDC30 Soft Landing',foxReveal:'\uD83E\uDD8A Fox Hint'};
-    puDiv.innerHTML=`<div class="powerups-bar">${powers.map(p=>`<span class="pu-badge">${labels[p]||p}</span>`).join('')}</div>`;
+    const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Pts',restoreHeart:'\u2764\uFE0F +Heart',
+      eliminate:'\uD83D\uDD25 Eliminate',doublePoints:'\uD83D\uDCAB 2x Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive',
+      cheerBoost:'\uD83D\uDC25 Cheer Boost',softLanding:'\uD83D\uDC30 Soft Landing',foxReveal:'\uD83E\uDD8A Fox Hint',
+      xpMultiplier:'\uD83D\uDCAB XP Boost',wordMaster:'\uD83D\uDCDA Word Master',comboExtender:'\uD83D\uDD17 Combo+',luckyPull:'\uD83C\uDF40 Lucky Pull'};
+    puDiv.innerHTML=`<div class="powerups-bar">${powers.map(p=>`<span class="pu-badge">${labels[p.name]||p.name}</span>`).join('')}</div>`;
   } else puDiv.innerHTML='';
 }
 
@@ -2181,10 +2278,14 @@ function updatePowerupsBar(){
   if(!bar)return;
   const powers=S.activePowers;
   if(!powers.length){bar.innerHTML='';return}
-  const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 +Pts',restoreHeart:'\u2764\uFE0F +Heart',
-    eliminate:'\uD83D\uDD25 Elim',doublePoints:'\uD83D\uDCAB 2x Pts',streakShield:'\uD83D\uDEE1\uFE0F Shield',revive:'\uD83D\uDD25 Revive',
-    cheerBoost:'\uD83D\uDC25 Cheer',softLanding:'\uD83D\uDC30 Shield',foxReveal:'\uD83E\uDD8A Hint'};
-  bar.innerHTML=powers.map(p=>`<span class="pu-badge">${labels[p]||p}</span>`).join('');
+  const labels={freeHint:'\uD83D\uDCA1 Hint',bonusScore:'\u2B50 +Pts',restoreHeart:'\u2764\uFE0F +Heart',
+    eliminate:'\uD83D\uDD25 Elim',doublePoints:'\uD83D\uDCAB 2x',streakShield:'\uD83D\uDEE1\uFE0F Shield',revive:'\uD83D\uDD25 Revive',
+    cheerBoost:'\uD83D\uDC25 Cheer',softLanding:'\uD83D\uDC30 Safe',foxReveal:'\uD83E\uDD8A Hint',
+    xpMultiplier:'\uD83D\uDCAB XP+',wordMaster:'\uD83D\uDCDA Master',comboExtender:'\uD83D\uDD17 Combo',luckyPull:'\uD83C\uDF40 Lucky'};
+  // Deduplicate by power name (show highest tier only)
+  const seen=new Set();
+  const unique=powers.filter(p=>{if(seen.has(p.name))return false;seen.add(p.name);return true});
+  bar.innerHTML=unique.map(p=>`<span class="pu-badge">${labels[p.name]||p.name}</span>`).join('');
 }
 
 function renderInventory(){
@@ -2279,9 +2380,10 @@ function showGachaResult(item,isDupe,rarity){
   ov.className=`gacha-result show gr-${rarity}`;
   const card=document.getElementById('gachaCard');
 
-  const powerLabels={freeHint:'\uD83D\uDCA1 Free Hint (1/round)',bonusScore:'\u2B50 Bonus Points',restoreHeart:'\u2764\uFE0F +1 Heart',
-    eliminate:'\uD83D\uDD25 Eliminate Wrong Answers',doublePoints:'\uD83D\uDCAB Double Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive All Hearts',
+  const powerLabels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Points',restoreHeart:'\u2764\uFE0F +Heart',
+    eliminate:'\uD83D\uDD25 Eliminate Wrong Answers',doublePoints:'\uD83D\uDCAB Points Multiplier',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive Hearts',
     cheerBoost:'\uD83D\uDC25 Praise Lasts Longer',softLanding:'\uD83D\uDC30 First Miss Costs No Heart',foxReveal:'\uD83E\uDD8A Shows First Letter',
+    xpMultiplier:'\uD83D\uDCAB XP Multiplier',wordMaster:'\uD83D\uDCDA Word Master Bonus',comboExtender:'\uD83D\uDD17 Combo Extender',luckyPull:'\uD83C\uDF40 Lucky Pull Boost',
     mythicWisdom:'\uD83C\uDF0C Free Hints + Eliminate + 2x Points!',mythicGuardian:'\uD83E\uDD8A Revive + Shield + Bonus Pts!',mythicAura:'\uD83C\uDF1F +Heart + Eliminate + Shield!'};
 
   card.innerHTML=`
@@ -2362,19 +2464,26 @@ function exitShop(){
 // ===== POWER-UP HOOKS =====
 function applyRoundStartPowers(){
   S.activePowers=getActivePowers();
-  S.freeHints=0;S.streakShielded=false;S.reviveUsed=false;S.eliminateUsed=false;S.softLandingUsed=false;
+  S.freeHints=0;S.streakShielded=0;S.streakShieldMax=0;S.reviveUsed=false;
+  S.eliminateUsed=false;S.softLandingUsed=false;S.comboMisses=0;
 
-  if(hasPower('restoreHeart'))S.hearts=Math.min(S.hearts+1,4);
-  // Count if multiple sources grant freeHint
-  S.freeHints=S.activePowers.filter(p=>p==='freeHint').length;
-
+  // Restore hearts based on tier
+  if(hasPower('restoreHeart')){
+    const amt=getPowerScale('restoreHeart');
+    S.hearts=Math.min(S.hearts+amt,5);
+  }
+  // Free hints based on tier
+  if(hasPower('freeHint'))S.freeHints=getPowerScale('freeHint');
+  // Streak shield uses based on tier
+  if(hasPower('streakShield'))S.streakShieldMax=getPowerScale('streakShield');
+  // Combo extender tracked via S.comboMisses vs max
   updatePowerupsBar();
 }
 
 function applyRevive(){
   if(hasPower('revive')&&!S.reviveUsed&&S.hearts===0){
     S.reviveUsed=true;
-    S.hearts=3;
+    S.hearts=getPowerScale('revive'); // tier determines hearts restored
     updateHUD();
     return true;
   }
@@ -2383,14 +2492,15 @@ function applyRevive(){
 
 function getBonusScoreFromPowers(){
   let bonus=0;
-  S.activePowers.forEach(p=>{
-    if(p==='bonusScore')bonus+=2;
-  });
+  if(hasPower('bonusScore'))bonus+=getPowerScale('bonusScore');
   return bonus;
 }
 
 function getPointsMultiplier(){
-  return hasPower('doublePoints')?2:1;
+  let mult=1;
+  if(hasPower('doublePoints'))mult*=getPowerScale('doublePoints');
+  if(hasPower('xpMultiplier'))mult*=getPowerScale('xpMultiplier');
+  return mult;
 }
 
 init();
