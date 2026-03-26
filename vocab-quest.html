@@ -246,6 +246,20 @@ body{
   line-height:1.3;
 }
 
+/* ===== WEEKLY QUIZ TOGGLE ===== */
+.quiz-toggle{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px 0 6px}
+.quiz-switch{position:relative;width:56px;height:30px;cursor:pointer}
+.quiz-switch input{opacity:0;width:0;height:0}
+.quiz-slider{position:absolute;inset:0;background:rgba(255,255,255,0.1);border-radius:15px;transition:.3s;border:2px solid rgba(255,255,255,0.15)}
+.quiz-slider::before{content:'';position:absolute;height:22px;width:22px;left:3px;bottom:2px;background:#888;border-radius:50%;transition:.3s}
+.quiz-switch input:checked+.quiz-slider{background:linear-gradient(135deg,var(--teal),var(--green));border-color:var(--teal)}
+.quiz-switch input:checked+.quiz-slider::before{transform:translateX(25px);background:#fff}
+.quiz-status{font-family:Fredoka,sans-serif;font-size:1rem;font-weight:600;color:rgba(255,255,255,0.4);transition:.3s}
+.quiz-status.on{color:var(--teal)}
+.quiz-info{margin-top:10px;font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--text-dim);line-height:1.6}
+.quiz-info strong{color:var(--gold)}
+.quiz-week-label{font-size:1.05rem;color:var(--teal);margin-bottom:4px}
+
 /* ===== BUTTONS ===== */
 .btn{
   font-family:'Fredoka',sans-serif;
@@ -376,6 +390,7 @@ body{
 .round-1-badge{background:rgba(123,79,207,0.2);color:var(--purple);border:1px solid var(--purple)}
 .round-2-badge{background:rgba(54,214,195,0.15);color:var(--teal);border:1px solid var(--teal)}
 .round-3-badge{background:rgba(244,114,182,0.15);color:var(--pink);border:1px solid var(--pink)}
+.round-4-badge{background:rgba(255,215,0,0.15);color:var(--gold);border:1px solid var(--gold)}
 .round-name{
   font-size:1.2rem;font-weight:700;
   margin-top:6px;
@@ -620,122 +635,13 @@ body{
 /* ===== GACHA SHOP ===== */
 .gacha-screen{justify-content:center;gap:20px;padding:36px 16px}
 
-/* Wizard Avatar */
+/* Wizard Avatar — SVG based */
 .wizard-avatar{
   position:relative;
-  width:220px;height:240px;
+  width:220px;height:280px;
   margin:0 auto 16px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-.wizard-hat{font-size:3.2rem;line-height:1;z-index:3;position:relative;animation:float 2.5s ease-in-out infinite;filter:drop-shadow(0 2px 10px rgba(255,215,0,0.3))}
-.wizard-body{
-  font-size:5.5rem;line-height:1;z-index:2;margin-top:-14px;
-  filter:drop-shadow(0 4px 12px rgba(123,79,207,0.4));
-  transition:filter .5s,transform .5s;
-  position:relative;
-}
-.wizard-pet{font-size:2.6rem;position:absolute;bottom:5px;right:-15px;z-index:4;animation:petBounce 1.5s ease-in-out infinite;filter:drop-shadow(0 2px 8px rgba(54,214,195,0.4))}
-@keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-
-/* Outfit FX layer — sits behind wizard body */
-.wizard-outfit-fx{
-  position:absolute;inset:0;z-index:1;
-  border-radius:50%;
-  pointer-events:none;
-  transition:all .5s;
-}
-
-/* === OUTFIT VISUAL EFFECTS === */
-/* Cozy Hoodie — warm orange aura */
-.outfit-hoodie .wizard-body{filter:drop-shadow(0 0 18px rgba(255,160,60,0.5)) drop-shadow(0 4px 12px rgba(255,120,20,0.3))}
-.outfit-hoodie .wizard-outfit-fx{background:radial-gradient(circle,rgba(255,160,60,0.15) 30%,transparent 70%)}
-
-/* Fan T-Shirt — colorful pulsing border */
-.outfit-tshirt .wizard-body{filter:drop-shadow(0 0 12px rgba(244,114,182,0.4)) drop-shadow(0 0 24px rgba(54,214,195,0.2))}
-.outfit-tshirt .wizard-outfit-fx{background:radial-gradient(circle,rgba(244,114,182,0.1) 30%,transparent 70%);animation:tshirtPulse 2s ease-in-out infinite}
-@keyframes tshirtPulse{0%,100%{opacity:.6}50%{opacity:1}}
-
-/* Idol Jacket — golden sparkle glow */
-.outfit-jacket .wizard-body{filter:drop-shadow(0 0 20px rgba(255,215,0,0.45)) drop-shadow(0 0 40px rgba(255,215,0,0.15))}
-.outfit-jacket .wizard-outfit-fx{
-  background:radial-gradient(circle,rgba(255,215,0,0.12) 20%,transparent 65%);
-  box-shadow:inset 0 0 30px rgba(255,215,0,0.08);
-}
-
-/* Wizard Cape — flowing purple aura */
-.outfit-cape .wizard-body{filter:drop-shadow(0 0 22px rgba(155,111,224,0.5)) drop-shadow(0 8px 20px rgba(123,79,207,0.3))}
-.outfit-cape .wizard-outfit-fx{
-  background:radial-gradient(ellipse 80% 120% at 50% 60%,rgba(123,79,207,0.2) 20%,transparent 70%);
-  animation:capeFlow 3s ease-in-out infinite;
-}
-@keyframes capeFlow{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.08)}}
-
-/* Sparkle Suit — diamond sparkle particles */
-.outfit-sparkle .wizard-body{
-  filter:drop-shadow(0 0 25px rgba(180,220,255,0.5)) drop-shadow(0 0 50px rgba(100,200,255,0.2));
-  animation:sparkleBody 1.5s ease-in-out infinite;
-}
-@keyframes sparkleBody{0%,100%{filter:drop-shadow(0 0 25px rgba(180,220,255,0.5))}50%{filter:drop-shadow(0 0 35px rgba(200,240,255,0.7)) drop-shadow(0 0 60px rgba(100,200,255,0.3))}}
-.outfit-sparkle .wizard-outfit-fx{
-  background:radial-gradient(circle,rgba(180,220,255,0.15) 20%,transparent 65%);
-}
-
-/* Magic Hanbok — pink/red traditional glow */
-.outfit-hanbok .wizard-body{filter:drop-shadow(0 0 20px rgba(255,80,120,0.4)) drop-shadow(0 0 40px rgba(255,150,180,0.15))}
-.outfit-hanbok .wizard-outfit-fx{
-  background:radial-gradient(circle,rgba(255,100,140,0.12) 25%,rgba(255,200,100,0.05) 60%,transparent 75%);
-}
-
-/* Galaxy Robe — animated space background */
-.outfit-galaxy .wizard-body{
-  filter:drop-shadow(0 0 30px rgba(100,100,255,0.5)) drop-shadow(0 0 60px rgba(200,100,255,0.25));
-  animation:galaxyPulse 3s ease-in-out infinite;
-}
-@keyframes galaxyPulse{0%,100%{filter:drop-shadow(0 0 30px rgba(100,100,255,0.5))}50%{filter:drop-shadow(0 0 45px rgba(180,100,255,0.6)) drop-shadow(0 0 80px rgba(255,100,200,0.2))}}
-.outfit-galaxy .wizard-outfit-fx{
-  background:radial-gradient(circle at 30% 40%,rgba(100,100,255,0.2),transparent 50%),
-             radial-gradient(circle at 70% 60%,rgba(255,100,200,0.15),transparent 50%),
-             radial-gradient(circle at 50% 50%,rgba(54,214,195,0.1),transparent 60%);
-  animation:galaxySpin 8s linear infinite;
-}
-@keyframes galaxySpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-
-/* Golden Armor — metallic gold shimmer */
-.outfit-gold .wizard-body{
-  filter:drop-shadow(0 0 30px rgba(255,215,0,0.6)) drop-shadow(0 0 60px rgba(255,180,0,0.25));
-  animation:goldShimmer 2s ease-in-out infinite;
-}
-@keyframes goldShimmer{0%,100%{filter:drop-shadow(0 0 30px rgba(255,215,0,0.5))}50%{filter:drop-shadow(0 0 50px rgba(255,230,50,0.8)) drop-shadow(0 0 80px rgba(255,200,0,0.3))}}
-.outfit-gold .wizard-outfit-fx{
-  background:radial-gradient(circle,rgba(255,215,0,0.18) 20%,rgba(255,180,0,0.06) 50%,transparent 70%);
-}
-
-/* Celestial Hanbok (mythic) — rainbow aurora shifting glow */
-.outfit-celestial .wizard-body{
-  filter:drop-shadow(0 0 35px rgba(255,100,200,0.5)) drop-shadow(0 0 70px rgba(100,100,255,0.3));
-  animation:celestialBody 3s ease-in-out infinite;
-}
-@keyframes celestialBody{
-  0%,100%{filter:drop-shadow(0 0 35px rgba(255,100,200,0.5)) drop-shadow(0 0 70px rgba(100,100,255,0.3))}
-  33%{filter:drop-shadow(0 0 40px rgba(100,100,255,0.5)) drop-shadow(0 0 80px rgba(54,214,195,0.3))}
-  66%{filter:drop-shadow(0 0 40px rgba(255,215,0,0.5)) drop-shadow(0 0 80px rgba(255,100,200,0.3))}
-}
-.outfit-celestial .wizard-outfit-fx{
-  background:radial-gradient(circle at 30% 30%,rgba(255,100,200,0.15),transparent 50%),
-             radial-gradient(circle at 70% 70%,rgba(100,100,255,0.15),transparent 50%),
-             radial-gradient(circle at 50% 50%,rgba(255,215,0,0.1),transparent 60%);
-  animation:galaxySpin 6s linear infinite;
-}
-
-/* === CSS sparkle particles for Sparkle Suit === */
-.wizard-sparkles{position:absolute;inset:-20px;z-index:5;pointer-events:none;overflow:visible}
-.w-spark{
-  position:absolute;width:6px;height:6px;
-  background:white;border-radius:50%;
-  animation:wSparkle var(--dur) ease-in-out infinite;
-  opacity:0;
-}
-@keyframes wSparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1.2)}}
+.wizard-avatar svg{width:100%;height:100%}
 
 .wizard-frame{
   background:rgba(22,12,50,0.6);
@@ -893,21 +799,48 @@ body{
   animation:fadeUp .35s ease-out;
 }
 
-/* Mini wizard in HUD */
+/* Mini wizard in HUD — SVG */
 .hud-wizard{
-  display:flex;align-items:center;gap:1px;
-  font-size:1.1rem;
-  padding:3px 6px;
+  display:flex;align-items:center;
+  padding:2px 4px;
   border-radius:10px;
   background:rgba(45,27,105,0.3);
   cursor:pointer;
   transition:all .25s;
-  line-height:1;
 }
 .hud-wizard:hover{background:rgba(45,27,105,0.5);transform:scale(1.08)}
-.hud-wizard .hw-hat{font-size:.9rem;margin-bottom:-4px}
-.hud-wizard .hw-body{font-size:1.3rem}
-.hud-wizard .hw-pet{font-size:.85rem;margin-left:1px}
+.hw-svg{width:36px;height:48px}
+.hw-svg svg{width:100%;height:100%}
+
+/* Set bonus indicators */
+.set-bonus-active{font-family:Fredoka,sans-serif;font-size:.8rem;color:var(--teal);margin-top:6px;padding:4px 10px;background:rgba(54,214,195,0.1);border-radius:10px;border:1px solid rgba(54,214,195,0.2)}
+.set-bonus-partial{font-family:Fredoka,sans-serif;font-size:.7rem;color:var(--text-dim);margin-top:3px}
+
+/* === MATCHING GAME (Round 4) === */
+.match-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  max-width:600px;
+  margin:0 auto;
+}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-col-title{font-family:Fredoka,sans-serif;font-size:.85rem;color:var(--text-dim);text-align:center;margin-bottom:4px}
+.match-tile{
+  font-family:Fredoka,sans-serif;font-size:.85rem;
+  padding:12px 14px;
+  background:var(--card);border:2px solid var(--card-border);
+  border-radius:12px;cursor:pointer;
+  transition:all .2s;text-align:center;
+  color:var(--text);min-height:48px;
+  display:flex;align-items:center;justify-content:center;
+}
+.match-tile:hover:not(.matched):not(.selected){border-color:var(--purple);background:rgba(123,79,207,0.1)}
+.match-tile.selected{border-color:var(--teal);background:rgba(54,214,195,0.12);box-shadow:0 0 12px rgba(54,214,195,0.2)}
+.match-tile.matched{opacity:0.4;pointer-events:none;border-color:var(--green);background:rgba(74,222,128,0.08)}
+.match-tile.wrong-flash{animation:matchShake .4s ease-out;border-color:var(--red)}
+@keyframes matchShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.match-score{font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--gold);text-align:center;margin-bottom:8px}
 
 /* Gacha sparkle rain for legendary */
 .legendary-rain{position:fixed;inset:0;z-index:199;pointer-events:none;overflow:hidden}
@@ -993,20 +926,36 @@ body{
     </div>
   </div>
 
-  <div class="card container">
+  <div class="card container" style="text-align:center">
+    <div class="chapter-title">&#128221; Weekly Quiz Mode</div>
+    <div class="quiz-toggle">
+      <label class="quiz-switch">
+        <input type="checkbox" id="quizToggle" onchange="toggleQuizMode(this.checked)">
+        <span class="quiz-slider"></span>
+      </label>
+      <span class="quiz-status" id="quizStatus">OFF</span>
+    </div>
+    <div class="quiz-info" id="quizInfo" style="display:none">
+      <div class="quiz-week-label">&#127919; <span id="quizLabel"></span></div>
+      <div>Part 1: Matching &#8212; <strong><span id="quizMatchCount"></span> words</strong></div>
+      <div>Part 2: Sentences &#8212; <strong><span id="quizSentCount"></span> words</strong></div>
+    </div>
+  </div>
+
+  <div class="card container" id="chCard">
     <div class="chapter-title">&#127926; Pick Your Setlist (Chapters)</div>
     <div class="ch-grid" id="chGrid"></div>
   </div>
 
-  <div class="card container">
+  <div class="card container" id="roundCard">
     <div class="chapter-title">&#127918; Choose Your Starting Round</div>
     <div class="round-select-grid" id="roundGrid">
       <input type="radio" name="roundPick" class="rd-input" id="rd0" value="0" checked>
       <label class="rd-label" for="rd0">
         <span class="rd-num">1</span>
         <span class="rd-info">
-          <span class="rd-title">Word &#8594; Definition</span>
-          <span class="rd-desc">See the vocab word, pick the right definition from 5 choices</span>
+          <span class="rd-title">Matching Game</span>
+          <span class="rd-desc">Match words to their definitions &mdash; connect the pairs! &#129513;</span>
         </span>
       </label>
 
@@ -1014,8 +963,8 @@ body{
       <label class="rd-label" for="rd1">
         <span class="rd-num">2</span>
         <span class="rd-info">
-          <span class="rd-title">Definition &#8594; Word</span>
-          <span class="rd-desc">See the definition, find the matching vocab word from 5 choices</span>
+          <span class="rd-title">Word &#8594; Definition</span>
+          <span class="rd-desc">See the vocab word, pick the right definition from 5 choices</span>
         </span>
       </label>
 
@@ -1023,8 +972,17 @@ body{
       <label class="rd-label" for="rd2">
         <span class="rd-num">3</span>
         <span class="rd-info">
+          <span class="rd-title">Definition &#8594; Word</span>
+          <span class="rd-desc">See the definition, find the matching vocab word from 5 choices</span>
+        </span>
+      </label>
+
+      <input type="radio" name="roundPick" class="rd-input" id="rd3" value="3">
+      <label class="rd-label" for="rd3">
+        <span class="rd-num">4</span>
+        <span class="rd-info">
           <span class="rd-title">Sentence Challenge</span>
-          <span class="rd-desc">Pick which sentence uses the word correctly &mdash; final boss! &#9876;&#65039;</span>
+          <span class="rd-desc">Pick which sentence uses the word correctly &mdash; final boss! &#9876;&#65039;&#127942;</span>
         </span>
       </label>
     </div>
@@ -1076,6 +1034,7 @@ body{
       <div class="wizard-frame" id="shopWizFrame">
         <div class="wizard-avatar" id="shopWizard"></div>
       </div>
+      <div id="shopSetBonus" style="margin-top:6px"></div>
       <div id="shopPowerups" style="margin-top:10px"></div>
     </div>
 
@@ -1116,6 +1075,18 @@ body{
 </div>
 
 <script>
+// ===== WEEKLY QUIZ CONFIG =====
+// Parent: update these 3 values each week!
+// matchWords = bold words (matching game)
+// sentenceWords = starred* words (sentence challenge)
+const WEEKLY_QUIZ={
+  label:'Ch 13–18 Quiz',
+  matchWords:['torrent','tribulations','reiterated','rigmarole','sublime',
+    'vale','inflection','ostentatiously','aesthetic','cloistered',
+    'staunchly','perusal','tenacity','relented','estranged'],
+  sentenceWords:['rigmarole','sublime','vale','aesthetic','staunchly']
+};
+
 // ===== DATA =====
 const VOCAB={
   7:[
@@ -1165,6 +1136,54 @@ const VOCAB={
     {word:'unheeded',pos:'adj.',def:'disregarded, unnoticed'},
     {word:'tremulous',pos:'adj.',def:'timid; fearful'},
     {word:'beguiled',pos:'v.',def:'distracted; charmed; entranced'}
+  ],
+  13:[
+    {word:'torrent',pos:'n.',def:'outpouring; flow'},
+    {word:'sallow',pos:'adj.',def:'a sickly yellow'},
+    {word:'brusquely',pos:'adv.',def:'abruptly; bluntly'},
+    {word:'dolefully',pos:'adv.',def:'with mourning or sadness'},
+    {word:'tribulations',pos:'n.',def:'trials; sufferings'},
+    {word:'bequeathed',pos:'v.',def:'left to a person by will; handed down'}
+  ],
+  14:[
+    {word:'confounded',pos:'v.',def:'confused'},
+    {word:'compunction',pos:'n.',def:'guilty conscience'},
+    {word:'reiterated',pos:'v.',def:'repeated'},
+    {word:'rigmarole',pos:'n.',def:'a rambling or meaningless story'},
+    {word:'beatification',pos:'n.',def:'making or being blessed'},
+    {word:'sublime',pos:'adj.',def:'supreme; splendid'}
+  ],
+  15:[
+    {word:'vale',pos:'n.',def:'valley'},
+    {word:'garret',pos:'n.',def:'attic'},
+    {word:'blithely',pos:'adv.',def:'light-heartedly; carelessly'},
+    {word:'drollery',pos:'n.',def:'comedy; clowning'},
+    {word:'inflection',pos:'n.',def:'a change in the pitch of the voice'},
+    {word:'ostentatiously',pos:'adv.',def:'in a showy, boastful manner'}
+  ],
+  16:[
+    {word:'revelled',pos:'v.',def:'delighted'},
+    {word:'aesthetic',pos:'adj.',def:'having to do with beauty'},
+    {word:'cloistered',pos:'adj.',def:'sheltered; secluded'},
+    {word:'personified',pos:'adj.',def:'embodied in human form'},
+    {word:'supplicant',pos:'n.',def:'humble beggar'},
+    {word:'prepense',pos:'adj.',def:'intentional, premeditated; planned'}
+  ],
+  17:[
+    {word:'staunchly',pos:'adv.',def:'faithfully, loyally'},
+    {word:'perusal',pos:'n.',def:'careful reading'},
+    {word:'effusion',pos:'n.',def:'an outpouring, unrestrained flow'},
+    {word:'perquisites',pos:'n.',def:'extra benefits, customary privileges'},
+    {word:'bedizened',pos:'v.',def:'adorned gaudily'},
+    {word:'tenacity',pos:'n.',def:'unwillingness to let go, stubbornness'}
+  ],
+  18:[
+    {word:'beaux',pos:'n.',def:'admirers, boyfriends'},
+    {word:'relented',pos:'v.',def:'yielded to compassion, shown mercy'},
+    {word:'estranged',pos:'v.',def:'alienated; separated'},
+    {word:'consequent',pos:'adj.',def:'logically consistent'},
+    {word:'irradiated',pos:'v.',def:'show upon, lit up'},
+    {word:'glens',pos:'n.',def:'narrow, secluded valleys'}
   ]
 };
 
@@ -1204,7 +1223,43 @@ const SENTENCES={
   resolute:['She was ___WORD___ in her decision to finish the race.','With a ___WORD___ look, he opened the door to the dark room.'],
   unheeded:['The warning signs went ___WORD___ and the hikers got lost.','Her advice was ___WORD___ and they made the same mistake.'],
   tremulous:['Her ___WORD___ voice revealed how nervous she was on stage.','With a ___WORD___ hand, he reached for the spider.'],
-  beguiled:['The audience was ___WORD___ by the magician\'s amazing tricks.','She was ___WORD___ by the beautiful melody of the song.']
+  beguiled:['The audience was ___WORD___ by the magician\'s amazing tricks.','She was ___WORD___ by the beautiful melody of the song.'],
+  torrent:['A ___WORD___ of rain flooded the streets in minutes.','She unleashed a ___WORD___ of words, barely stopping to breathe.'],
+  sallow:['After weeks of being sick, his face looked pale and ___WORD___.','The ___WORD___ complexion of the patient worried the doctor.'],
+  brusquely:['He ___WORD___ told her to move out of the way.','The shopkeeper ___WORD___ refused to answer any more questions.'],
+  dolefully:['The dog stared ___WORD___ at the door, waiting for its owner.','She ___WORD___ packed her bags, sad to leave her friends behind.'],
+  tribulations:['Despite many ___WORD___, the family stayed strong together.','The ___WORD___ of the long journey tested their patience.'],
+  bequeathed:['Her grandmother ___WORD___ the antique necklace to her in her will.','The old professor ___WORD___ his entire book collection to the library.'],
+  confounded:['The magic trick ___WORD___ the audience completely.','She was ___WORD___ by the impossible math problem.'],
+  compunction:['He felt no ___WORD___ about eating the last slice of cake.','She had a pang of ___WORD___ after lying to her friend.'],
+  reiterated:['The teacher ___WORD___ the instructions one more time for clarity.','Mom ___WORD___ that we needed to be home before dark.'],
+  rigmarole:['Getting a passport involves such a tiresome ___WORD___ of paperwork.','He launched into a long ___WORD___ about his weekend that made no sense.'],
+  beatification:['The ceremony celebrated the ___WORD___ of the beloved nun.','The ___WORD___ process required proof of a miracle.'],
+  sublime:['The sunset over the ocean was absolutely ___WORD___.','The orchestra delivered a ___WORD___ performance that moved everyone to tears.'],
+  vale:['The little village was nestled in a quiet green ___WORD___.','Mist settled over the ___WORD___ as morning broke.'],
+  garret:['The struggling artist lived in a tiny ___WORD___ above the bakery.','She climbed the narrow stairs to the dusty ___WORD___.'],
+  blithely:['She ___WORD___ skipped through the park without a care in the world.','He ___WORD___ ignored the warning signs posted on the fence.'],
+  drollery:['The clown\'s ___WORD___ had the children laughing for hours.','His sense of ___WORD___ made even boring meetings entertaining.'],
+  inflection:['The rise in her ___WORD___ showed she was asking a question.','His voice had a sad ___WORD___ that revealed his true feelings.'],
+  ostentatiously:['She ___WORD___ displayed her new designer bag for everyone to see.','He ___WORD___ waved his award around the room.'],
+  revelled:['The kids ___WORD___ in the freedom of summer vacation.','She ___WORD___ in every moment of the concert.'],
+  aesthetic:['The ___WORD___ beauty of the garden took her breath away.','She rearranged her room for a more ___WORD___ look.'],
+  cloistered:['The nuns lived a ___WORD___ life away from the busy city.','He had a ___WORD___ childhood, rarely leaving the small town.'],
+  personified:['With her grace and poise, she was elegance ___WORD___.','He was kindness ___WORD___, always helping everyone around him.'],
+  supplicant:['The ___WORD___ knelt before the king and begged for mercy.','Like a ___WORD___, she pleaded with her parents for a later curfew.'],
+  prepense:['The crime was clearly ___WORD___, planned weeks in advance.','His ___WORD___ cruelty showed he had thought about it beforehand.'],
+  staunchly:['She ___WORD___ defended her best friend against the gossip.','He ___WORD___ believed that honesty is always the best policy.'],
+  perusal:['After a careful ___WORD___ of the menu, she ordered the pasta.','His ___WORD___ of the contract revealed a hidden clause.'],
+  effusion:['Her ___WORD___ of gratitude was so heartfelt it made everyone smile.','The poet\'s ___WORD___ of emotion filled every line of the poem.'],
+  perquisites:['Free lunches were one of the ___WORD___ of working at the tech company.','The ___WORD___ of the job included a company car and travel expenses.'],
+  bedizened:['The float was ___WORD___ with glitter, ribbons, and flashing lights.','She arrived at the party ___WORD___ in layers of gaudy jewelry.'],
+  tenacity:['Her ___WORD___ in studying paid off with a perfect test score.','The team\'s ___WORD___ kept them fighting until the final whistle.'],
+  beaux:['Anne imagined having many ___WORD___ lining up to court her.','In the old days, young women kept a list of their ___WORD___.'],
+  relented:['After much begging, Dad finally ___WORD___ and let us get a puppy.','The storm ___WORD___ and the sun broke through the clouds.'],
+  estranged:['The two sisters had been ___WORD___ for years after their argument.','He felt ___WORD___ from his old friends after moving to a new city.'],
+  consequent:['Her argument was logical and ___WORD___ from start to finish.','The detective\'s ___WORD___ reasoning led straight to the culprit.'],
+  irradiated:['The morning sun ___WORD___ the stained glass windows beautifully.','Her face was ___WORD___ with joy when she heard the good news.'],
+  glens:['They hiked through the shady ___WORD___ between the mountains.','The ___WORD___ were filled with wildflowers in the spring.']
 };
 
 // ===== PRAISE & ENCOURAGEMENT =====
@@ -1257,29 +1312,39 @@ const LEVELS=[
 const ROUND_INFO=[
   {
     num:1,
-    title:'Word \u2192 Definition',
+    title:'Matching Game',
     badge:'round-1-badge',
-    desc:'I say the word, you pick the definition. Classic trainee drills! \uD83D\uDCDA',
+    desc:'Match words to their definitions! Connect the pairs, slay the grid! \uD83E\uDDE9',
     stories:[
-      {emoji:'\uD83D\uDEAA',room:'The Entrance Hall',text:'"You step through the ancient doors and the bass DROPS. Magical lightsticks float in the air like a concert. Your debut era starts NOW, bestie!" \u2014 Lexicon'},
-      {emoji:'\uD83D\uDCDA',room:'The Whispering Stacks',text:'"The enchanted books are whispering fan chants \u2014 they\'re hyping YOU up! Show them what you\'ve got, trainee!"'}
+      {emoji:'\uD83E\uDDE9',room:'The Mirror Chamber',text:'"The walls are covered in enchanted mirrors, each reflecting a word and its meaning. But they\'re all MIXED UP! Only a true K-pop stan with vocab skills can reconnect them. Let\'s go, bestie!" \u2014 Lexicon'},
+      {emoji:'\uD83D\uDEAA',room:'The Entrance Hall',text:'"You step through the ancient doors and the bass DROPS. Magical mirrors everywhere! Match every word to its meaning. Your debut era starts NOW, bestie!" \u2014 Lexicon'}
     ]
   },
   {
     num:2,
-    title:'Definition \u2192 Word',
+    title:'Word \u2192 Definition',
     badge:'round-2-badge',
-    desc:'I give you the meaning, you find the word. Level up era! \uD83D\uDD25',
+    desc:'I say the word, you pick the definition. Level up era! \uD83D\uDCDA',
     stories:[
-      {emoji:'\uD83E\uDDE9',room:'The Puzzle Chamber',text:'"Glowing runes pulse on the walls like stage lights at a concert. The Word Goblin scrambled everything, but you\'re too cracked for his games. Let him cook? Nah \u2014 let YOU cook!" \u2014 Lexicon'},
-      {emoji:'\uD83C\uDFB6',room:'The Echo Hall',text:'"The walls echo with word magic. Each correct answer rings out like an encore. The crowd (of enchanted books) is going FERAL!"'}
+      {emoji:'\uD83D\uDCDA',room:'The Whispering Stacks',text:'"The enchanted books are whispering fan chants \u2014 they\'re hyping YOU up! Show them what you\'ve got, trainee!"'},
+      {emoji:'\uD83E\uDDE9',room:'The Puzzle Chamber',text:'"Glowing runes pulse on the walls like stage lights at a concert. The Word Goblin scrambled everything, but you\'re too cracked for his games!" \u2014 Lexicon'}
     ]
   },
   {
     num:3,
-    title:'Sentence Challenge',
+    title:'Definition \u2192 Word',
     badge:'round-3-badge',
-    desc:'Pick the sentence that uses the word correctly. Final boss energy! \u2694\uFE0F',
+    desc:'I give you the meaning, you find the word. Boss mode! \uD83D\uDD25',
+    stories:[
+      {emoji:'\uD83C\uDFB6',room:'The Echo Hall',text:'"The walls echo with word magic. Each correct answer rings out like an encore. The crowd (of enchanted books) is going FERAL!"'},
+      {emoji:'\uD83E\uDDE9',room:'The Puzzle Chamber',text:'"Glowing runes pulse on the walls. The Word Goblin scrambled everything, but you\'re too cracked for his games. Let him cook? Nah \u2014 let YOU cook!" \u2014 Lexicon'}
+    ]
+  },
+  {
+    num:4,
+    title:'Sentence Challenge',
+    badge:'round-4-badge',
+    desc:'Pick the sentence that uses the word correctly. Final boss! \u2694\uFE0F\uD83C\uDFC6',
     stories:[
       {emoji:'\uD83D\uDC7A',room:'The Word Goblin\'s Lair',text:'"You hear cackling ahead! The Word Goblin is there, but honestly? He\'s giving flop era energy. You\'re about to end his whole career. SLAY HIM, BESTIE!" \u2014 Lexicon'},
       {emoji:'\uD83C\uDFF0',room:'The Grand Archive',text:'"The final chamber! Golden light floods the room like a sold-out concert finale. Confetti falls. Lightsticks wave. This is YOUR moment! ENCORE TIME!"'}
@@ -1425,7 +1490,10 @@ const S={
   reviveUsed:false,   // phoenix revive used?
   eliminateUsed:false, // eliminate used this round?
   softLandingUsed:false, // soft landing used?
-  returnTo:'sumScreen' // where to go back from shop
+  returnTo:'sumScreen', // where to go back from shop
+  quizMode:false,       // true when running weekly quiz
+  quizMatchWords:[],    // resolved vocab entries for matching part
+  quizSentenceWords:[]  // resolved vocab entries for sentence part
 };
 
 // ===== INIT =====
@@ -1451,14 +1519,31 @@ function makeStars(){
 
 function buildChapters(){
   const g=document.getElementById('chGrid');
-  for(let ch=7;ch<=12;ch++){
+  for(let ch=7;ch<=18;ch++){
     const ck=[7,8,9].includes(ch)?'checked':'';
     g.innerHTML+=`<input type="checkbox" class="ch-input" id="c${ch}" value="${ch}" ${ck}><label class="ch-label" for="c${ch}"><span class="ch-dot">\u2713</span>Ch ${ch}</label>`;
   }
 }
 
+function toggleQuizMode(on){
+  S.quizMode=on;
+  document.getElementById('chCard').style.display=on?'none':'';
+  document.getElementById('roundCard').style.display=on?'none':'';
+  const info=document.getElementById('quizInfo');
+  const status=document.getElementById('quizStatus');
+  info.style.display=on?'':'none';
+  status.textContent=on?'ON':'OFF';
+  status.className='quiz-status'+(on?' on':'');
+  if(on){
+    document.getElementById('quizLabel').textContent=WEEKLY_QUIZ.label;
+    document.getElementById('quizMatchCount').textContent=WEEKLY_QUIZ.matchWords.length;
+    document.getElementById('quizSentCount').textContent=WEEKLY_QUIZ.sentenceWords.length;
+  }
+}
+
 // ===== START =====
 function startGame(){
+  if(S.quizMode){startWeeklyQuiz();return}
   const cks=document.querySelectorAll('.ch-input:checked');
   if(!cks.length)return alert('Pick at least one chapter, bestie!');
 
@@ -1504,6 +1589,66 @@ function buildRound(roundNum){
   showStory(story.emoji,story.room,story.text);
 }
 
+// ===== WEEKLY QUIZ =====
+function startWeeklyQuiz(){
+  // Build lookup of all vocab entries by word
+  const allWords={};
+  Object.keys(VOCAB).forEach(ch=>{
+    VOCAB[ch].forEach(e=>{allWords[e.word]={...e,ch:+ch}});
+  });
+
+  S.quizMatchWords=WEEKLY_QUIZ.matchWords.map(w=>allWords[w]).filter(Boolean);
+  S.quizSentenceWords=WEEKLY_QUIZ.sentenceWords.map(w=>allWords[w]).filter(Boolean);
+
+  // S.words = union of both lists (for wordStats tracking)
+  const seen=new Set();
+  S.words=[];
+  [...S.quizMatchWords,...S.quizSentenceWords].forEach(e=>{
+    if(!seen.has(e.word)){seen.add(e.word);S.words.push(e)}
+  });
+  S.words.forEach(w=>{if(!S.wordStats[w.word])S.wordStats[w.word]={att:0,cor:0,mastered:false}});
+
+  S.score=0;S.hearts=3;S.streak=0;S.bestStreak=0;
+  S.answered=0;S.correct=0;S.wrong=0;S.wrongRow=0;
+  S.round=0;S.qIndex=0;
+  S.sessionStart=S.sessionStart||Date.now();
+
+  buildQuizRound(0);
+}
+
+function buildQuizRound(part){
+  // part 0 = matching (S.round=0), part 1 = sentences (S.round=3)
+  S.round=part===0?0:3;
+  S.qIndex=0;
+  S.roundWords=[];
+  S.roundCorrect=0;
+  S.roundTotal=0;
+  S.hearts=3;
+  S.midStoryShown=false;
+
+  const srcWords=part===0?S.quizMatchWords:S.quizSentenceWords;
+  let pool=[...srcWords];
+  srcWords.forEach(w=>{
+    const s=S.wordStats[w.word];
+    if(s&&s.att>0&&s.cor/s.att<0.6)pool.push({...w});
+  });
+  shuffle(pool);
+  S.queue=pool;
+  S.totalQs=pool.length;
+
+  showScreen('gameScreen');
+  applyRoundStartPowers();
+  updateMiniWizard();
+
+  if(part===0){
+    showStory('\uD83E\uDDE9','Weekly Quiz: Matching',
+      `"Time for your weekly vocab check, bestie! Match all ${srcWords.length} words to their definitions. You've been studying \u2014 now PROVE IT!" \u2014 Lexicon`);
+  } else {
+    showStory('\u2694\uFE0F','Weekly Quiz: Sentences',
+      `"Part 2! Only ${srcWords.length} words, but they're the tricky ones. Pick the sentence that uses each word correctly. Final boss energy! Let's GO!" \u2014 Lexicon`);
+  }
+}
+
 // ===== SCREENS =====
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -1539,6 +1684,14 @@ function updateHUD(){
 
 // ===== ROUND BANNER =====
 function showRoundBanner(){
+  if(S.quizMode){
+    const label=S.round===0?'Part 1: Matching':'Part 2: Sentences';
+    document.getElementById('roundBanner').innerHTML=`
+      <span class="round-badge round-1-badge">\uD83D\uDCDD</span>
+      <div class="round-name">${WEEKLY_QUIZ.label} \u2014 ${label}</div>
+    `;
+    return;
+  }
   const info=ROUND_INFO[S.round];
   document.getElementById('roundBanner').innerHTML=`
     <span class="round-badge ${info.badge}">Round ${info.num}</span>
@@ -1552,6 +1705,13 @@ function showQuestion(){
     showRoundSummary();
     return;
   }
+
+  // Matching game: render full grid batch instead of single question
+  if(S.round===0){
+    renderMatchingGame();
+    return;
+  }
+
   showRoundBanner();
   updateHUD();
 
@@ -1569,13 +1729,13 @@ function showQuestion(){
   counter.textContent=`Question ${S.qIndex+1} of ${S.totalQs}`;
   card.appendChild(counter);
 
-  if(S.round===0) renderR1(card,entry);
-  else if(S.round===1) renderR2(card,entry);
+  if(S.round===1) renderR1(card,entry);
+  else if(S.round===2) renderR2(card,entry);
   else renderR3(card,entry);
 
-  // Fox Reveal: show a subtle hint with first letter of answer
-  if(hasPower('foxReveal')&&S.round!==2){
-    const answer=S.round===0?entry.def:entry.word;
+  // Fox Reveal: show a subtle hint with first letter of answer (word↔def rounds only)
+  if(hasPower('foxReveal')&&(S.round===1||S.round===2)){
+    const answer=S.round===1?entry.def:entry.word;
     const hint=document.createElement('div');
     hint.className='hint-text';
     hint.style.marginTop='6px';hint.style.fontSize='.85rem';
@@ -1799,6 +1959,186 @@ function renderR3(card,entry){
       'She was beguiled by the instruction manual and fell asleep reading it.', // wrong: manuals aren\'t charming
       'The traffic jam beguiled the commuters on their way to work.', // wrong: traffic isn\'t enchanting
       'He was beguiled by the long list of chores he had to finish.' // wrong: chores aren\'t captivating
+    ],
+    torrent:[
+      'A gentle torrent of snowflakes drifted softly to the ground.', // wrong: torrent implies force, not gentleness
+      'She spoke in a torrent, whispering so quietly no one could hear.', // wrong: torrent = outpouring, not whispering
+      'The torrent of silence in the room was deafening.' // wrong: torrent means flow/outpouring, silence doesn\'t flow
+    ],
+    sallow:[
+      'After a day at the beach, her skin looked sallow and sun-kissed.', // wrong: sallow = sickly yellow, not healthy tan
+      'The sallow roses bloomed bright red in the garden.', // wrong: sallow means sickly yellow, not bright
+      'His sallow cheeks were rosy and full of color.' // wrong: direct contradiction
+    ],
+    brusquely:[
+      'She brusquely handed him the gift with a warm, lingering hug.', // wrong: brusquely = abruptly, not warmly
+      'He brusquely spent three hours carefully explaining every detail.', // wrong: brusque is quick/blunt, not careful/lengthy
+      'The host brusquely welcomed each guest with a long personal speech.' // wrong: brusquely means bluntly/shortly
+    ],
+    dolefully:[
+      'She dolefully jumped for joy when she won the prize.', // wrong: dolefully = with sadness, not joy
+      'The team dolefully celebrated their championship victory.', // wrong: celebrating isn\'t mournful
+      'He dolefully told the funniest joke anyone had ever heard.' // wrong: doleful = sad, not funny
+    ],
+    tribulations:[
+      'The vacation was full of tribulations like sunny beaches and great food.', // wrong: tribulations = sufferings, not pleasures
+      'She enjoyed the tribulations of winning award after award.', // wrong: tribulations aren\'t enjoyable rewards
+      'The tribulations of the spa day left her completely relaxed.' // wrong: spa days aren\'t trials/sufferings
+    ],
+    bequeathed:[
+      'He bequeathed his lunch to his friend by stealing it off the table.', // wrong: bequeath = leave by will, not steal
+      'She bequeathed her old toys by throwing them in the trash.', // wrong: bequeath = hand down, not discard
+      'The company bequeathed the employees by firing them all.' // wrong: bequeath = leave/give, not fire
+    ],
+    confounded:[
+      'The simple instructions confounded her because they were so easy.', // wrong: confounded = confused, easy things don\'t confuse
+      'He was confounded by the answer since he had studied it all week.', // wrong: studying should reduce confusion
+      'She felt confounded after everything went exactly as planned.' // wrong: expected outcomes don\'t confuse
+    ],
+    compunction:[
+      'She felt compunction after receiving a wonderful surprise party.', // wrong: compunction = guilt, surprise parties don\'t cause guilt
+      'His compunction grew as he won more and more prizes.', // wrong: winning doesn\'t cause guilty conscience
+      'The compunction of eating her favorite dessert was overwhelming.' // wrong: enjoying dessert isn\'t guilt-inducing (without context)
+    ],
+    reiterated:[
+      'She reiterated something completely new that nobody had heard before.', // wrong: reiterate = repeat, not say new things
+      'He reiterated by changing his opinion to the opposite view.', // wrong: reiterate = repeat same thing, not change
+      'The singer reiterated by performing a brand new unreleased song.' // wrong: reiterate = repeat, not debut
+    ],
+    rigmarole:[
+      'The rigmarole of the story was clear, concise, and to the point.', // wrong: rigmarole = rambling/meaningless, not concise
+      'His rigmarole explanation helped everyone understand immediately.', // wrong: rigmarole = meaningless rambling
+      'The short, one-sentence rigmarole was easy to follow.' // wrong: rigmarole implies long and rambling
+    ],
+    beatification:[
+      'The beatification ceremony was held to punish the wrongdoer.', // wrong: beatification = blessing, not punishment
+      'His beatification at school meant he was expelled for bad behavior.', // wrong: confused with a negative outcome
+      'The beatification of the villain surprised no one.' // wrong: villains aren\'t typically blessed
+    ],
+    sublime:[
+      'The sublime meal was so bad we couldn\'t eat a single bite.', // wrong: sublime = supreme/splendid, not bad
+      'The movie was sublime, with terrible acting and a boring plot.', // wrong: contradiction
+      'Everyone agreed the sublime painting was ugly and forgettable.' // wrong: sublime = splendid, not ugly
+    ],
+    vale:[
+      'From the top of the vale, she could see for miles around.', // wrong: vale = valley, you\'d be at the bottom
+      'The vale rose high above the surrounding mountains.', // wrong: a valley doesn\'t rise above mountains
+      'They sailed across the vast vale in their ship.' // wrong: confused with a body of water
+    ],
+    garret:[
+      'The garret was a spacious basement with high ceilings.', // wrong: garret = attic, not basement
+      'They swam in the garret behind the house all summer.', // wrong: confused with pool/garden
+      'The underground garret stayed cool even in summer.' // wrong: garret is at the TOP of a building
+    ],
+    blithely:[
+      'She blithely worried about every possible thing that could go wrong.', // wrong: blithely = carelessly/lightheartedly, not worrying
+      'He blithely agonized over the difficult decision for weeks.', // wrong: blithely = carefree, not agonizing
+      'She blithely panicked when she realized she forgot her homework.' // wrong: blithely and panicked contradict
+    ],
+    drollery:[
+      'His drollery brought tears of sadness to the whole audience.', // wrong: drollery = comedy, not sadness
+      'The funeral was marked by an abundance of drollery.', // wrong: funerals don\'t feature comedy
+      'Her drollery was so serious that nobody dared to smile.' // wrong: drollery = clowning/comedy, not seriousness
+    ],
+    inflection:[
+      'His voice had no inflection, rising and falling with great emotion.', // wrong: contradicts "no inflection"
+      'The inflection of the written essay could be heard clearly.', // wrong: written text doesn\'t have vocal pitch
+      'She spoke in a perfect monotone, full of interesting inflections.' // wrong: monotone = no pitch changes
+    ],
+    ostentatiously:[
+      'He ostentatiously hid the trophy in his closet where nobody could see.', // wrong: ostentatiously = showily, not hiding
+      'She ostentatiously donated to charity without telling a single person.', // wrong: ostentatious = showy, not secret
+      'He ostentatiously blended into the crowd, trying not to be noticed.' // wrong: ostentatious = boastful/showy
+    ],
+    revelled:[
+      'She revelled in the boredom of the long, empty afternoon.', // wrong: revelled = delighted, boredom isn\'t delightful
+      'He revelled in his punishment and asked for more chores.', // wrong: punishment isn\'t something you delight in
+      'They revelled in the terrible weather that ruined their plans.' // wrong: bad weather doesn\'t bring delight
+    ],
+    aesthetic:[
+      'The aesthetic qualities of the junkyard made it a popular tourist spot.', // wrong: junkyards aren\'t known for beauty
+      'She chose the outfit for its aesthetic comfort, not its looks.', // wrong: aesthetic = about beauty, not comfort
+      'The aesthetic value of the noise was appreciated by music critics.' // wrong: random noise isn\'t about beauty
+    ],
+    cloistered:[
+      'Her cloistered lifestyle meant she was always out at parties.', // wrong: cloistered = sheltered/secluded, not social
+      'The cloistered neighborhood was known for its busy nightlife.', // wrong: cloistered = secluded, not busy
+      'He lived a cloistered life, traveling to a new country every week.' // wrong: constant travel isn\'t secluded
+    ],
+    personified:[
+      'Cruelty personified, she always helped everyone she met.', // wrong: helping people is the opposite of cruelty
+      'He was laziness personified, working eighteen hours a day.', // wrong: working long hours contradicts laziness
+      'She was chaos personified, keeping everything perfectly organized.' // wrong: organized contradicts chaos
+    ],
+    supplicant:[
+      'The supplicant demanded the king give him what he deserved.', // wrong: supplicants beg humbly, not demand
+      'As a proud supplicant, she refused to ask anyone for help.', // wrong: supplicant = humble beggar
+      'The supplicant arrogantly ordered the servants around.' // wrong: supplicant = humble, not arrogant
+    ],
+    prepense:[
+      'The prepense accident happened completely by surprise.', // wrong: prepense = intentional, accidents aren\'t planned
+      'His prepense stumble was purely accidental and unplanned.', // wrong: prepense means the opposite of accidental
+      'The prepense discovery caught the scientist totally off guard.' // wrong: prepense = planned, discoveries off guard aren\'t planned
+    ],
+    staunchly:[
+      'He staunchly abandoned his friends when they needed him most.', // wrong: staunchly = loyally, not abandoning
+      'She staunchly betrayed the team by sharing their secrets.', // wrong: staunchly = faithfully, not betraying
+      'They staunchly wavered on their decision, changing it every day.' // wrong: staunchly = firmly, not wavering
+    ],
+    perusal:[
+      'After a quick perusal, he had thoroughly memorized every detail.', // wrong: perusal = careful reading, quick contradicts
+      'Her perusal of the book meant she only glanced at the cover.', // wrong: perusal = careful reading, not a glance
+      'His perusal involved skimming the first sentence and moving on.' // wrong: perusal = careful/thorough reading
+    ],
+    effusion:[
+      'His quiet effusion of emotion went completely unnoticed by everyone.', // wrong: effusion = unrestrained outpouring, not quiet
+      'Her effusion was carefully measured and reserved.', // wrong: effusion = unrestrained, not measured
+      'The effusion of silence filled the empty room.' // wrong: effusion = outpouring/flow, silence doesn\'t pour
+    ],
+    perquisites:[
+      'The perquisites of detention included staying late and missing recess.', // wrong: perquisites = benefits/privileges, detention isn\'t a perk
+      'Losing your allowance was one of the perquisites of bad grades.', // wrong: losing things aren\'t perks
+      'The perquisites of the punishment made nobody want the job.' // wrong: punishments aren\'t perks
+    ],
+    bedizened:[
+      'The bedizened room was bare and completely empty.', // wrong: bedizened = adorned gaudily, not bare
+      'She arrived bedizened in her simplest plain white t-shirt.', // wrong: bedizened = gaudily adorned, not simple
+      'The bedizened Christmas tree had nothing on it at all.' // wrong: bedizened = decorated gaudily
+    ],
+    tenacity:[
+      'His tenacity meant he gave up after the first try.', // wrong: tenacity = stubbornness/persistence, not giving up
+      'Her tenacity was shown by how quickly she abandoned the project.', // wrong: tenacity = not letting go
+      'With great tenacity, he surrendered at the first sign of trouble.' // wrong: tenacity = persistence
+    ],
+    beaux:[
+      'Her beaux were all her female best friends from school.', // wrong: beaux = male admirers/boyfriends
+      'The beaux gathered to play basketball at the women\'s league.', // wrong: confused with a general group
+      'She introduced her beaux as her collection of teddy bears.' // wrong: beaux = admirers, not objects
+    ],
+    relented:[
+      'She relented and became even stricter with the rules.', // wrong: relented = gave in/showed mercy, not got stricter
+      'The teacher relented by adding three more pages of homework.', // wrong: relenting = yielding, not adding burden
+      'He relented and doubled down on his harsh punishment.' // wrong: relented = showed mercy, not increased harshness
+    ],
+    estranged:[
+      'The estranged sisters talked on the phone every single day.', // wrong: estranged = separated/alienated, not close
+      'They were estranged, always finishing each other\'s sentences.', // wrong: estranged means distant, not close
+      'The estranged couple spent every holiday happily together.' // wrong: estranged = alienated
+    ],
+    consequent:[
+      'His consequent argument jumped randomly from topic to topic.', // wrong: consequent = logically consistent, not random
+      'Her consequent reasoning made no sense and contradicted itself.', // wrong: consequent = logical, not contradictory
+      'The consequent speech was full of gaps and logical fallacies.' // wrong: consequent = logically consistent
+    ],
+    irradiated:[
+      'The dark cave was irradiated, making it impossible to see anything.', // wrong: irradiated = lit up, dark cave contradicts
+      'The room was irradiated with complete and total darkness.', // wrong: irradiated = lit up, not darkened
+      'Her face was irradiated with gloom and deep sadness.' // wrong: irradiated = lit up/shone, not gloomy
+    ],
+    glens:[
+      'The glens towered above the clouds like mountain peaks.', // wrong: glens = narrow valleys, they don\'t tower
+      'From the glens, they looked down at the valleys far below.', // wrong: glens ARE valleys
+      'The wide, open glens stretched as far as the eye could see.' // wrong: glens = narrow and secluded, not wide and open
     ]
   };
   const wordWrongs=WRONG_SENTENCES[entry.word];
@@ -1890,26 +2230,186 @@ function addHint(card,entry){
     const ht=document.createElement('div');
     ht.className='hint-text';
 
-    if(S.round===0){
-      // Round 1: They see the word, need help with the definition
-      // Give them the part of speech + a simpler/partial clue about meaning
-      const defWords=entry.def.split(/[,;]/);
-      const partialDef=defWords.length>1?defWords[0].trim()+'...':entry.def.slice(0,Math.ceil(entry.def.length*0.6))+'...';
-      ht.textContent=`It's a ${entry.pos} Think: "${partialDef}"`;
-    } else if(S.round===1){
-      // Round 2: They see the definition, need help finding the word
-      // Give first letter, length, and part of speech
+    if(S.round===1){
+      // Word → Definition: Show a sentence for context, NOT the definition itself
+      const sents=SENTENCES[entry.word];
+      if(sents&&sents.length){
+        const s=sents[Math.floor(Math.random()*sents.length)].replace(/___WORD___/g,entry.word);
+        ht.textContent=`${entry.pos} — Used in a sentence: "${s}"`;
+      } else {
+        ht.textContent=`It's a ${entry.pos} — think about how this word sounds and what it could mean!`;
+      }
+    } else if(S.round===2){
+      // Definition → Word: They see the definition, need help finding the word
       const halfWord=entry.word.slice(0,Math.ceil(entry.word.length/2));
       ht.textContent=`The word starts with "${halfWord}..." (${entry.word.length} letters, ${entry.pos})`;
-    } else {
-      // Round 3: Sentence challenge — help them understand what the word means
+    } else if(S.round===3){
+      // Sentence Challenge: help them understand what the word means
       ht.textContent=`"${entry.word}" means: ${entry.def} (${entry.pos})`;
+    } else {
+      // Matching game: give part of speech
+      ht.textContent=`"${entry.word}" is a ${entry.pos} — think about its meaning!`;
     }
 
     card.appendChild(ht);
     updateHUD();
   };
   card.appendChild(btn);
+}
+
+// ===== MATCHING GAME (Round 4) =====
+function renderMatchingGame(){
+  showRoundBanner();
+  updateHUD();
+  const area=document.getElementById('questionArea');
+  area.innerHTML='';
+
+  // Take batch of up to 6 words from queue
+  const batchSize=Math.min(6,S.queue.length-S.qIndex);
+  const batch=S.queue.slice(S.qIndex,S.qIndex+batchSize);
+
+  const card=document.createElement('div');
+  card.className='q-card';card.id='qCard';
+  area.appendChild(card);
+
+  const counter=document.createElement('div');
+  counter.className='q-counter';
+  counter.textContent=`Match ${S.qIndex+1}-${S.qIndex+batchSize} of ${S.totalQs}`;
+  card.appendChild(counter);
+
+  const prompt=document.createElement('div');
+  prompt.className='q-prompt';
+  prompt.textContent='Tap a word, then tap its matching definition!';
+  card.appendChild(prompt);
+
+  const scoreDiv=document.createElement('div');
+  scoreDiv.className='match-score';
+  scoreDiv.id='matchProgress';
+  scoreDiv.textContent=`Matched: 0 / ${batchSize}`;
+  card.appendChild(scoreDiv);
+
+  const grid=document.createElement('div');
+  grid.className='match-grid';
+
+  // Words column (left)
+  const wordCol=document.createElement('div');
+  wordCol.className='match-col';
+  wordCol.innerHTML='<div class="match-col-title">Words</div>';
+
+  // Definitions column (right)
+  const defCol=document.createElement('div');
+  defCol.className='match-col';
+  defCol.innerHTML='<div class="match-col-title">Definitions</div>';
+
+  // Shuffle definitions separately
+  const shuffledDefs=[...batch];
+  shuffle(shuffledDefs);
+
+  // Track match state
+  let selectedWord=null;
+  let matchedCount=0;
+
+  batch.forEach((entry,i)=>{
+    const tile=document.createElement('div');
+    tile.className='match-tile';
+    tile.textContent=entry.word;
+    tile.dataset.word=entry.word;
+    tile.dataset.type='word';
+    tile.onclick=()=>handleMatchClick(tile);
+    wordCol.appendChild(tile);
+  });
+
+  shuffledDefs.forEach((entry,i)=>{
+    const tile=document.createElement('div');
+    tile.className='match-tile';
+    tile.textContent=entry.def;
+    tile.dataset.word=entry.word; // correct word for this def
+    tile.dataset.type='def';
+    tile.onclick=()=>handleMatchClick(tile);
+    defCol.appendChild(tile);
+  });
+
+  grid.appendChild(wordCol);
+  grid.appendChild(defCol);
+  card.appendChild(grid);
+
+  function handleMatchClick(tile){
+    if(tile.classList.contains('matched'))return;
+
+    if(tile.dataset.type==='word'){
+      // Select/deselect word
+      wordCol.querySelectorAll('.match-tile').forEach(t=>t.classList.remove('selected'));
+      if(selectedWord===tile){selectedWord=null;return}
+      tile.classList.add('selected');
+      selectedWord=tile;
+    } else if(tile.dataset.type==='def'&&selectedWord){
+      // Check match
+      const wordEntry=batch.find(e=>e.word===selectedWord.dataset.word);
+      const isCorrect=tile.dataset.word===selectedWord.dataset.word;
+
+      if(!S.roundWords.includes(selectedWord.dataset.word))S.roundWords.push(selectedWord.dataset.word);
+      S.wordStats[selectedWord.dataset.word].att++;
+      S.answered++;S.roundTotal++;
+
+      if(isCorrect){
+        S.correct++;S.roundCorrect++;S.streak++;S.wrongRow=0;
+        if(S.streak>S.bestStreak)S.bestStreak=S.streak;
+        S.wordStats[selectedWord.dataset.word].cor++;
+
+        let pts=10;
+        if(S.streak>=3)pts+=5;
+        pts+=5; // harder round bonus
+        pts+=getBonusScoreFromPowers();
+        if(hasPower('wordMaster')&&S.wordStats[selectedWord.dataset.word].mastered)pts+=getPowerScale('wordMaster');
+        pts=Math.round(pts*getPointsMultiplier());
+        S.score+=pts;
+
+        const s=S.wordStats[selectedWord.dataset.word];
+        if(s.cor>=2&&s.cor/s.att>=0.75)s.mastered=true;
+
+        selectedWord.classList.add('matched');
+        tile.classList.add('matched');
+        selectedWord.classList.remove('selected');
+        selectedWord=null;
+        matchedCount++;
+        document.getElementById('matchProgress').textContent=`Matched: ${matchedCount} / ${batchSize}`;
+        showFB(true);
+        spawnSparkles();
+        updateHUD();
+
+        // Check if batch complete
+        if(matchedCount===batchSize){
+          setTimeout(()=>{
+            S.qIndex+=batchSize;
+            showQuestion(); // next batch or summary
+          },1500);
+        }
+      } else {
+        // Wrong match
+        S.wrong++;S.wrongRow++;
+        if(hasPower('comboExtender')&&S.comboMisses<getPowerScale('comboExtender')){S.comboMisses++}
+        else if(hasPower('streakShield')&&S.streakShielded<S.streakShieldMax){S.streakShielded++}
+        else {S.streak=0;S.comboMisses=0}
+        if(hasPower('softLanding')&&!S.softLandingUsed){S.softLandingUsed=true}
+        else {S.hearts=Math.max(0,S.hearts-1)}
+        if(S.hearts===0)applyRevive();
+
+        tile.classList.add('wrong-flash');
+        selectedWord.classList.add('wrong-flash');
+        selectedWord.classList.remove('selected');
+        const prevWord=selectedWord;
+        selectedWord=null;
+        showFB(false);
+        updateHUD();
+        document.getElementById('gameScreen').classList.add('shake');
+        setTimeout(()=>{
+          document.getElementById('gameScreen').classList.remove('shake');
+          tile.classList.remove('wrong-flash');
+          prevWord.classList.remove('wrong-flash');
+        },400);
+      }
+    }
+  }
 }
 
 // ===== PROCESS ANSWER =====
@@ -1927,7 +2427,7 @@ function processAnswer(isCorrect){
     S.wordStats[word].cor++;
     let pts=10;
     if(S.streak>=3)pts+=5;
-    if(S.round===2)pts+=5; // bonus for harder round
+    if(S.round>=2)pts+=5; // bonus for harder rounds
     pts+=getBonusScoreFromPowers();
     // Word master bonus for already-mastered words
     if(hasPower('wordMaster')&&S.wordStats[word]&&S.wordStats[word].mastered){
@@ -2031,13 +2531,36 @@ function showRoundSummary(){
   for(const l of LEVELS)if(S.score>=l.min)rank=l.name;
   const acc=S.answered>0?Math.round(S.correct/S.answered*100):0;
 
-  const roundName=ROUND_INFO[S.round].title;
-  const nextRound=S.round<2;
+  const roundName=S.quizMode?(S.round===0?'Matching':'Sentence Challenge'):ROUND_INFO[S.round].title;
+
+  // Quiz mode: next part logic
+  let isComplete, nextAction, nextLabel, replayAction;
+  if(S.quizMode){
+    const hasPartTwo=S.quizSentenceWords.length>0;
+    isComplete=S.round===3||(!hasPartTwo&&S.round===0);
+    nextAction='buildQuizRound(1)';
+    nextLabel='Part 2: Sentence Challenge \u2694\uFE0F';
+    replayAction='startWeeklyQuiz()';
+  } else {
+    isComplete=S.round===3;
+    nextAction=`buildRound(${S.round+1})`;
+    nextLabel=ROUND_INFO[S.round+1]?`Next Round: ${ROUND_INFO[S.round+1].title} \u2192`:'';
+    replayAction='buildRound(0)';
+  }
+  const hasNext=!isComplete;
+
+  // Wizard SVG on summary
+  const wizSvg=buildWizard(getWizardSvgOpts('_sum'));
+
+  const sumTitle=S.quizMode
+    ?(isComplete?'Weekly Quiz Complete!':('Part 1 Complete! \uD83C\uDFA4'))
+    :(isComplete?'Quest Complete!':'Round '+(S.round+1)+' Complete!');
 
   const c=document.getElementById('sumCard');
   c.innerHTML=`
-    <div style="font-size:2.5rem;margin-bottom:6px">${S.round===2?'\uD83C\uDFC6':'\uD83C\uDFA4'}</div>
-    <div class="sum-title">${S.round===2?'Quest Complete!':'Round '+(S.round+1)+' Complete!'}</div>
+    <div style="width:120px;height:160px;margin:0 auto 10px">${wizSvg}</div>
+    <div style="font-size:2.5rem;margin-bottom:6px">${isComplete?'\uD83C\uDFC6':'\uD83C\uDFA4'}</div>
+    <div class="sum-title">${sumTitle}</div>
     <div class="sum-rank">${rank}</div>
     <div style="font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--text-dim);margin-bottom:16px">${roundName}</div>
 
@@ -2054,9 +2577,9 @@ function showRoundSummary(){
       <button class="btn btn-purple" style="font-size:1.1rem;padding:16px 36px;background:linear-gradient(135deg,#9b6fe0,var(--gold));color:#1a0a2e" onclick="openShop('sumScreen')">
         \uD83C\uDFB0 Wizard Drip Shop \u2728
       </button>
-      ${nextRound?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="buildRound(${S.round+1})">Next Round: ${ROUND_INFO[S.round+1].title} \u2192</button>`:''}
+      ${hasNext?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="${nextAction}">${nextLabel}</button>`:''}
       ${practice.length?`<button class="btn btn-go" onclick="practiceMissed()">Comeback Era (Practice Missed) \uD83D\uDD04</button>`:''}
-      ${!nextRound?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="buildRound(0)">Play Again! \uD83D\uDD01</button>`:''}
+      ${isComplete?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="${replayAction}">Play Again! \uD83D\uDD01</button>`:''}
       <button class="btn btn-outline" onclick="viewWords()">View All Words \uD83D\uDCDA</button>
       <button class="btn btn-outline" onclick="showScreen('startScreen')">Change Setlist \uD83C\uDFB5</button>
     </div>
@@ -2118,6 +2641,394 @@ function updateParent(){
 // ===== UTILS =====
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
+// ===== SVG WIZARD BUILDER =====
+// Maps each gacha item to SVG parameters: {svgType, svgColors}
+// Hat types: 'galaxy','cap','crown','aurora' | Outfit types: 'blue','sparkle','gold','celestial' | Pet types: null,'dragon','kitsune'
+const ITEM_SVG_MAP={
+  // Hats — each gets a unique SVG type
+  hat_cap:{svgType:'cap'},                                    // Trainee Cap — red baseball cap
+  hat_bow:{svgType:'bow'},                                    // Ribbon Bow — pink bow
+  hat_beanie:{svgType:'beanie'},                              // Cozy Beanie — orange knit cap
+  hat_hairclip:{svgType:'hairclip'},                          // Star Hair Clip — subtle gold star
+  hat_headphones:{svgType:'galaxy',headphones:true},          // K-pop Headphones — wizard hat + headphones
+  hat_tophat:{svgType:'tophat'},                              // Fancy Top Hat — tall purple top hat
+  hat_flowercrown:{svgType:'flowercrown'},                    // Flower Crown — ring of flowers
+  hat_beret:{svgType:'beret'},                                // Artist Beret — red beret
+  hat_crown:{svgType:'crown',hatColor:'default'},             // Royal Crown — gold crown
+  hat_catears:{svgType:'catears'},                            // Neko Ears — pink cat ears
+  hat_astronaut:{svgType:'galaxy'},                           // Space Helmet — galaxy wizard hat
+  hat_pirate:{svgType:'bandana'},                             // Pirate Bandana — red bandana with skull
+  hat_flame:{svgType:'crown',hatColor:'fire'},                // Flame Crown — red/orange crown
+  hat_galaxy:{svgType:'galaxy'},                              // Galaxy Tiara — galaxy wizard hat (legendary)
+  hat_icecrown:{svgType:'crown',hatColor:'ice'},              // Ice Crown — blue ice crown
+  hat_aurora:{svgType:'aurora'},                              // Aurora Crown — rainbow mythic hat
+  // Pets — dragon/kitsune get SVG, others show emoji
+  pet_chick:{svgType:null},pet_bunny:{svgType:null},pet_hamster:{svgType:null},pet_kitten:{svgType:null},
+  pet_cat:{svgType:null},pet_fox:{svgType:null},pet_owl:{svgType:null},pet_panda:{svgType:null},
+  pet_dragon:{svgType:'dragon'},pet_unicorn:{svgType:null},pet_miniphoenix:{svgType:null},pet_crystalwolf:{svgType:null},
+  pet_phoenix:{svgType:null},pet_stardragon:{svgType:'dragon'},pet_goldtiger:{svgType:null},
+  pet_kitsune:{svgType:'kitsune'},
+  // Outfits — each gets unique robe color via robeHue
+  out_hoodie:{svgType:'blue',robeHue:'orange'},               // Cozy Hoodie — warm orange robe
+  out_tshirt:{svgType:'blue',robeHue:'pink'},                 // Fan T-Shirt — pink robe
+  out_uniform:{svgType:'blue',robeHue:'blue'},                // School Blazer — classic blue robe
+  out_pajamas:{svgType:'blue',robeHue:'purple'},              // Star Pajamas — purple robe
+  out_jacket:{svgType:'sparkle',robeHue:'purple'},            // Idol Jacket — purple sparkle robe
+  out_cape:{svgType:'blue',robeHue:'purple'},                 // Wizard Cape — purple robe
+  out_denim:{svgType:'blue',robeHue:'teal'},                  // Denim Vest — teal robe
+  out_sailor:{svgType:'blue',robeHue:'blue'},                 // Sailor Dress — navy blue robe
+  out_sparkle:{svgType:'sparkle',robeHue:'blue'},             // Sparkle Suit — blue sparkle robe
+  out_hanbok:{svgType:'sparkle',robeHue:'pink'},              // Magic Hanbok — pink sparkle robe
+  out_fairy:{svgType:'sparkle',robeHue:'green'},              // Fairy Dress — green sparkle robe
+  out_spacesuit:{svgType:'sparkle',robeHue:'teal'},           // Space Suit — teal sparkle robe
+  out_galaxy:{svgType:'gold'},                                // Galaxy Robe — gold (legendary)
+  out_gold:{svgType:'gold'},                                  // Golden Armor — gold (legendary)
+  out_crystal:{svgType:'gold'},                               // Crystal Dress — gold (legendary)
+  out_celestial:{svgType:'celestial'}                         // Celestial Hanbok — rainbow (mythic)
+};
+
+function buildWizard(opts={}){
+  const {hat='galaxy',outfit='blue',pet=null,petEmoji=null,headphones=false,idSuffix='',robeHue='blue',hatColor='default'}=opts;
+  const id=s=>`${s}${idSuffix}`;
+
+  // Robe color palettes — so different outfits produce different colored robes
+  const ROBE_PAL={
+    blue:{m:'#2d6fd4',d:'#1a4fa0',dd:'#14397a'},
+    pink:{m:'#d44fa0',d:'#a01a6f',dd:'#7a144f'},
+    green:{m:'#2da06f',d:'#1a7a4f',dd:'#145a3a'},
+    orange:{m:'#d4882d',d:'#a0651a',dd:'#7a4a14'},
+    purple:{m:'#7b4fcf',d:'#5a2d9e',dd:'#3a1a6e'},
+    red:{m:'#cf4f5f',d:'#9e2d3d',dd:'#6e1a2a'},
+    teal:{m:'#36b6c3',d:'#1a8a94',dd:'#14686e'},
+  };
+  const rp=ROBE_PAL[robeHue]||ROBE_PAL.blue;
+
+  let defs=`<defs>
+    <linearGradient id="${id('galaxyHat')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b3fa0"/><stop offset="25%" stop-color="#4a2d8a"/>
+      <stop offset="50%" stop-color="#2e5cb8"/><stop offset="75%" stop-color="#7b4fcf"/>
+      <stop offset="100%" stop-color="#c05ab8"/>
+    </linearGradient>
+    <linearGradient id="${id('goldTrim')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/><stop offset="50%" stop-color="#c8a84e"/><stop offset="100%" stop-color="#ffd700"/>
+    </linearGradient>
+    <radialGradient id="${id('crystalGlow')}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/><stop offset="40%" stop-color="#64d8ff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#64d8ff" stop-opacity="0"/>
+    </radialGradient>`;
+
+  if(outfit==='blue'||outfit==='sparkle'){
+    defs+=`<linearGradient id="${id('robeMain')}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${rp.m}"/><stop offset="100%" stop-color="${rp.d}"/>
+    </linearGradient>
+    <linearGradient id="${id('robeDark')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="${rp.d}"/><stop offset="100%" stop-color="${rp.dd}"/>
+    </linearGradient>`;
+  }
+  if(outfit==='sparkle'){
+    defs+=`<linearGradient id="${id('sparkleGrad')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64d8ff"/><stop offset="50%" stop-color="#c77dff"/><stop offset="100%" stop-color="#ff6ec7"/>
+    </linearGradient>`;
+  }
+  if(outfit==='gold'){
+    defs+=`<linearGradient id="${id('goldRobe')}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/><stop offset="50%" stop-color="#c8a84e"/><stop offset="100%" stop-color="#ffd700"/>
+    </linearGradient>
+    <linearGradient id="${id('robeDark')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b8942e"/><stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>`;
+  }
+  if(outfit==='celestial'){
+    defs+=`<linearGradient id="${id('celestialGrad')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6ec7"><animate attributeName="stop-color" values="#ff6ec7;#7b4fcf;#36d6c3;#ffd700;#ff6ec7" dur="4s" repeatCount="indefinite"/></stop>
+      <stop offset="50%" stop-color="#7b4fcf"><animate attributeName="stop-color" values="#7b4fcf;#36d6c3;#ffd700;#ff6ec7;#7b4fcf" dur="4s" repeatCount="indefinite"/></stop>
+      <stop offset="100%" stop-color="#36d6c3"><animate attributeName="stop-color" values="#36d6c3;#ffd700;#ff6ec7;#7b4fcf;#36d6c3" dur="4s" repeatCount="indefinite"/></stop>
+    </linearGradient>
+    <linearGradient id="${id('robeDark')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a1a5e"/><stop offset="100%" stop-color="#1a2a5e"/>
+    </linearGradient>
+    <radialGradient id="${id('auroraGlow')}" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ff6ec7" stop-opacity="0.15"><animate attributeName="stop-color" values="#ff6ec7;#64d8ff;#ffd700;#ff6ec7" dur="5s" repeatCount="indefinite"/></stop>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>`;
+  }
+  defs+=`</defs>`;
+
+  const staffColor=outfit==='gold'?'#ffd700':outfit==='celestial'?'#ffd700':'#a07828';
+  const crystalColor=outfit==='celestial'?'#ff6ec7':'#64d8ff';
+  const trimRef=id('goldTrim');
+  const robeRef=outfit==='sparkle'?id('sparkleGrad'):outfit==='gold'?id('goldRobe'):outfit==='celestial'?id('celestialGrad'):id('robeMain');
+  const robeDarkRef=id('robeDark');
+
+  let auroraBack=outfit==='celestial'?`<ellipse cx="150" cy="180" rx="120" ry="100" fill="url(#${id('auroraGlow')})"/>`:'';
+
+  let staff=`<line x1="225" y1="95" x2="240" y2="360" stroke="${staffColor}" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="225" cy="65" r="14" fill="url(#${id('crystalGlow')})"><animate attributeName="r" values="12;16;12" dur="2.5s" repeatCount="indefinite"/></circle>
+    <path d="M218,58 L225,48 L232,58 L232,72 L225,78 L218,72 Z" fill="${crystalColor}" opacity="0.6" stroke="${crystalColor}" stroke-width="0.5"/>
+    <circle cx="222" cy="60" r="2" fill="#fff" opacity="0.8"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/></circle>
+    <circle cx="225" cy="65" r="24" fill="${crystalColor}" opacity="0.08"><animate attributeName="r" values="20;28;20" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.05;0.15;0.05" dur="3s" repeatCount="indefinite"/></circle>`;
+
+  let robe=`<path d="M100,200 Q95,280 85,370 L215,370 Q210,280 200,200 Z" fill="url(#${robeDarkRef})"/>
+    <path d="M108,200 Q105,270 95,370 L150,370 L150,200 Z" fill="url(#${robeRef})"/>
+    <path d="M192,200 Q195,270 205,370 L150,370 L150,200 Z" fill="url(#${robeRef})"/>
+    <path d="M140,210 L136,370 L164,370 L160,210 Z" fill="rgba(0,0,0,0.15)"/>`;
+
+  if(outfit==='sparkle'){
+    const sc=['#fff','#ffd700','#64d8ff','#ff6ec7','#c77dff'];
+    for(let i=0;i<12;i++){const cx=80+Math.random()*120,cy=155+Math.random()*200,r=1+Math.random()*2.5,c=sc[i%5],dur=1+Math.random()*2,del=Math.random()*2.5;
+      robe+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="0.6"><animate attributeName="opacity" values="0.2;1;0.2" dur="${dur}s" repeatCount="indefinite" begin="${del}s"/></circle>`;}
+  }
+  if(outfit==='celestial'){
+    const ch=['★','✦','✧','⋆'];
+    for(let i=0;i<8;i++){const x=82+Math.random()*130,y=155+Math.random()*200,s=5+Math.random()*8,c=['#fff','#ffd700','#64d8ff','#ff6ec7'][i%4],dur=1.5+Math.random()*2,del=Math.random()*3;
+      robe+=`<text x="${x}" y="${y}" font-size="${s}" fill="${c}" opacity="0.6"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="${dur}s" repeatCount="indefinite" begin="${del}s"/>${ch[i%4]}</text>`;}
+  }
+  if(outfit==='blue'){
+    robe+=`<circle cx="115" cy="270" r="1.5" fill="#64d8ff" opacity="0.5"/><circle cx="125" cy="280" r="1" fill="#64d8ff" opacity="0.4"/>
+    <line x1="115" y1="270" x2="125" y2="280" stroke="#64d8ff" stroke-width="0.5" opacity="0.3"/>
+    <circle cx="180" cy="260" r="1.5" fill="#64d8ff" opacity="0.5"/><circle cx="188" cy="275" r="1" fill="#64d8ff" opacity="0.4"/>
+    <line x1="180" y1="260" x2="188" y2="275" stroke="#64d8ff" stroke-width="0.5" opacity="0.3"/>`;
+  }
+
+  let trim=`<path d="M85,358 Q150,365 215,358 L215,370 Q150,377 85,370 Z" fill="url(#${trimRef})"/>
+    <line x1="108" y1="200" x2="95" y2="370" stroke="#c8a84e" stroke-width="3"/>
+    <line x1="192" y1="200" x2="205" y2="370" stroke="#c8a84e" stroke-width="3"/>`;
+
+  const beltGem=outfit==='gold'?'#e74c3c':outfit==='celestial'?'#fff':'#e74c3c';
+  let belt=`<rect x="100" y="225" width="100" height="10" rx="4" fill="url(#${trimRef})" stroke="#8B6914" stroke-width="1"/>
+    <circle cx="150" cy="230" r="9" fill="#c8a84e" stroke="#8B6914" stroke-width="1.5"/><circle cx="150" cy="230" r="5" fill="${beltGem}"/>
+    <circle cx="120" cy="230" r="4" fill="#2ecc71" opacity="0.8"/><circle cx="180" cy="230" r="4" fill="#2ecc71" opacity="0.8"/>`;
+
+  let sleeves=`<path d="M108,200 Q80,220 65,260 Q62,268 70,270 L95,245 Q100,230 108,215 Z" fill="url(#${robeRef})"/>
+    <path d="M192,200 Q210,215 225,245 Q228,255 222,258 L200,235 Q196,220 192,210 Z" fill="url(#${robeRef})"/>
+    <path d="M65,255 Q70,270 78,265" stroke="#c8a84e" stroke-width="2.5" fill="none"/>
+    <path d="M220,243 Q225,255 218,253" stroke="#c8a84e" stroke-width="2.5" fill="none"/>`;
+
+  let hands=`<circle cx="72" cy="264" r="10" fill="#f5d5a8"/><circle cx="68" cy="260" r="3" fill="#f5d5a8"/><circle cx="222" cy="252" r="10" fill="#f5d5a8"/>`;
+  let book=`<g transform="translate(38,246) rotate(-15)"><rect x="0" y="0" width="44" height="34" rx="3" fill="#7b4fcf"/>
+    <rect x="2" y="2" width="40" height="30" rx="2" fill="#9b6ee6"/><line x1="22" y1="2" x2="22" y2="32" stroke="#6b3fa0" stroke-width="1.5"/>
+    <rect x="5" y="7" width="14" height="2.5" rx="1" fill="#ffd700" opacity="0.8"/><rect x="5" y="12" width="11" height="1.5" rx="0.75" fill="#ffd700" opacity="0.5"/>
+    <text x="12" y="25" text-anchor="middle" font-size="8" fill="#ffd700">★</text><rect x="21" y="4" width="1" height="26" fill="#f5e6c8" opacity="0.4"/></g>`;
+
+  let collar=`<path d="M125,188 Q150,198 175,188 L175,200 Q150,210 125,200 Z" fill="url(#${robeRef})"/>
+    <path d="M125,188 Q150,195 175,188" stroke="#c8a84e" stroke-width="2.5" fill="none"/>
+    <circle cx="150" cy="195" r="6" fill="#ffd700" stroke="#8B6914" stroke-width="1"/><circle cx="150" cy="195" r="3" fill="#ff8c00"/>`;
+
+  let head=`<circle cx="150" cy="155" r="42" fill="#f5d5a8"/>
+    <ellipse cx="118" cy="170" rx="11" ry="6" fill="#ffb5a0" opacity="0.4"/>
+    <ellipse cx="182" cy="170" rx="11" ry="6" fill="#ffb5a0" opacity="0.4"/>`;
+
+  let hair=`<path d="M108,130 Q110,115 130,112 Q150,110 170,112 Q190,115 192,130 L192,140 Q185,128 150,125 Q115,128 108,140 Z" fill="#6b3a1a"/>
+    <path d="M112,130 Q120,120 135,118 Q145,117 150,120" fill="#7a4420" opacity="0.7"/>
+    <path d="M188,130 Q180,120 165,118 Q155,117 150,120" fill="#7a4420" opacity="0.7"/>
+    <path d="M108,138 Q98,145 94,160 Q90,175 88,195 Q86,210 84,230 Q82,245 80,260" stroke="#6b3a1a" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M108,138 Q98,145 94,160 Q90,175 88,195 Q86,210 84,230 Q82,245 80,260" stroke="#7a4420" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="80" cy="262" r="5" fill="#ff6ec7"/><circle cx="80" cy="262" r="3" fill="#ff9de0"/>
+    <path d="M192,138 Q202,145 206,160 Q210,175 212,195 Q214,210 216,230 Q218,245 220,260" stroke="#6b3a1a" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M192,138 Q202,145 206,160 Q210,175 212,195 Q214,210 216,230 Q218,245 220,260" stroke="#7a4420" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="220" cy="262" r="5" fill="#ff6ec7"/><circle cx="220" cy="262" r="3" fill="#ff9de0"/>`;
+
+  let face=`<line x1="139" y1="155" x2="161" y2="155" stroke="#666" stroke-width="2"/>
+    <circle cx="132" cy="155" r="14" fill="none" stroke="#555" stroke-width="2.5"/><circle cx="132" cy="155" r="13" fill="#d4e8ff" opacity="0.08"/>
+    <circle cx="168" cy="155" r="14" fill="none" stroke="#555" stroke-width="2.5"/><circle cx="168" cy="155" r="13" fill="#d4e8ff" opacity="0.08"/>
+    <line x1="118" y1="152" x2="108" y2="145" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+    <line x1="182" y1="152" x2="192" y2="145" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="132" cy="157" rx="6" ry="7" fill="#4a2810"/><ellipse cx="168" cy="157" rx="6" ry="7" fill="#4a2810"/>
+    <ellipse cx="132" cy="158" rx="5" ry="6" fill="#6b3fa0"/><ellipse cx="168" cy="158" rx="5" ry="6" fill="#6b3fa0"/>
+    <ellipse cx="132" cy="158" rx="3" ry="3.5" fill="#2d1b00"/><ellipse cx="168" cy="158" rx="3" ry="3.5" fill="#2d1b00"/>
+    <circle cx="129" cy="154" r="2.5" fill="#fff" opacity="0.9"/><circle cx="165" cy="154" r="2.5" fill="#fff" opacity="0.9"/>
+    <circle cx="135" cy="160" r="1.2" fill="#fff" opacity="0.6"/><circle cx="171" cy="160" r="1.2" fill="#fff" opacity="0.6"/>
+    <path d="M120,142 Q132,136 144,142" stroke="#6b3a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M156,142 Q168,136 180,142" stroke="#6b3a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="150" cy="165" r="2.5" fill="#e8b898" opacity="0.6"/>
+    <path d="M136,176 Q150,188 164,176" stroke="#c47a5a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="122" cy="165" r="1" fill="#d4a880" opacity="0.4"/><circle cx="126" cy="168" r="1" fill="#d4a880" opacity="0.3"/>
+    <circle cx="174" cy="165" r="1" fill="#d4a880" opacity="0.4"/><circle cx="178" cy="168" r="1" fill="#d4a880" opacity="0.3"/>`;
+
+  // Crown color palettes
+  const CROWN_PAL={
+    default:{base:'#ffd700',mid:'#f0c030',band:'#c8a84e',gem1:'#e74c3c',gem2:'#3498db',gem3:'#2ecc71'},
+    fire:{base:'#ff6b35',mid:'#ff4500',band:'#cc3300',gem1:'#ffd700',gem2:'#ff0000',gem3:'#ff8c00'},
+    ice:{base:'#a8e6ff',mid:'#64d8ff',band:'#4fc3f7',gem1:'#e0f7ff',gem2:'#80deea',gem3:'#b2ebf2'},
+  };
+  const cp=CROWN_PAL[hatColor]||CROWN_PAL.default;
+
+  // Hat SVGs
+  let hatSvg='';
+  if(hat==='galaxy'){
+    hatSvg=`<ellipse cx="150" cy="128" rx="62" ry="14" fill="url(#${id('galaxyHat')})"/>
+      <path d="M92,128 Q100,80 125,55 Q140,30 155,20 Q150,50 168,60 Q190,85 208,128 Z" fill="url(#${id('galaxyHat')})"/>
+      <path d="M155,20 Q165,30 168,45 Q158,35 155,20 Z" fill="#9b59b6" opacity="0.5"/>
+      <path d="M92,124 Q150,115 208,124 L208,130 Q150,121 92,130 Z" fill="url(#${trimRef})"/>
+      <circle cx="150" cy="123" r="6" fill="#e74c3c" stroke="#8B6914" stroke-width="1"/>
+      <circle cx="120" cy="100" r="1.5" fill="#fff" opacity="0.7"><animate attributeName="opacity" values="0.3;0.9;0.3" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="140" cy="75" r="1" fill="#ffd700" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle cx="175" cy="90" r="1.5" fill="#64d8ff" opacity="0.7"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="1.8s" repeatCount="indefinite" begin="1s"/></circle>`;
+  } else if(hat==='cap'){
+    hatSvg=`<ellipse cx="150" cy="125" rx="50" ry="12" fill="#e74c3c"/>
+      <path d="M100,125 Q105,95 150,88 Q195,95 200,125 Z" fill="#e74c3c"/>
+      <path d="M108,122 Q112,100 150,93 Q188,100 192,122 Z" fill="#c0392b"/>
+      <path d="M88,128 Q68,122 62,132 Q68,140 95,133 Z" fill="#e74c3c"/>
+      <text x="150" y="114" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffd700">★</text>`;
+  } else if(hat==='bow'){
+    hatSvg=`<path d="M150,112 Q118,95 128,115 Q138,120 150,112" fill="#ff6ec7"/>
+      <path d="M150,112 Q182,95 172,115 Q162,120 150,112" fill="#ff6ec7"/>
+      <path d="M150,112 Q120,98 130,114" fill="#ff9de0" opacity="0.5"/>
+      <path d="M150,112 Q180,98 170,114" fill="#ff9de0" opacity="0.5"/>
+      <circle cx="150" cy="112" r="6" fill="#ff1493"/>
+      <circle cx="150" cy="110" r="2" fill="#ff6ec7" opacity="0.6"/>
+      <path d="M144,118 Q136,132 132,140" stroke="#ff6ec7" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M156,118 Q164,132 168,140" stroke="#ff6ec7" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  } else if(hat==='beanie'){
+    hatSvg=`<path d="M105,132 Q108,98 150,90 Q192,98 195,132 Z" fill="#ff8c42"/>
+      <path d="M110,128 Q114,102 150,95 Q186,102 190,128 Z" fill="#ffaa60"/>
+      <path d="M105,126 Q150,118 195,126 L195,136 Q150,128 105,136 Z" fill="#e67e22"/>
+      <circle cx="150" cy="87" r="8" fill="#ff8c42"/>
+      <circle cx="148" cy="85" r="3" fill="#ffcc80" opacity="0.5"/>`;
+  } else if(hat==='flowercrown'){
+    hatSvg=`<path d="M105,125 Q128,115 150,114 Q172,115 195,125" stroke="#2ecc71" stroke-width="5" fill="none"/>
+      <circle cx="108" cy="124" r="7" fill="#ff6ec7"/><circle cx="108" cy="124" r="3" fill="#ffd700"/>
+      <circle cx="128" cy="118" r="7" fill="#ffd700"/><circle cx="128" cy="118" r="3" fill="#fff"/>
+      <circle cx="150" cy="115" r="8" fill="#ff4444"/><circle cx="150" cy="115" r="3.5" fill="#ffd700"/>
+      <circle cx="172" cy="118" r="7" fill="#64d8ff"/><circle cx="172" cy="118" r="3" fill="#fff"/>
+      <circle cx="192" cy="124" r="7" fill="#c77dff"/><circle cx="192" cy="124" r="3" fill="#ffd700"/>
+      <circle cx="118" cy="120" r="4" fill="#2ecc71" opacity="0.6"/>
+      <circle cx="140" cy="116" r="3" fill="#2ecc71" opacity="0.5"/>
+      <circle cx="160" cy="116" r="3" fill="#2ecc71" opacity="0.5"/>
+      <circle cx="182" cy="120" r="4" fill="#2ecc71" opacity="0.6"/>`;
+  } else if(hat==='beret'){
+    hatSvg=`<ellipse cx="142" cy="118" rx="46" ry="20" fill="#e74c3c"/>
+      <ellipse cx="142" cy="116" rx="40" ry="16" fill="#c0392b"/>
+      <circle cx="148" cy="104" r="5" fill="#e74c3c"/>
+      <path d="M100,122 Q142,112 192,122" stroke="#b03030" stroke-width="2" fill="none"/>`;
+  } else if(hat==='catears'){
+    hatSvg=`<path d="M108,132 Q150,122 192,132" stroke="#555" stroke-width="3.5" fill="none"/>
+      <path d="M118,132 L108,100 L136,122 Z" fill="#ff6ec7"/>
+      <path d="M122,128 L114,105 L134,122 Z" fill="#ffb5d5" opacity="0.6"/>
+      <path d="M182,132 L192,100 L164,122 Z" fill="#ff6ec7"/>
+      <path d="M178,128 L186,105 L166,122 Z" fill="#ffb5d5" opacity="0.6"/>`;
+  } else if(hat==='bandana'){
+    hatSvg=`<path d="M100,128 Q150,115 200,128 L200,140 Q150,127 100,140 Z" fill="#e74c3c"/>
+      <path d="M104,130 Q150,118 196,130 L196,136 Q150,124 104,136 Z" fill="#c0392b"/>
+      <path d="M96,134 Q82,124 84,138 Q88,146 100,138" fill="#c0392b"/>
+      <path d="M94,136 Q84,128 86,138 Q88,142 96,138" fill="#e74c3c"/>
+      <text x="150" y="136" text-anchor="middle" font-size="11" fill="#fff">☠</text>`;
+  } else if(hat==='tophat'){
+    hatSvg=`<ellipse cx="150" cy="122" rx="52" ry="11" fill="#2d1b69"/>
+      <rect x="112" y="68" width="76" height="54" rx="5" fill="#2d1b69"/>
+      <rect x="114" y="70" width="72" height="50" rx="4" fill="#3a2480"/>
+      <rect x="112" y="108" width="76" height="8" rx="2" fill="#c8a84e"/>
+      <circle cx="150" cy="112" r="4" fill="#ffd700"/>
+      <circle cx="140" cy="85" r="1" fill="#fff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="162" cy="78" r="1" fill="#ffd700" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>`;
+  } else if(hat==='hairclip'){
+    hatSvg=`<text x="122" y="125" font-size="18" fill="#ffd700">★</text>
+      <circle cx="127" cy="119" r="6" fill="#ffd700" opacity="0.3"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="2s" repeatCount="indefinite"/><animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/></circle>`;
+  } else if(hat==='crown'){
+    // Crown with color variants (default gold, fire red/orange, ice blue)
+    hatSvg=`<path d="M110,122 L118,92 L128,108 L150,78 L172,108 L182,92 L190,122 Z" fill="${cp.base}"/>
+      <path d="M114,120 L120,95 L130,108 L150,82 L170,108 L180,95 L186,120 Z" fill="${cp.mid}"/>
+      <path d="M108,118 Q150,112 192,118 L192,126 Q150,120 108,126 Z" fill="${cp.band}" stroke="${cp.band}" stroke-width="1"/>
+      <circle cx="150" cy="86" r="5" fill="${cp.gem1}" stroke-width="0.5"/>
+      <circle cx="126" cy="102" r="4" fill="${cp.gem2}"/><circle cx="174" cy="102" r="4" fill="${cp.gem3}"/>
+      <circle cx="150" cy="78" r="3" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="2s" repeatCount="indefinite"/></circle>`;
+    if(hatColor==='fire'){
+      hatSvg+=`<circle cx="135" cy="75" r="4" fill="#ff4500" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="165" cy="75" r="4" fill="#ff6b35" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.8s" repeatCount="indefinite" begin="0.3s"/></circle>`;
+    }
+    if(hatColor==='ice'){
+      hatSvg+=`<circle cx="130" cy="80" r="3" fill="#e0f7ff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="170" cy="80" r="3" fill="#b2ebf2" opacity="0.5"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>`;
+    }
+  } else if(hat==='aurora'){
+    hatSvg=`<ellipse cx="150" cy="128" rx="62" ry="14" fill="url(#${id('celestialGrad')})"/>
+      <path d="M92,128 Q100,78 125,52 Q140,28 155,18 Q150,48 168,58 Q190,83 208,128 Z" fill="url(#${id('celestialGrad')})"/>
+      <path d="M92,124 Q150,115 208,124 L208,130 Q150,121 92,130 Z" fill="url(#${trimRef})"/>
+      <circle cx="150" cy="123" r="6" fill="#fff" opacity="0.9"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/></circle>`;
+    for(let i=0;i<10;i++){const cx=100+Math.random()*100,cy=40+Math.random()*80,r=0.8+Math.random()*2,c=['#fff','#ffd700','#64d8ff','#ff6ec7','#36d6c3'][i%5],dur=1+Math.random()*2.5,del=Math.random()*3;
+      hatSvg+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="0.6"><animate attributeName="opacity" values="0.2;1;0.2" dur="${dur}s" repeatCount="indefinite" begin="${del}s"/></circle>`;}
+  }
+
+  // Headphones
+  let hpSvg='';
+  if(headphones){
+    hpSvg=`<path d="M95,145 Q92,110 115,95" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M205,145 Q208,110 185,95" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <rect x="82" y="138" width="22" height="32" rx="11" fill="#444" stroke="#333" stroke-width="1.5"/>
+      <rect x="85" y="141" width="16" height="26" rx="8" fill="#7b4fcf"/>
+      <rect x="196" y="138" width="22" height="32" rx="11" fill="#444" stroke="#333" stroke-width="1.5"/>
+      <rect x="199" y="141" width="16" height="26" rx="8" fill="#7b4fcf"/>`;
+  }
+
+  // Pet
+  let petSvg='';
+  if(pet==='dragon'){
+    petSvg=`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-10;0,0" dur="2.5s" repeatCount="indefinite"/>
+      <ellipse cx="50" cy="265" rx="22" ry="16" fill="#2ecc71"/>
+      <path d="M30,250 Q10,232 16,254 Q20,260 32,258 Z" fill="#27ae60" opacity="0.8"/>
+      <path d="M70,250 Q90,232 84,254 Q80,260 68,258 Z" fill="#27ae60" opacity="0.8"/>
+      <circle cx="50" cy="240" r="16" fill="#2ecc71"/>
+      <path d="M38,228 L33,215 L42,226 Z" fill="#c8a84e"/><path d="M62,228 L67,215 L58,226 Z" fill="#c8a84e"/>
+      <circle cx="42" cy="236" r="5" fill="#fff"/><circle cx="58" cy="236" r="5" fill="#fff"/>
+      <circle cx="43" cy="236" r="3" fill="#2d1b00"/><circle cx="59" cy="236" r="3" fill="#2d1b00"/>
+      <circle cx="42" cy="234" r="1.5" fill="#fff" opacity="0.8"/><circle cx="58" cy="234" r="1.5" fill="#fff" opacity="0.8"/>
+      <path d="M43,253 Q50,259 57,253" stroke="#1a6b3a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M72,268 Q90,278 85,264 Q82,258 76,264" fill="#2ecc71"/>
+      <circle cx="50" cy="262" r="5" fill="#ff6b35" opacity="0.4"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="1.5s" repeatCount="indefinite"/><animate attributeName="r" values="4;7;4" dur="1.5s" repeatCount="indefinite"/></circle>
+    </g>`;
+  } else if(pet==='kitsune'){
+    petSvg=`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-8;0,0" dur="3s" repeatCount="indefinite"/>
+      <ellipse cx="50" cy="270" rx="22" ry="14" fill="#ff8c42"/>
+      <path d="M72,268 Q95,250 88,242" stroke="#ff8c42" stroke-width="4" fill="none" stroke-linecap="round"><animate attributeName="d" values="M72,268 Q95,250 88,242;M72,268 Q98,248 90,238;M72,268 Q95,250 88,242" dur="3s" repeatCount="indefinite"/></path>
+      <path d="M72,270 Q100,258 95,248" stroke="#ffaa60" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M70,272 Q98,268 96,258" stroke="#ff8c42" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="88" cy="242" r="3" fill="#ffd700" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="95" cy="248" r="2.5" fill="#ff6ec7" opacity="0.5"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle cx="50" cy="248" r="14" fill="#ff8c42"/>
+      <path d="M38,238 L32,220 L44,234 Z" fill="#ff8c42"/><path d="M62,238 L68,220 L56,234 Z" fill="#ff8c42"/>
+      <circle cx="43" cy="246" r="4" fill="#fff"/><circle cx="57" cy="246" r="4" fill="#fff"/>
+      <circle cx="44" cy="246" r="2.5" fill="#e74c3c"/><circle cx="58" cy="246" r="2.5" fill="#e74c3c"/>
+      <circle cx="50" cy="253" r="2" fill="#2d1b00"/>
+      <line x1="30" y1="250" x2="40" y2="252" stroke="#ffcc99" stroke-width="0.8"/><line x1="60" y1="252" x2="70" y2="250" stroke="#ffcc99" stroke-width="0.8"/>
+    </g>`;
+  }
+  // Emoji fallback for pets without dedicated SVG
+  if(!pet&&petEmoji){
+    petSvg=`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-6;0,0" dur="2s" repeatCount="indefinite"/>
+      <circle cx="50" cy="260" r="24" fill="rgba(123,79,207,0.15)"/>
+      <text x="50" y="268" text-anchor="middle" font-size="32">${petEmoji}</text>
+    </g>`;
+  }
+
+  let boots=`<ellipse cx="125" cy="372" rx="18" ry="8" fill="#6b3a1a"/><ellipse cx="125" cy="370" rx="16" ry="6" fill="#8B4513"/>
+    <ellipse cx="175" cy="372" rx="18" ry="8" fill="#6b3a1a"/><ellipse cx="175" cy="370" rx="16" ry="6" fill="#8B4513"/>`;
+
+  return `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">${defs}
+    <g><animateTransform attributeName="transform" type="translate" values="0,0;0,-2;0,0" dur="4s" repeatCount="indefinite"/>
+    ${auroraBack}${staff}${robe}${trim}${belt}${sleeves}${hands}${book}${collar}${head}${hair}${face}${hatSvg}${hpSvg}${boots}
+    </g>${petSvg}</svg>`;
+}
+
+// Get SVG opts from equipped items
+function getWizardSvgOpts(suffix){
+  const hatItem=getEquippedItem('hat');
+  const petItem=getEquippedItem('pet');
+  const outfitItem=getEquippedItem('outfit');
+  const hatMap=hatItem?ITEM_SVG_MAP[hatItem.id]:null;
+  const petMap=petItem?ITEM_SVG_MAP[petItem.id]:null;
+  const outMap=outfitItem?ITEM_SVG_MAP[outfitItem.id]:null;
+  return {
+    hat:hatMap?hatMap.svgType:'galaxy',
+    outfit:outMap?outMap.svgType:'blue',
+    pet:petMap?petMap.svgType:null,
+    petEmoji:petItem&&(!petMap||!petMap.svgType)?petItem.emoji:null,
+    headphones:!!(hatMap&&hatMap.headphones),
+    robeHue:(outMap&&outMap.robeHue)||'blue',
+    hatColor:(hatMap&&hatMap.hatColor)||'default',
+    idSuffix:suffix||''
+  };
+}
+
 // ===== GACHA SYSTEM =====
 function getItem(id){
   for(const cat of Object.values(GACHA_ITEMS)){
@@ -2175,19 +3086,9 @@ function hasPower(name){return S.activePowers.some(p=>p.name===name)}
 function updateMiniWizard(){
   const el=document.getElementById('hudWizard');
   if(!el)return;
-  const hat=getEquippedItem('hat');
-  const pet=getEquippedItem('pet');
-  el.innerHTML=`${hat?`<span class="hw-hat">${hat.emoji}</span>`:''}<span class="hw-body">\uD83E\uDDD9\u200D\u2642\uFE0F</span>${pet?`<span class="hw-pet">${pet.emoji}</span>`:''}`;
+  const opts=getWizardSvgOpts('_mini');
+  el.innerHTML=`<div class="hw-svg">${buildWizard(opts)}</div>`;
 }
-
-// Map outfit IDs to CSS class suffixes
-const OUTFIT_FX={
-  out_hoodie:'hoodie',out_tshirt:'tshirt',out_jacket:'jacket',out_cape:'cape',
-  out_sparkle:'sparkle',out_hanbok:'hanbok',out_galaxy:'galaxy',out_gold:'gold',
-  out_celestial:'celestial',out_uniform:'tshirt',out_pajamas:'hoodie',
-  out_denim:'jacket',out_sailor:'cape',out_fairy:'sparkle',out_spacesuit:'galaxy',
-  out_crystal:'sparkle'
-};
 
 function updateShopWizard(){
   const frame=document.getElementById('shopWizFrame');
@@ -2199,67 +3100,33 @@ function updateShopWizard(){
   const outfit=getEquippedItem('outfit');
 
   // Find best rarity among equipped
-  const rarities=['common','rare','epic','legendary'];
+  const rarities=['common','rare','epic','legendary','mythic'];
   let best='common';
   [hat,pet,outfit].forEach(i=>{if(i&&rarities.indexOf(i.rarity)>rarities.indexOf(best))best=i.rarity});
   frame.className='wizard-frame rf-'+best;
 
-  // Outfit FX class on the avatar container
-  const outfitClass=outfit?'outfit-'+(OUTFIT_FX[outfit.id]||''):'';
-  wiz.className='wizard-avatar'+(outfitClass?' '+outfitClass:'');
-
-  // Build sparkle particles for Sparkle Suit
-  let sparkleHTML='';
-  if(outfit&&outfit.id==='out_sparkle'){
-    sparkleHTML='<div class="wizard-sparkles">';
-    const colors=['#b4dcff','#fff','#64c8ff','#e0f0ff','#ffd700','#f472b6'];
-    for(let i=0;i<12;i++){
-      sparkleHTML+=`<div class="w-spark" style="left:${10+Math.random()*80}%;top:${10+Math.random()*80}%;--dur:${1+Math.random()*2}s;animation-delay:${Math.random()*2}s;background:${colors[Math.floor(Math.random()*colors.length)]};width:${3+Math.random()*5}px;height:${3+Math.random()*5}px"></div>`;
-    }
-    sparkleHTML+='</div>';
-  }
-
-  // Galaxy Robe: add tiny star dots
-  let galaxyHTML='';
-  if(outfit&&outfit.id==='out_galaxy'){
-    galaxyHTML='<div class="wizard-sparkles">';
-    const starColors=['#fff','#b794f6','#64c8ff','#f472b6','#ffd700'];
-    for(let i=0;i<15;i++){
-      galaxyHTML+=`<div class="w-spark" style="left:${5+Math.random()*90}%;top:${5+Math.random()*90}%;--dur:${1.5+Math.random()*2.5}s;animation-delay:${Math.random()*2.5}s;background:${starColors[Math.floor(Math.random()*starColors.length)]};width:${2+Math.random()*4}px;height:${2+Math.random()*4}px"></div>`;
-    }
-    galaxyHTML+='</div>';
-  }
-
-  // Celestial Hanbok (mythic): rainbow aurora particles
-  let celestialHTML='';
-  if(outfit&&outfit.id==='out_celestial'){
-    celestialHTML='<div class="wizard-sparkles">';
-    const cc=['#ff6ec7','#7b4fcf','#36d6c3','#ffd700','#fff','#64c8ff'];
-    for(let i=0;i<18;i++){
-      celestialHTML+='<div class="w-spark" style="left:'+(5+Math.random()*90)+'%;top:'+(5+Math.random()*90)+'%;--dur:'+(1+Math.random()*2.5)+'s;animation-delay:'+(Math.random()*2.5)+'s;background:'+cc[Math.floor(Math.random()*cc.length)]+';width:'+(3+Math.random()*6)+'px;height:'+(3+Math.random()*6)+'px"></div>';
-    }
-    celestialHTML+='</div>';
-  }
-
-  // Golden Armor: gold particles
-  let goldHTML='';
-  if(outfit&&outfit.id==='out_gold'){
-    goldHTML='<div class="wizard-sparkles">';
-    for(let i=0;i<10;i++){
-      goldHTML+=`<div class="w-spark" style="left:${10+Math.random()*80}%;top:${15+Math.random()*70}%;--dur:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*2}s;background:#ffd700;width:${3+Math.random()*5}px;height:${3+Math.random()*5}px"></div>`;
-    }
-    goldHTML+='</div>';
-  }
-
-  wiz.innerHTML=`
-    <div class="wizard-outfit-fx"></div>
-    ${hat?`<div class="wizard-hat">${hat.emoji}</div>`:''}
-    <div class="wizard-body">\uD83E\uDDD9\u200D\u2642\uFE0F</div>
-    ${pet?`<div class="wizard-pet">${pet.emoji}</div>`:''}
-    ${sparkleHTML}${galaxyHTML}${goldHTML}${celestialHTML}
-  `;
+  // Render SVG wizard
+  const opts=getWizardSvgOpts('_shop');
+  wiz.innerHTML=buildWizard(opts);
 
   document.getElementById('shopScore').textContent=S.score;
+
+  // Set bonus indicator
+  const setBonus=getActiveSetBonus();
+  let setHTML='';
+  if(setBonus){
+    setHTML=`<div class="set-bonus-active">${setBonus.desc} <span style="color:var(--gold)">${setBonus.name} COMPLETE!</span></div>`;
+  } else {
+    // Show partial set progress
+    const equipped=['hat','pet','outfit'].map(s=>S.equipped[s]).filter(Boolean);
+    for(const [key,set] of Object.entries(SET_BONUSES)){
+      const count=set.items.filter(id=>equipped.includes(id)).length;
+      if(count>0&&count<3){
+        setHTML+=`<div class="set-bonus-partial">${set.name}: ${count}/3</div>`;
+      }
+    }
+  }
+  document.getElementById('shopSetBonus').innerHTML=setHTML;
 
   // Show active powers
   const powers=getActivePowers();
