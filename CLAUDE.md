@@ -4,15 +4,16 @@
 A single-file interactive HTML vocabulary game (`vocab-quest.html`) built for an 11-year-old girl. The game turns vocabulary study into a K-pop/Gen Z themed adventure through "The Lost Library" with a gacha item shop and customizable SVG wizard avatar.
 
 ## Key Files
-- `vocab-quest.html` — The entire game (HTML + CSS + JS in one file, ~3200+ lines)
+- `vocab-quest.html` — The entire game (HTML + CSS + JS in one file, ~3400 lines)
 - `wizard-preview-v3.html` — SVG wizard avatar preview (approved design, integrated into game)
 - `wizard-preview-v2.html` — Earlier SVG prototype (reference only)
 - `wizard-preview.html` — First SVG prototype (reference only)
 
 ## Git Info
-- **Branch `master`**: Stable base game (before gacha/shop features)
-- **Branch `tweaks`** (CURRENT): Active development branch — all phases complete
-- Always work on `tweaks` branch. Merge to `master` only when user confirms everything works.
+- **Branch `master`**: Original base game (before gacha/shop features)
+- **Branch `master2`**: Stable checkpoint — Phases 1-5 complete, chapters 7-18, weekly quiz mode
+- **Branch `tweaks`** (CURRENT): Active development branch — same as master2 currently
+- Always work on `tweaks` branch. Create a new checkpoint branch (master3, etc.) when user wants to save a version.
 
 ## Architecture & Structure (inside vocab-quest.html)
 The file is organized in this order:
