@@ -197,6 +197,54 @@ body{
 }
 .ch-input:checked+.ch-label .ch-dot{background:var(--teal);border-color:var(--teal)}
 
+/* Week group headers */
+.week-group{margin-bottom:14px}
+.week-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;padding:8px 12px;
+  border-radius:12px;
+  font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:600;
+  cursor:pointer;user-select:none;transition:all .2s;
+}
+.week-header.current{background:rgba(54,214,195,0.12);border:1.5px solid rgba(54,214,195,0.3);color:var(--teal)}
+.week-header.previous{background:rgba(123,79,207,0.08);border:1.5px solid rgba(123,79,207,0.2);color:var(--text-dim)}
+.week-header:hover{transform:translateY(-1px)}
+.week-badge{font-size:.7rem;padding:3px 8px;border-radius:8px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.week-badge.now{background:var(--teal);color:#0b0618}
+.week-badge.prev{background:rgba(123,79,207,0.3);color:var(--purple)}
+.week-toggle{font-size:.8rem;opacity:.6;transition:opacity .2s}
+.week-header:hover .week-toggle{opacity:1}
+
+/* Study Guide Panel */
+.study-panel{
+  position:fixed;top:0;left:-380px;width:360px;height:100%;z-index:160;
+  background:rgba(11,6,24,0.97);border-right:1.5px solid var(--card-border);
+  padding:22px 18px;overflow-y:auto;
+  transition:left .4s cubic-bezier(.34,1.56,.64,1);
+  backdrop-filter:blur(20px);
+}
+.study-panel.open{left:0}
+.study-panel h3{font-family:'Fredoka',sans-serif;color:var(--gold);font-size:1.15rem;margin-bottom:14px}
+.study-panel .close{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text);cursor:pointer;font-size:1.2rem;opacity:.5}
+.study-panel .close:hover{opacity:1}
+.study-word{
+  padding:10px 12px;margin-bottom:8px;
+  border-radius:12px;background:rgba(123,79,207,0.08);
+  border-left:3px solid var(--purple);
+}
+.study-word .sw-word{font-family:'Fredoka',sans-serif;font-weight:700;color:var(--teal);font-size:1rem}
+.study-word .sw-pos{font-size:.75rem;color:var(--text-dim);margin-left:6px}
+.study-word .sw-def{font-size:.85rem;color:var(--text);margin-top:4px;line-height:1.4}
+.study-btn{
+  position:fixed;bottom:16px;left:16px;z-index:100;
+  padding:10px 16px;border-radius:14px;border:1.5px solid var(--purple);
+  background:rgba(22,12,50,0.9);color:var(--text);
+  font-family:'Fredoka',sans-serif;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:all .25s;backdrop-filter:blur(10px);
+  display:none;
+}
+.study-btn:hover{background:rgba(123,79,207,0.2);border-color:var(--teal);transform:translateY(-2px)}
+
 /* ===== ROUND SELECTOR ===== */
 .round-select-grid{display:flex;flex-direction:column;gap:10px}
 .rd-input{display:none}
@@ -862,6 +910,7 @@ body{
   .hud{padding:10px 12px}
   .q-card{padding:20px 16px}
   .parent-panel{width:270px}
+  .study-panel{width:290px;left:-310px}
   .gacha-pulls{flex-direction:column;align-items:center}
   .pull-btn{min-width:200px}
   .inv-grid{grid-template-columns:repeat(3,1fr)}
@@ -911,6 +960,14 @@ body{
   <div id="parentContent"></div>
 </div>
 
+<!-- Study Guide -->
+<button class="study-btn" id="studyBtn" onclick="toggleStudyGuide()">&#128214; Study Guide</button>
+<div class="study-panel" id="studyPanel">
+  <button class="close" onclick="toggleStudyGuide()">&times;</button>
+  <h3>&#128214; Study Guide</h3>
+  <div id="studyContent"></div>
+</div>
+
 <!-- ===== START SCREEN ===== -->
 <div class="screen active" id="startScreen" style="justify-content:center;gap:22px;padding:36px 16px">
   <div class="title">The Quest for the<br>Lost Library</div>
@@ -943,8 +1000,8 @@ body{
   </div>
 
   <div class="card container" id="chCard">
-    <div class="chapter-title">&#127926; Pick Your Setlist (Chapters)</div>
-    <div class="ch-grid" id="chGrid"></div>
+    <div class="chapter-title">&#128218; Vocab Chapters</div>
+    <div id="chGrid"></div>
   </div>
 
   <div class="card container" id="roundCard">
@@ -1519,10 +1576,27 @@ function makeStars(){
 
 function buildChapters(){
   const g=document.getElementById('chGrid');
-  for(let ch=7;ch<=18;ch++){
-    const ck=[7,8,9].includes(ch)?'checked':'';
-    g.innerHTML+=`<input type="checkbox" class="ch-input" id="c${ch}" value="${ch}" ${ck}><label class="ch-label" for="c${ch}"><span class="ch-dot">\u2713</span>Ch ${ch}</label>`;
-  }
+  const weeks=[
+    {label:'This Week',badge:'now',cls:'current',chs:[13,14,15,16,17,18],defaultOn:true},
+    {label:'Last Week',badge:'prev',cls:'previous',chs:[7,8,9,10,11,12],defaultOn:false}
+  ];
+  weeks.forEach(w=>{
+    const allOn=w.defaultOn;
+    g.innerHTML+=`<div class="week-group">
+      <div class="week-header ${w.cls}" onclick="toggleWeek(this)">
+        <span><span class="week-badge ${w.badge}">${w.badge==='now'?'Current':'Review'}</span> ${w.label} (Ch ${w.chs[0]}\u2013${w.chs[w.chs.length-1]})</span>
+        <span class="week-toggle">${allOn?'tap to deselect':'tap to select'}</span>
+      </div>
+      <div class="ch-grid">${w.chs.map(ch=>`<input type="checkbox" class="ch-input" id="c${ch}" value="${ch}" ${allOn?'checked':''}><label class="ch-label" for="c${ch}"><span class="ch-dot">\u2713</span>Ch ${ch}</label>`).join('')}</div>
+    </div>`;
+  });
+}
+function toggleWeek(header){
+  const grid=header.nextElementSibling;
+  const boxes=grid.querySelectorAll('.ch-input');
+  const allChecked=[...boxes].every(b=>b.checked);
+  boxes.forEach(b=>b.checked=!allChecked);
+  header.querySelector('.week-toggle').textContent=allChecked?'tap to select':'tap to deselect';
 }
 
 function toggleQuizMode(on){
@@ -1657,6 +1731,11 @@ function showScreen(id){
   el.classList.remove('screen-enter');
   void el.offsetWidth;
   el.classList.add('screen-enter');
+  // Close study guide when leaving game screen and update visibility
+  if(id!=='gameScreen'){
+    document.getElementById('studyPanel').classList.remove('open');
+  }
+  setTimeout(updateStudyBtnVisibility,50);
 }
 
 // ===== HUD =====
@@ -2578,10 +2657,11 @@ function showRoundSummary(){
         \uD83C\uDFB0 Wizard Drip Shop \u2728
       </button>
       ${hasNext?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="${nextAction}">${nextLabel}</button>`:''}
+      <button class="btn btn-go" onclick="redoCurrentRound()">Redo This Round \uD83D\uDD01</button>
       ${practice.length?`<button class="btn btn-go" onclick="practiceMissed()">Comeback Era (Practice Missed) \uD83D\uDD04</button>`:''}
       ${isComplete?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="${replayAction}">Play Again! \uD83D\uDD01</button>`:''}
       <button class="btn btn-outline" onclick="viewWords()">View All Words \uD83D\uDCDA</button>
-      <button class="btn btn-outline" onclick="showScreen('startScreen')">Change Setlist \uD83C\uDFB5</button>
+      <button class="btn btn-outline" onclick="showScreen('startScreen')">Back to Menu \uD83C\uDFB5</button>
     </div>
   `;
   showScreen('sumScreen');
@@ -2596,6 +2676,37 @@ function practiceMissed(){
   S.roundWords=[];S.roundCorrect=0;S.roundTotal=0;S.hearts=3;S.midStoryShown=false;
   showScreen('gameScreen');
   showStory('\uD83D\uDD04','Comeback Era','"Time to redeem yourself, bestie! These words tried to ratio you, but you\'re about to clap back. Let\'s get this W!" \u2014 Lexicon');
+}
+
+function redoCurrentRound(){
+  if(S.quizMode){
+    if(S.round===0) startWeeklyQuiz();
+    else buildQuizRound(1);
+  } else {
+    buildRound(S.round);
+  }
+}
+
+function toggleStudyGuide(){
+  const panel=document.getElementById('studyPanel');
+  const isOpen=panel.classList.toggle('open');
+  if(isOpen) updateStudyGuide();
+}
+function updateStudyGuide(){
+  const c=document.getElementById('studyContent');
+  const words=S.words||[];
+  if(!words.length){c.innerHTML='<p style="color:var(--text-dim)">Start a game to see your words here!</p>';return}
+  c.innerHTML=words.map(w=>
+    `<div class="study-word"><span class="sw-word">${w.word}</span><span class="sw-pos">${w.pos}</span><div class="sw-def">${w.def}</div></div>`
+  ).join('');
+}
+function updateStudyBtnVisibility(){
+  const btn=document.getElementById('studyBtn');
+  // Show during gameplay except boss round (round 3) and weekly quiz mode
+  const isGameScreen=document.getElementById('gameScreen').classList.contains('active');
+  const isBossRound=S.round===3;
+  const show=isGameScreen&&!S.quizMode&&!isBossRound&&S.words&&S.words.length>0;
+  btn.style.display=show?'block':'none';
 }
 
 function viewWords(){
