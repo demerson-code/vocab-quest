@@ -11,6 +11,11 @@ git checkout tweaks
 git checkout gh-pages
 git merge tweaks -m "Deploy latest changes from tweaks"
 
+# Sync index.html (what GitHub Pages serves) with vocab-quest.html
+cp vocab-quest.html index.html
+git add index.html
+git commit -m "Sync index.html with vocab-quest.html"
+
 # Push to GitHub (triggers Pages rebuild)
 git push origin gh-pages
 

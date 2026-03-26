@@ -7,6 +7,9 @@ cd /d "%~dp0"
 git checkout tweaks
 git checkout gh-pages
 git merge tweaks -m "Deploy latest changes from tweaks"
+copy /Y vocab-quest.html index.html
+git add index.html
+git commit -m "Sync index.html with vocab-quest.html"
 git push origin gh-pages
 git checkout tweaks
 
