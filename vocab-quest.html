@@ -358,6 +358,7 @@ body{
 
 /* ===== GAME HUD ===== */
 .hud{
+  position:relative;
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 18px;
   background:var(--card);
@@ -904,6 +905,61 @@ body{
   100%{opacity:0;transform:translateY(100vh) rotate(360deg)}
 }
 
+/* === HUD MENU BUTTON === */
+.hud-menu-btn{
+  position:absolute;top:8px;right:8px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  color:var(--text-dim);font-size:.85rem;
+  width:28px;height:28px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.hud-menu-btn:hover{background:rgba(239,68,68,0.15);border-color:var(--red);color:var(--red)}
+
+/* === LEARNING CARD OVERLAY === */
+.learn-overlay{
+  position:fixed;inset:0;z-index:180;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(11,6,24,0.85);
+  opacity:0;pointer-events:none;transition:opacity .35s;
+  padding:16px;
+}
+.learn-overlay.show{opacity:1;pointer-events:auto}
+.learn-card{
+  background:linear-gradient(135deg,rgba(45,27,105,0.95),rgba(22,12,50,0.98));
+  border:2px solid var(--purple);border-radius:var(--radius);
+  padding:28px 24px;max-width:420px;width:100%;
+  text-align:center;
+  box-shadow:0 0 40px rgba(123,79,207,0.3),0 12px 40px rgba(0,0,0,0.5);
+  animation:learnCardIn .4s cubic-bezier(.22,1,.36,1);
+}
+@keyframes learnCardIn{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.learn-label{font-family:Fredoka,sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--pink);margin-bottom:10px}
+.learn-word{font-family:'Cinzel Decorative',serif;font-size:1.6rem;font-weight:700;color:var(--gold);margin-bottom:4px}
+.learn-pos{font-family:Fredoka,sans-serif;font-size:.8rem;color:var(--text-dim);margin-bottom:12px;font-style:italic}
+.learn-def{font-family:Fredoka,sans-serif;font-size:1.05rem;color:var(--text);line-height:1.5;margin-bottom:14px;padding:12px 16px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(123,79,207,0.15)}
+.learn-sentence{font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--teal);line-height:1.5;margin-bottom:18px;font-style:italic}
+.learn-dismiss{
+  font-family:Fredoka,sans-serif;font-size:1rem;font-weight:600;
+  padding:12px 32px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+  color:#0b0618;transition:all .2s;
+}
+.learn-dismiss:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(54,214,195,0.3)}
+
+/* === MASTERY TRACKER === */
+.mastery-legend{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;padding:8px 0}
+.mastery-legend span{font-family:Fredoka,sans-serif;font-size:.72rem;color:var(--text-dim)}
+.sw-mastery{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;margin-bottom:6px;transition:all .2s}
+.sw-mastery.m-none{background:rgba(239,68,68,0.06);border-left:3px solid var(--red)}
+.sw-mastery.m-learning{background:rgba(255,215,0,0.06);border-left:3px solid var(--gold)}
+.sw-mastery.m-good{background:rgba(74,222,128,0.06);border-left:3px solid var(--green)}
+.sw-mastery.m-mastered{background:rgba(255,215,0,0.1);border-left:3px solid var(--gold)}
+.sw-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px}
+.sw-info{flex:1;min-width:0}
+.sw-stats{font-family:Fredoka,sans-serif;font-size:.7rem;color:var(--text-dim);margin-top:3px}
+.sw-quote{font-family:Fredoka,sans-serif;font-size:.78rem;color:var(--pink);font-style:italic;margin-top:5px;line-height:1.4;opacity:0.8}
+
 @media(max-width:600px){
   .ch-grid{grid-template-columns:repeat(2,1fr)}
   .sum-stats{grid-template-columns:1fr 1fr}
@@ -930,6 +986,11 @@ body{
 
 <!-- Feedback -->
 <div class="feedback" id="fb"><div class="feedback-text" id="fbText"></div></div>
+
+<!-- Learning card overlay -->
+<div class="learn-overlay" id="learnOv">
+  <div class="learn-card" id="learnCard"></div>
+</div>
 
 <!-- Story overlay -->
 <div class="story-overlay" id="storyOv">
@@ -1000,7 +1061,13 @@ body{
   </div>
 
   <div class="card container" id="chCard">
-    <div class="chapter-title">&#128218; Vocab Chapters</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="chapter-title" style="margin-bottom:0">&#128218; Vocab Chapters</div>
+      <div id="multBadge" style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:12px;background:rgba(54,214,195,0.1);border:1px solid rgba(54,214,195,0.25)">
+        <span id="multDisplay" style="font-family:Fredoka,sans-serif;font-size:1.1rem;font-weight:700;color:var(--teal)">1.6x</span>
+        <span id="multDesc" style="font-family:Fredoka,sans-serif;font-size:.65rem;color:var(--text-dim);max-width:80px;line-height:1.2">pts bonus</span>
+      </div>
+    </div>
     <div id="chGrid"></div>
   </div>
 
@@ -1057,6 +1124,7 @@ body{
       <div class="hud-hearts" id="hudHearts"></div>
       <div class="hud-streak" id="hudStreak"></div>
       <div class="hud-rank" id="hudRank">Trainee</div>
+      <button class="hud-menu-btn" onclick="confirmBackToMenu()" title="Back to Menu">✕</button>
     </div>
     <div class="powerups-bar" id="puBar"></div>
     <div class="progress">
@@ -1100,22 +1168,22 @@ body{
       <div class="gacha-pulls">
         <button class="pull-btn pull-basic" onclick="gachaPull('basic')">
           <div>Basic Pull</div>
-          <div class="pull-cost">&#11088; 20 pts</div>
+          <div class="pull-cost">&#11088; 40 pts</div>
           <div class="pull-odds">mostly common</div>
         </button>
         <button class="pull-btn pull-super" onclick="gachaPull('super')">
           <div>Super Pull</div>
-          <div class="pull-cost">&#11088; 50 pts</div>
+          <div class="pull-cost">&#11088; 100 pts</div>
           <div class="pull-odds">rare+ odds up!</div>
         </button>
         <button class="pull-btn pull-mega" onclick="gachaPull('mega')">
           <div>MEGA Pull</div>
-          <div class="pull-cost">&#11088; 100 pts</div>
+          <div class="pull-cost">&#11088; 250 pts</div>
           <div class="pull-odds">epic &amp; legendary!</div>
         </button>
         <button class="pull-btn pull-divine" onclick="gachaPull('divine')">
           <div>&#10024; DIVINE Pull &#10024;</div>
-          <div class="pull-cost">&#11088; 250 pts</div>
+          <div class="pull-cost">&#11088; 500 pts</div>
           <div class="pull-odds">mythic chance!</div>
         </button>
       </div>
@@ -1319,6 +1387,232 @@ const SENTENCES={
   glens:['They hiked through the shady ___WORD___ between the mountains.','The ___WORD___ were filled with wildflowers in the spring.']
 };
 
+// ===== BOOK CONTEXT QUOTES (Anne of Green Gables style) =====
+const BOOK_QUOTES={
+  admonished:'Marilla admonished Anne sternly for dyeing her hair green with that wretched bottle from the peddler.',
+  glibly:'Anne glibly assured Marilla she would never imagine during lessons again, though they both knew better.',
+  irreverence:'Mrs. Lynde was scandalized by what she called Anne\'s irreverence toward the minister\'s sermon.',
+  petition:'Anne presented her petition to Marilla with clasped hands, begging to attend Diana\'s birthday party.',
+  heathen:'Mrs. Lynde declared the twins next door were growing up like little heathens without proper guidance.',
+  manse:'The new minister and his wife settled into the old manse beside the Presbyterian church.',
+  imploring:'Anne turned her imploring eyes on Matthew, knowing he could never resist her earnest pleas.',
+  deferring:'Marilla kept deferring her decision about the Sunday school picnic until Anne was nearly beside herself.',
+  discourse:'Miss Stacy could discourse for hours on English literature, and her students hung on every word.',
+  rapt:'Anne sat in rapt attention as the sunset painted Avonlea\'s sky in shades of rose and amber.',
+  askance:'Marilla looked askance at the cake Anne had baked, suspecting something had gone terribly wrong.',
+  diligently:'Anne studied diligently for the Queen\'s entrance exams, determined to make Matthew and Marilla proud.',
+  suppositions:'Diana\'s suppositions about the haunted wood turned out to be nothing more than shadows and wind.',
+  vagaries:'The vagaries of Anne\'s imagination led her down paths that both delighted and horrified Marilla.',
+  obtrusive:'The new girl\'s obtrusive red hair was the first thing everyone in Avonlea noticed about her.',
+  consternation:'To Marilla\'s consternation, Anne had invited Diana to tea and accidentally served her currant wine.',
+  undauntedly:'Anne undauntedly marched up to Gilbert Blythe and told him exactly what she thought of his teasing.',
+  reprehensible:'Marilla considered Anne\'s behavior at the church social absolutely reprehensible and said so plainly.',
+  refractory:'The refractory cow wandered into Marilla\'s garden again, trampling her prized chrysanthemums.',
+  obdurate:'Anne remained obdurate in her refusal to forgive Gilbert, no matter how many times he apologized.',
+  penitent:'A penitent Anne stood before Marilla, tearfully confessing she had lost the amethyst brooch.',
+  beseechingly:'Anne looked beseechingly at Matthew across the dinner table, willing him to take her side.',
+  abasement:'The abasement Anne felt after her disastrous recitation at the concert was almost too much to bear.',
+  officious:'Mrs. Lynde was her usual officious self, telling everyone in Avonlea exactly how to manage their affairs.',
+  furbelows:'Anne longed for a dress with furbelows and puffed sleeves like the other girls wore.',
+  dudgeon:'Marilla left Mrs. Lynde\'s kitchen in high dudgeon after that pointed remark about her preserves.',
+  disconsolately:'Anne sat disconsolately by her window, watching the rain wash away her plans for the garden party.',
+  ruddy:'Diana\'s ruddy cheeks glowed as she ran through the orchard to meet Anne at their special place.',
+  rebukingly:'Marilla spoke rebukingly to Anne about the state of her arithmetic slate and daydreaming in class.',
+  hampered:'The heavy spring rains hampered the farmers of Avonlea, delaying the planting season by weeks.',
+  dubious:'Matthew gave Anne\'s latest scheme a dubious glance, but handed over the money regardless.',
+  vexed:'Marilla was thoroughly vexed when she discovered Anne had been reading novels under her quilt again.',
+  resolute:'With resolute determination, Anne set her mind to winning the Avery scholarship at Queen\'s.',
+  unheeded:'Anne\'s warnings about the leaky boat went unheeded, and soon the vessel began to sink.',
+  tremulous:'In a tremulous voice, Anne recited her poem before the entire school for the first time.',
+  beguiled:'The children were utterly beguiled by the story Anne spun about the fairy queen of the Haunted Wood.',
+  torrent:'A torrent of words poured from Anne as she described her first glimpse of the Lake of Shining Waters.',
+  sallow:'The sallow-faced orphan on the train platform looked nothing like the boy Matthew had expected.',
+  brusquely:'Marilla brusquely told Anne to stop her chattering and help with the dishes before sunset.',
+  dolefully:'Anne stared dolefully at her reflection, lamenting her red hair for the hundredth time that week.',
+  tribulations:'Through all her tribulations at Green Gables, Anne never lost her gift for finding beauty in the world.',
+  bequeathed:'The old captain had bequeathed his collection of seashells to the Avonlea school museum.',
+  confounded:'Matthew was utterly confounded by the array of puffed-sleeved dresses in the Carmody dress shop.',
+  compunction:'Anne felt not a shred of compunction about ignoring Gilbert Blythe at the church picnic.',
+  reiterated:'Miss Stacy reiterated the importance of proper grammar, glancing meaningfully at the back row.',
+  rigmarole:'Marilla had no patience for the rigmarole of Anne\'s latest dramatic tale about woodland fairies.',
+  beatification:'Anne spoke of the garden at twilight with such reverence it sounded like a kind of beatification.',
+  sublime:'The view from the hilltop was sublime, and Anne declared it the most beautiful spot in all of Avonlea.',
+  vale:'Mist crept through the quiet vale below Green Gables as morning broke over Prince Edward Island.',
+  garret:'Anne loved her little garret room at Green Gables, with its window overlooking the cherry tree.',
+  blithely:'Anne blithely promised to behave at the tea party, skipping out the door before Marilla could object.',
+  drollery:'Gilbert\'s drollery during the school play had the audience roaring with laughter, even Marilla.',
+  inflection:'There was a sorrowful inflection in Matthew\'s voice that made Anne stop and take his hand.',
+  ostentatiously:'Josie Pye ostentatiously displayed her new pearl ring, making sure every girl in class noticed.',
+  revelled:'Anne revelled in the golden October days, gathering armfuls of crimson maple leaves along Lover\'s Lane.',
+  aesthetic:'Anne\'s aesthetic sensibility made her rearrange the wildflowers in three different vases before she was satisfied.',
+  cloistered:'The cloistered life at Green Gables suited Matthew perfectly, far from the bustle of Charlottetown.',
+  personified:'With her wild red hair and boundless spirit, Anne was imagination personified in Avonlea.',
+  supplicant:'Like a humble supplicant, Anne knelt by Marilla\'s chair and begged to be allowed to stay at Green Gables.',
+  prepense:'The prank on Mr. Phillips was clearly prepense, planned during three separate recesses by the older boys.',
+  staunchly:'Diana staunchly defended Anne against the gossip of the Pye girls, as any true bosom friend would.',
+  perusal:'After careful perusal of Anne\'s report card, Marilla permitted herself a small, proud smile.',
+  effusion:'Anne\'s effusion of gratitude when Matthew brought home the dress with puffed sleeves was overwhelming.',
+  perquisites:'Free apples from the orchard were among the pleasant perquisites of living at Green Gables.',
+  bedizened:'The church social table was bedizened with ribbons and paper flowers in every color imaginable.',
+  tenacity:'It was Anne\'s tenacity more than her talent that carried her through the Queen\'s entrance examinations.',
+  beaux:'The older girls in Avonlea talked endlessly about their beaux, which Anne found both fascinating and silly.',
+  relented:'Marilla finally relented and allowed Anne to attend the concert, unable to resist those pleading gray eyes.',
+  estranged:'Anne and Diana were briefly estranged after the currant wine incident, and both were utterly miserable.',
+  consequent:'Miss Stacy praised Anne\'s consequent reasoning in her essay on the history of Prince Edward Island.',
+  irradiated:'Anne\'s face was irradiated with pure joy as she rounded the bend and saw Green Gables for the first time.',
+  glens:'The children explored the shady glens around Avonlea, pretending they were enchanted forests from storybooks.'
+};
+
+// ===== TEACH IT BACK DATA =====
+const TEACH_HINTS={
+  admonished:{best:'Scolded or warned someone about their behavior',vague:'Said something to someone',wrong:'Encouraged someone to keep going'},
+  glibly:{best:'Speaking smoothly but without real sincerity',vague:'Talking in a certain way',wrong:'Speaking slowly and carefully with deep thought'},
+  irreverence:{best:'Showing a lack of proper respect',vague:'A feeling about something',wrong:'Showing too much admiration for authority'},
+  petition:{best:'A formal request or plea for something',vague:'A kind of document',wrong:'An official order that must be obeyed'},
+  heathen:{best:'Someone who does not believe in religion',vague:'A type of person',wrong:'A person who is extremely devoted to their faith'},
+  manse:{best:'The house where a minister or pastor lives',vague:'A kind of building',wrong:'A grand estate owned by wealthy nobility'},
+  imploring:{best:'Begging or pleading with great emotion',vague:'Asking for something',wrong:'Demanding firmly with authority'},
+  deferring:{best:'Putting something off until a later time',vague:'Doing something about a decision',wrong:'Rushing to complete something immediately'},
+  discourse:{best:'Having a conversation or discussion',vague:'Communicating with people',wrong:'Writing a formal essay on a topic'},
+  rapt:{best:'Completely absorbed and deeply moved',vague:'Feeling a strong emotion',wrong:'Bored and unable to pay attention'},
+  askance:{best:'A sideways look showing disapproval or suspicion',vague:'A way of looking at something',wrong:'A wide-eyed look of amazement and wonder'},
+  diligently:{best:'Working with careful, steady effort',vague:'Doing something in a way',wrong:'Working quickly without checking for mistakes'},
+  suppositions:{best:'Guesses or assumptions not yet proven',vague:'Things people think about',wrong:'Facts confirmed by evidence and research'},
+  vagaries:{best:'Unpredictable, strange ideas or whims',vague:'Certain kinds of thoughts',wrong:'Carefully planned and logical strategies'},
+  obtrusive:{best:'Sticking out in an unpleasant, noticeable way',vague:'Something you can see',wrong:'Blending in perfectly with surroundings'},
+  consternation:{best:'Anxious confusion that leaves you stunned',vague:'A strong feeling',wrong:'A calm sense of peace after solving a problem'},
+  undauntedly:{best:'Bravely, without being scared or discouraged',vague:'In a certain manner',wrong:'Hesitantly, with a lot of nervous worry'},
+  reprehensible:{best:'Behavior so bad it deserves strong criticism',vague:'Something people have opinions about',wrong:'Behavior that is slightly unusual but harmless'},
+  refractory:{best:'Stubbornly refusing to obey or cooperate',vague:'Difficult in some way',wrong:'Fragile and easily broken into pieces'},
+  obdurate:{best:'Refusing to change one\'s mind despite pressure',vague:'A way of being firm',wrong:'Open-minded and willing to consider new ideas'},
+  penitent:{best:'A person who feels deep regret for wrongdoing',vague:'Someone with strong feelings',wrong:'A person who feels proud of what they did'},
+  beseechingly:{best:'In a desperate, pleading manner',vague:'In an emotional way',wrong:'In a commanding, authoritative tone'},
+  abasement:{best:'Being made to feel deeply ashamed or humiliated',vague:'A bad experience',wrong:'Rising to a higher position of honor'},
+  officious:{best:'Annoyingly eager to tell others what to do',vague:'Involved with other people',wrong:'Holding a high rank in government'},
+  furbelows:{best:'Fancy ruffles or frills on clothing',vague:'Parts of an outfit',wrong:'Heavy boots worn for outdoor work'},
+  dudgeon:{best:'A feeling of deep anger and resentment',vague:'A strong emotion',wrong:'A feeling of mild amusement at something silly'},
+  disconsolately:{best:'In a deeply unhappy, hopeless manner',vague:'Feeling a certain way',wrong:'In a cheerful way after receiving good news'},
+  ruddy:{best:'Having a warm, rosy, healthy-looking complexion',vague:'A way skin can look',wrong:'Extremely pale from being unwell'},
+  rebukingly:{best:'In a way that shows sharp disapproval',vague:'Speaking in a tone',wrong:'In a gentle, encouraging manner'},
+  hampered:{best:'Held back or prevented from moving freely',vague:'Affected by something',wrong:'Helped along and given extra support'},
+  dubious:{best:'Doubtful or not entirely trustworthy',vague:'A way to feel about something',wrong:'Completely certain and fully reliable'},
+  vexed:{best:'Feeling annoyed and frustrated',vague:'Having an emotion',wrong:'Feeling calm and perfectly content'},
+  resolute:{best:'Firmly determined and unwilling to give up',vague:'Having a strong quality',wrong:'Unsure and constantly changing one\'s mind'},
+  unheeded:{best:'Ignored, as if no one paid attention',vague:'Not dealt with',wrong:'Carefully considered before being rejected'},
+  tremulous:{best:'Shaking slightly from nervousness or fear',vague:'A physical reaction',wrong:'Standing perfectly still with confidence'},
+  beguiled:{best:'Charmed or enchanted in a delightful way',vague:'Affected by someone',wrong:'Repelled and driven away by something ugly'},
+  torrent:{best:'A powerful, rushing flow or outpouring',vague:'A lot of something',wrong:'A gentle, slow trickle of water'},
+  sallow:{best:'Skin that looks unhealthily yellowish',vague:'A way of looking',wrong:'Skin that is deeply tanned from the sun'},
+  brusquely:{best:'Speaking in a short, rude, abrupt way',vague:'A way of talking',wrong:'Speaking in a long, drawn-out, gentle manner'},
+  dolefully:{best:'In a sad, mournful, sorrowful way',vague:'With a lot of feeling',wrong:'With excitement and high energy'},
+  tribulations:{best:'Serious troubles and painful hardships',vague:'Things that happen in life',wrong:'Small daily chores that are mildly boring'},
+  bequeathed:{best:'Left to someone in a will after death',vague:'Given to another person',wrong:'Borrowed temporarily with plans to return it'},
+  confounded:{best:'Utterly confused and unable to understand',vague:'Feeling something strongly',wrong:'Completely certain about what is happening'},
+  compunction:{best:'A nagging feeling of guilt about something',vague:'A feeling inside',wrong:'A burst of excitement before a fun event'},
+  reiterated:{best:'Said again, often for emphasis',vague:'Communicated something',wrong:'Said something brand new for the first time'},
+  rigmarole:{best:'A long, rambling, pointless story or process',vague:'A kind of talking',wrong:'A brief, well-organized presentation'},
+  beatification:{best:'The act of declaring someone supremely blessed',vague:'A religious event',wrong:'A public punishment for wrongdoing'},
+  sublime:{best:'So magnificent it inspires awe and wonder',vague:'Really good',wrong:'Ordinary and unremarkable in every way'},
+  vale:{best:'A broad valley, often poetic or literary',vague:'A place outdoors',wrong:'A high mountain peak above the clouds'},
+  garret:{best:'A small room or attic at the top of a house',vague:'A room in a building',wrong:'A large underground basement or cellar'},
+  blithely:{best:'In a carefree, cheerful, lighthearted way',vague:'Doing something happily',wrong:'In a deeply serious and solemn manner'},
+  drollery:{best:'Humor or comedy, often quirky and amusing',vague:'A way of entertaining',wrong:'A dramatic tragedy that makes people cry'},
+  inflection:{best:'A rise or fall in the pitch of someone\'s voice',vague:'Something about speaking',wrong:'The volume at which someone talks'},
+  ostentatiously:{best:'Showing off in a flashy, attention-seeking way',vague:'Doing something noticeably',wrong:'Acting humbly and trying to avoid attention'},
+  revelled:{best:'Took great delight and pleasure in something',vague:'Had a good time',wrong:'Suffered through something reluctantly'},
+  aesthetic:{best:'Related to beauty and artistic appearance',vague:'About how things look',wrong:'Related to athletic ability and sports'},
+  cloistered:{best:'Sheltered away from the outside world',vague:'Kept in a certain place',wrong:'Constantly traveling and exploring new places'},
+  personified:{best:'Represented as a living, human-like form',vague:'Connected to people somehow',wrong:'Made completely abstract and impossible to picture'},
+  supplicant:{best:'Someone humbly begging for help or mercy',vague:'A person who wants something',wrong:'A powerful leader giving orders to others'},
+  prepense:{best:'Done deliberately, planned in advance',vague:'Related to thinking',wrong:'Done accidentally without any planning'},
+  staunchly:{best:'With strong, unwavering loyalty and support',vague:'In a firm way',wrong:'Weakly and without real commitment'},
+  perusal:{best:'A careful, thorough reading of something',vague:'Looking at something',wrong:'A quick glance that skips most details'},
+  effusion:{best:'An enthusiastic, unrestrained outpouring of feeling',vague:'Expressing something',wrong:'A careful, measured, restrained response'},
+  perquisites:{best:'Extra benefits or privileges beyond regular pay',vague:'Things you can get',wrong:'Mandatory requirements you must complete'},
+  bedizened:{best:'Decorated in a flashy, over-the-top way',vague:'Changed how something looks',wrong:'Stripped bare of all decoration'},
+  tenacity:{best:'Stubborn determination that refuses to quit',vague:'A personality trait',wrong:'A willingness to give up when things get hard'},
+  beaux:{best:'Admirers or boyfriends who court someone',vague:'People in someone\'s life',wrong:'Close female friends who share secrets'},
+  relented:{best:'Finally gave in and showed mercy',vague:'Changed how they acted',wrong:'Became even stricter and more unyielding'},
+  estranged:{best:'Separated from someone due to conflict',vague:'Having a relationship issue',wrong:'Brought closer together by shared experiences'},
+  consequent:{best:'Following logically from what came before',vague:'Related to results',wrong:'Random and unconnected to previous events'},
+  irradiated:{best:'Lit up or made to glow with light',vague:'Something happened with light',wrong:'Made completely dark and impossible to see'},
+  glens:{best:'Narrow, hidden valleys tucked between hills',vague:'Places in nature',wrong:'Wide open plains stretching to the horizon'}
+};
+const TEACH_SENTENCES={
+  admonished:{best:'The teacher admonished the students for talking during the test.',awkward:'She admonished him and then they went home.',wrong:'He admonished his friend with a warm hug and a gift.'},
+  glibly:{best:'He glibly promised to help, but everyone knew he wouldn\'t follow through.',awkward:'She spoke glibly at the event last Tuesday.',wrong:'She glibly poured her heart out, crying with deep sincerity.'},
+  irreverence:{best:'His irreverence shocked the congregation when he joked during the sermon.',awkward:'The irreverence was something people talked about.',wrong:'Her irreverence for the teacher showed in how politely she listened.'},
+  petition:{best:'The students signed a petition asking the school to extend lunch break.',awkward:'She brought the petition to the meeting room.',wrong:'The king issued a petition commanding all citizens to pay higher taxes.'},
+  heathen:{best:'The missionary considered anyone who hadn\'t heard the gospel a heathen.',awkward:'They called him a heathen and he reacted.',wrong:'The heathen spent every Sunday faithfully teaching Bible class.'},
+  manse:{best:'The new pastor and her family moved into the manse beside the church.',awkward:'They visited the manse on a Saturday afternoon.',wrong:'The manse was a popular shop where villagers bought bread.'},
+  imploring:{best:'With imploring eyes, the child begged her mother for one more story.',awkward:'Her imploring manner was noticed by several people.',wrong:'His imploring tone made it clear he didn\'t care about the answer.'},
+  deferring:{best:'She kept deferring her dentist appointment because she was nervous.',awkward:'He was deferring the thing until later.',wrong:'By deferring, she made sure everything was finished ahead of schedule.'},
+  discourse:{best:'The professors discoursed for hours about the meaning of the poem.',awkward:'They had a discourse and then left the room.',wrong:'She discoursed silently, never saying a single word to anyone.'},
+  rapt:{best:'The children listened with rapt attention as the storyteller wove her tale.',awkward:'He was rapt during the whole afternoon.',wrong:'She was so rapt that she scrolled her phone and ignored the speaker.'},
+  askance:{best:'She looked askance at the stranger who claimed to be a long-lost cousin.',awkward:'He glanced askance and then continued walking.',wrong:'She looked askance at the puppy, smiling with pure adoration.'},
+  diligently:{best:'She diligently checked every answer twice before submitting her test.',awkward:'He worked diligently on the project that week.',wrong:'He diligently skipped every step and rushed to finish first.'},
+  suppositions:{best:'Her suppositions about the ending turned out to be completely wrong.',awkward:'The suppositions were discussed among the group members.',wrong:'The scientist\'s suppositions were proven facts backed by decades of data.'},
+  vagaries:{best:'The vagaries of the weather made it impossible to plan the picnic.',awkward:'His vagaries were something people noticed about him.',wrong:'Her vagaries followed a strict, predictable daily routine.'},
+  obtrusive:{best:'The bright neon sign was obtrusive against the quiet, historic street.',awkward:'The obtrusive thing bothered some of the people there.',wrong:'The decoration was so obtrusive that nobody even noticed it.'},
+  consternation:{best:'To everyone\'s consternation, the bridge was closed with no detour signs.',awkward:'There was consternation among the group that evening.',wrong:'She felt consternation as she relaxed peacefully by the lake.'},
+  undauntedly:{best:'She undauntedly volunteered to speak first despite her stage fright.',awkward:'He undauntedly went ahead with the plan.',wrong:'He undauntedly hid under the bed, too scared to come out.'},
+  reprehensible:{best:'Cheating on the exam was reprehensible and led to her suspension.',awkward:'The reprehensible act was discussed at the meeting.',wrong:'Donating to charity every week is truly reprehensible behavior.'},
+  refractory:{best:'The refractory horse refused to cross the wooden bridge.',awkward:'The refractory situation continued for a while.',wrong:'The refractory student always followed every rule without complaint.'},
+  obdurate:{best:'Despite everyone\'s pleas, the obdurate judge refused to reduce the sentence.',awkward:'He remained obdurate throughout the afternoon.',wrong:'She was so obdurate that she changed her mind every five minutes.'},
+  penitent:{best:'The penitent thief returned the stolen items and apologized sincerely.',awkward:'The penitent person stood in the hallway.',wrong:'The penitent bully laughed and bragged about what he had done.'},
+  beseechingly:{best:'She looked at him beseechingly, hoping he would forgive her mistake.',awkward:'He spoke beseechingly to the person across the table.',wrong:'She beseechingly ordered them to obey her without question.'},
+  abasement:{best:'The public abasement of being booed off stage haunted him for years.',awkward:'The abasement was something she experienced that day.',wrong:'Winning the gold medal filled her with a deep sense of abasement.'},
+  officious:{best:'The officious neighbor kept telling everyone how to mow their lawns.',awkward:'She was officious during the event on Saturday.',wrong:'He was so officious that he minded his own business perfectly.'},
+  furbelows:{best:'Her dress was covered in furbelows that swished when she walked.',awkward:'The furbelows were part of her outfit for the occasion.',wrong:'He wore sturdy furbelows on his feet to hike through the mud.'},
+  dudgeon:{best:'She stormed out in high dudgeon after they laughed at her painting.',awkward:'His dudgeon was obvious to everyone in the room.',wrong:'He accepted the insult in dudgeon, smiling warmly and shaking hands.'},
+  disconsolately:{best:'He sat disconsolately on the bench after his team lost the championship.',awkward:'She walked disconsolately through the park that day.',wrong:'She disconsolately jumped for joy when she heard the great news.'},
+  ruddy:{best:'After playing outside all morning, the children\'s cheeks were ruddy.',awkward:'She noticed his ruddy appearance at the gathering.',wrong:'His face was ruddy and pale, as if he hadn\'t seen the sun in months.'},
+  rebukingly:{best:'The librarian looked rebukingly at the boys who were shouting.',awkward:'She spoke rebukingly during their conversation.',wrong:'She rebukingly praised him, telling him what a wonderful job he did.'},
+  hampered:{best:'Heavy snow hampered their efforts to reach the cabin before dark.',awkward:'The project was hampered by various factors.',wrong:'The strong tailwind hampered the ship, pushing it swiftly to port.'},
+  dubious:{best:'She gave him a dubious look when he claimed he\'d seen a UFO.',awkward:'The dubious situation made people think about it.',wrong:'The dubious evidence was rock-solid proof that convinced everyone instantly.'},
+  vexed:{best:'He was vexed when his little sister erased his entire drawing.',awkward:'She felt vexed about the situation that happened.',wrong:'She was vexed by the lovely surprise party thrown in her honor.'},
+  resolute:{best:'Despite the storm, the resolute climbers pressed on toward the summit.',awkward:'Her resolute nature was known by many people.',wrong:'He was resolute, changing his plan every time someone disagreed.'},
+  unheeded:{best:'Her warning about the icy road went unheeded, and three cars skidded.',awkward:'The unheeded message sat there for a while.',wrong:'Her unheeded advice was immediately followed by everyone in the group.'},
+  tremulous:{best:'In a tremulous voice, she asked if the test results were bad.',awkward:'His tremulous reaction was noticed by his friend.',wrong:'With a tremulous shout, the bold knight charged fearlessly into battle.'},
+  beguiled:{best:'The audience was beguiled by the magician\'s incredible sleight of hand.',awkward:'She was beguiled during the evening at the event.',wrong:'He was so beguiled by the lecture that he fell asleep from boredom.'},
+  torrent:{best:'A torrent of words poured out as she described her exciting trip.',awkward:'The torrent was something they all experienced together.',wrong:'A gentle torrent dripped slowly, barely making a sound.'},
+  sallow:{best:'After weeks of illness, her once-bright face had turned sallow.',awkward:'His sallow look was something people noticed.',wrong:'Her sallow skin glowed with a vibrant, sun-kissed tan.'},
+  brusquely:{best:'The shopkeeper brusquely told them to buy something or leave.',awkward:'He brusquely responded to the question asked.',wrong:'She brusquely whispered sweet, gentle words of encouragement.'},
+  dolefully:{best:'The dog looked dolefully at its empty food bowl and whimpered.',awkward:'She dolefully did the thing she needed to do.',wrong:'He dolefully danced around the room, laughing with pure joy.'},
+  tribulations:{best:'Despite many tribulations, she never lost hope of finishing school.',awkward:'The tribulations were part of what happened that year.',wrong:'Their tribulations included spa days and relaxing beach vacations.'},
+  bequeathed:{best:'Grandma bequeathed her antique ring to me in her will.',awkward:'The item was bequeathed to someone in the family.',wrong:'She bequeathed the book by picking it up at the store yesterday.'},
+  confounded:{best:'The riddle confounded everyone, and nobody could solve it.',awkward:'He was confounded by the experience he had.',wrong:'She was confounded because the instructions were perfectly clear.'},
+  compunction:{best:'He felt no compunction about eating the last cookie without asking.',awkward:'The compunction she felt was strong that day.',wrong:'Her compunction made her feel excited to break the rules again.'},
+  reiterated:{best:'The coach reiterated the play three times so everyone understood.',awkward:'She reiterated something during the conversation.',wrong:'He reiterated by saying something completely new and different.'},
+  rigmarole:{best:'Filing the forms involved a ridiculous rigmarole of endless paperwork.',awkward:'The rigmarole took a while to get through.',wrong:'His rigmarole was a brief, clear, two-sentence explanation.'},
+  beatification:{best:'The ceremony celebrated the beatification of the beloved nun.',awkward:'The beatification was an event that people attended.',wrong:'The beatification ceremony stripped the criminal of all honors.'},
+  sublime:{best:'The sunset over the ocean was a sublime display of color.',awkward:'The sublime experience stayed with her afterward.',wrong:'The burnt, tasteless dinner was truly a sublime culinary achievement.'},
+  vale:{best:'Mist hung low in the quiet vale between the green hills.',awkward:'They traveled through the vale on their journey.',wrong:'Standing atop the rocky vale, she could see the valleys far below.'},
+  garret:{best:'The artist painted in a tiny garret tucked under the roof.',awkward:'The garret was a space that she used often.',wrong:'The spacious garret was located in the building\'s ground-floor lobby.'},
+  blithely:{best:'She blithely skipped down the street without a care in the world.',awkward:'He blithely continued with what he was doing.',wrong:'She blithely sobbed into her pillow, overwhelmed with grief.'},
+  drollery:{best:'His drollery kept the whole class laughing throughout the lesson.',awkward:'The drollery was part of the evening\'s activities.',wrong:'Her drollery left the audience weeping in deep sorrow.'},
+  inflection:{best:'The rising inflection in her voice made the statement sound like a question.',awkward:'His inflection changed during the conversation.',wrong:'Her inflection referred to the specific words she chose to use.'},
+  ostentatiously:{best:'He ostentatiously flashed his new watch so everyone would notice.',awkward:'She ostentatiously did things at the party.',wrong:'She ostentatiously hid her trophy so nobody would ever see it.'},
+  revelled:{best:'The children revelled in the snow day, building forts all morning.',awkward:'She revelled during the afternoon at the park.',wrong:'He revelled in the punishment, wishing it would never end.'},
+  aesthetic:{best:'The designer chose each color for its aesthetic appeal.',awkward:'The aesthetic quality was discussed by the group.',wrong:'She admired the aesthetic of the engine\'s fuel efficiency.'},
+  cloistered:{best:'The cloistered monks rarely left their mountain monastery.',awkward:'Her cloistered lifestyle continued for several years.',wrong:'The cloistered adventurer traveled to a new country every month.'},
+  personified:{best:'With her endless energy, she personified the spirit of youth.',awkward:'The idea was personified in a way people understood.',wrong:'The concept was personified by removing all human qualities from it.'},
+  supplicant:{best:'The supplicant knelt before the queen, begging for mercy.',awkward:'The supplicant waited in the hall for a while.',wrong:'The supplicant stood tall, commanding everyone to obey.'},
+  prepense:{best:'The lawyer argued the crime was prepense, planned weeks in advance.',awkward:'The prepense nature of it was discussed in the meeting.',wrong:'The prepense accident happened completely by random chance.'},
+  staunchly:{best:'She staunchly defended her best friend against the unfair rumors.',awkward:'He staunchly continued throughout the whole week.',wrong:'He staunchly betrayed his allies at the first sign of trouble.'},
+  perusal:{best:'After careful perusal of the contract, she found a hidden clause.',awkward:'Her perusal of the document happened that morning.',wrong:'His quick perusal meant he read every word three times over.'},
+  effusion:{best:'Her effusion of gratitude embarrassed him with its overwhelming warmth.',awkward:'The effusion happened after the event concluded.',wrong:'His effusion was a cold, carefully measured single-word reply.'},
+  perquisites:{best:'Free meals and a company car were perquisites of the executive job.',awkward:'The perquisites were part of what was offered.',wrong:'The perquisites included mandatory overtime and extra homework.'},
+  bedizened:{best:'The float was bedizened with glitter, streamers, and flashing lights.',awkward:'The room was bedizened for the occasion.',wrong:'The bedizened room was plain white with no decorations at all.'},
+  tenacity:{best:'Her tenacity in studying paid off when she aced the final exam.',awkward:'His tenacity was something everyone recognized about him.',wrong:'His tenacity was clear when he quit after the very first try.'},
+  beaux:{best:'She had several beaux competing for her attention at the dance.',awkward:'Her beaux were present at the gathering that evening.',wrong:'Her beaux were her elderly aunts who visited every Sunday.'},
+  relented:{best:'After hours of begging, Mom finally relented and let us get a puppy.',awkward:'She relented and things changed after that.',wrong:'He relented by doubling the punishment and adding extra chores.'},
+  estranged:{best:'The estranged siblings hadn\'t spoken to each other in five years.',awkward:'They became estranged at some point during that time.',wrong:'The estranged couple spent every moment happily together.'},
+  consequent:{best:'Her consequent reasoning convinced the jury that the facts fit together.',awkward:'The consequent outcome was noted by everyone there.',wrong:'His consequent argument jumped randomly between unrelated topics.'},
+  irradiated:{best:'The setting sun irradiated the clouds with shades of gold and pink.',awkward:'The area was irradiated during the late afternoon.',wrong:'The room was irradiated, leaving it pitch black and impossible to see.'},
+  glens:{best:'They hiked through the misty glens hidden between the Scottish hills.',awkward:'The glens were part of the landscape they visited.',wrong:'The flat, treeless glens stretched wide across the open desert.'}
+};
+
 // ===== PRAISE & ENCOURAGEMENT =====
 const PRAISE=[
   'SLAY! \u2728','Let her cook! \uD83D\uDC69\u200D\uD83C\uDF73','No cap, that was fire! \uD83D\uDD25',
@@ -1402,9 +1696,15 @@ const ROUND_INFO=[
     title:'Sentence Challenge',
     badge:'round-4-badge',
     desc:'Pick the sentence that uses the word correctly. Final boss! \u2694\uFE0F\uD83C\uDFC6',
+  },
+  {
+    num:5,
+    title:'Teach It Back',
+    badge:'round-5-badge',
+    desc:'Pick the BEST hint to help a friend learn this word! Bonus round! \uD83C\uDF93\u2728',
     stories:[
-      {emoji:'\uD83D\uDC7A',room:'The Word Goblin\'s Lair',text:'"You hear cackling ahead! The Word Goblin is there, but honestly? He\'s giving flop era energy. You\'re about to end his whole career. SLAY HIM, BESTIE!" \u2014 Lexicon'},
-      {emoji:'\uD83C\uDFF0',room:'The Grand Archive',text:'"The final chamber! Golden light floods the room like a sold-out concert finale. Confetti falls. Lightsticks wave. This is YOUR moment! ENCORE TIME!"'}
+      {emoji:'\uD83C\uDF93',room:'The Teaching Tower',text:'"Plot twist, bestie! Now YOU\'RE the teacher! Pick the best hint to help a friend learn each word. If you can teach it, you truly KNOW it. Triple points! Let\'s GO!" \u2014 Lexicon'},
+      {emoji:'\uD83C\uDFA4',room:'The Mentor Stage',text:'"The enchanted books are watching \u2014 show them you don\'t just know these words, you can TEACH them! This is main character energy fr fr!" \u2014 Lexicon'}
     ]
   }
 ];
@@ -1513,8 +1813,19 @@ const PULL_ODDS={
   mega:   {common:0,rare:15,epic:50,legendary:35,mythic:0},
   divine: {common:0,rare:0,epic:20,legendary:55,mythic:25}
 };
-const PULL_COST={basic:20,super:50,mega:100,divine:250};
-const DUPE_REFUND={common:5,rare:15,epic:30,legendary:60,mythic:125};
+const PULL_COST={basic:40,super:100,mega:250,divine:500};
+const DUPE_REFUND={common:3,rare:8,epic:20,legendary:40,mythic:80};
+
+// ===== WORD COUNT MULTIPLIER =====
+// More chapters = harder = more reward. Max 6 chapters (one week).
+function getChapterMultiplier(){
+  const n=S.chapters?S.chapters.length:1;
+  if(n<=1)return 0.8;
+  if(n<=2)return 1.0;
+  if(n<=4)return 1.2;
+  if(n<=5)return 1.4;
+  return 1.6; // 6 chapters = full week
+}
 
 // ===== STATE =====
 const S={
@@ -1550,13 +1861,62 @@ const S={
   returnTo:'sumScreen', // where to go back from shop
   quizMode:false,       // true when running weekly quiz
   quizMatchWords:[],    // resolved vocab entries for matching part
-  quizSentenceWords:[]  // resolved vocab entries for sentence part
+  quizSentenceWords:[], // resolved vocab entries for sentence part
+  _priorSessionTime:0,  // cumulative ms from prior sessions
+  _learnTimer:null,     // auto-dismiss timer for learning card
+  pityCounter:0,        // pulls since last rare+ result
+  badgeProgress:{teachBackCount:0}
 };
+
+// ===== PERSISTENCE =====
+const SAVE_KEY='vocabquest_save';
+function saveProgress(){
+  try{
+    const totalMs=(S.sessionStart?Date.now()-S.sessionStart:0)+S._priorSessionTime;
+    const data={
+      wordStats:S.wordStats,
+      score:S.score,
+      inventory:S.inventory,
+      equipped:S.equipped,
+      bestStreak:S.bestStreak,
+      sessionTime:totalMs,
+      pityCounter:S.pityCounter,
+      badgeProgress:S.badgeProgress
+    };
+    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+function loadProgress(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(d.wordStats)S.wordStats=d.wordStats;
+    if(typeof d.score==='number')S.score=d.score;
+    if(Array.isArray(d.inventory))S.inventory=d.inventory;
+    if(d.equipped)S.equipped=d.equipped;
+    if(typeof d.bestStreak==='number')S.bestStreak=d.bestStreak;
+    if(typeof d.sessionTime==='number')S._priorSessionTime=d.sessionTime;
+    if(typeof d.pityCounter==='number')S.pityCounter=d.pityCounter;
+    if(d.badgeProgress)S.badgeProgress={...S.badgeProgress,...d.badgeProgress};
+  }catch(e){}
+}
+function resetProgress(){
+  if(!confirm('Reset ALL progress? Score, inventory, word stats, and equipped items will be erased. This cannot be undone!'))return;
+  localStorage.removeItem(SAVE_KEY);
+  S.wordStats={};S.score=0;S.inventory=[];S.equipped={hat:null,pet:null,outfit:null};
+  S.bestStreak=0;S._priorSessionTime=0;S.activePowers=[];S.pityCounter=0;
+  S.badgeProgress={teachBackCount:0};
+  updateMiniWizard();
+  alert('Progress reset! Start fresh, bestie! \u2728');
+}
 
 // ===== INIT =====
 function init(){
+  loadProgress();
   makeStars();
   buildChapters();
+  updateMultDisplay();
   document.getElementById('startBtn').onclick=startGame;
   document.getElementById('storyBtn').onclick=dismissStory;
   document.getElementById('parentBtn').onclick=()=>{document.getElementById('parentPanel').classList.toggle('open');updateParent()};
@@ -1587,7 +1947,7 @@ function buildChapters(){
         <span><span class="week-badge ${w.badge}">${w.badge==='now'?'Current':'Review'}</span> ${w.label} (Ch ${w.chs[0]}\u2013${w.chs[w.chs.length-1]})</span>
         <span class="week-toggle">${allOn?'tap to deselect':'tap to select'}</span>
       </div>
-      <div class="ch-grid">${w.chs.map(ch=>`<input type="checkbox" class="ch-input" id="c${ch}" value="${ch}" ${allOn?'checked':''}><label class="ch-label" for="c${ch}"><span class="ch-dot">\u2713</span>Ch ${ch}</label>`).join('')}</div>
+      <div class="ch-grid">${w.chs.map(ch=>`<input type="checkbox" class="ch-input" id="c${ch}" value="${ch}" ${allOn?'checked':''} onchange="updateMultDisplay()"><label class="ch-label" for="c${ch}"><span class="ch-dot">\u2713</span>Ch ${ch}</label>`).join('')}</div>
     </div>`;
   });
 }
@@ -1597,12 +1957,29 @@ function toggleWeek(header){
   const allChecked=[...boxes].every(b=>b.checked);
   boxes.forEach(b=>b.checked=!allChecked);
   header.querySelector('.week-toggle').textContent=allChecked?'tap to select':'tap to deselect';
+  updateMultDisplay();
+}
+function updateMultDisplay(){
+  const n=document.querySelectorAll('.ch-input:checked').length;
+  const mult=n<=1?0.8:n<=2?1.0:n<=4?1.2:n<=5?1.4:1.6;
+  const desc=n<=1?'add more!':n<=2?'baseline':n<=4?'nice!':n<=5?'almost max!':n>=6?'max bonus! \uD83D\uDD25':'';
+  const el=document.getElementById('multDisplay');
+  const dl=document.getElementById('multDesc');
+  const badge=document.getElementById('multBadge');
+  if(el)el.textContent=mult+'x';
+  if(el)el.style.color=mult>=1.4?'var(--gold)':mult>=1.2?'var(--teal)':'var(--text-dim)';
+  if(badge){
+    badge.style.borderColor=mult>=1.4?'rgba(255,215,0,0.3)':mult>=1.2?'rgba(54,214,195,0.25)':'rgba(255,255,255,0.1)';
+    badge.style.background=mult>=1.4?'rgba(255,215,0,0.08)':mult>=1.2?'rgba(54,214,195,0.1)':'rgba(255,255,255,0.04)';
+  }
+  if(dl)dl.textContent=desc;
 }
 
 function toggleQuizMode(on){
   S.quizMode=on;
   document.getElementById('chCard').style.display=on?'none':'';
   document.getElementById('roundCard').style.display=on?'none':'';
+  document.getElementById('multBadge').style.display=on?'none':'';
   const info=document.getElementById('quizInfo');
   const status=document.getElementById('quizStatus');
   info.style.display=on?'':'none';
@@ -1626,7 +2003,7 @@ function startGame(){
   S.chapters.forEach(ch=>VOCAB[ch].forEach(e=>S.words.push({...e,ch})));
   S.words.forEach(w=>{if(!S.wordStats[w.word])S.wordStats[w.word]={att:0,cor:0,mastered:false}});
 
-  S.score=0;S.hearts=3;S.streak=0;S.bestStreak=0;S.answered=0;S.correct=0;S.wrong=0;S.wrongRow=0;
+  S.hearts=3;S.streak=0;S.answered=0;S.correct=0;S.wrong=0;S.wrongRow=0;
   S.round=0;S.qIndex=0;
   S.sessionStart=S.sessionStart||Date.now();
 
@@ -1682,7 +2059,7 @@ function startWeeklyQuiz(){
   });
   S.words.forEach(w=>{if(!S.wordStats[w.word])S.wordStats[w.word]={att:0,cor:0,mastered:false}});
 
-  S.score=0;S.hearts=3;S.streak=0;S.bestStreak=0;
+  S.hearts=3;S.streak=0;
   S.answered=0;S.correct=0;S.wrong=0;S.wrongRow=0;
   S.round=0;S.qIndex=0;
   S.sessionStart=S.sessionStart||Date.now();
@@ -1691,8 +2068,8 @@ function startWeeklyQuiz(){
 }
 
 function buildQuizRound(part){
-  // part 0 = matching (S.round=0), part 1 = sentences (S.round=3)
-  S.round=part===0?0:3;
+  // part 0 = matching (S.round=0), part 1 = sentences (S.round=3), part 2 = teach it back (S.round=4)
+  S.round=part===0?0:part===1?3:4;
   S.qIndex=0;
   S.roundWords=[];
   S.roundCorrect=0;
@@ -1700,12 +2077,23 @@ function buildQuizRound(part){
   S.hearts=3;
   S.midStoryShown=false;
 
-  const srcWords=part===0?S.quizMatchWords:S.quizSentenceWords;
+  let srcWords;
+  if(part===0)srcWords=S.quizMatchWords;
+  else if(part===1)srcWords=S.quizSentenceWords;
+  else{
+    // Teach It Back: union of all quiz words
+    const seen=new Set();srcWords=[];
+    [...S.quizMatchWords,...S.quizSentenceWords].forEach(w=>{
+      if(!seen.has(w.word)){seen.add(w.word);srcWords.push(w)}
+    });
+  }
   let pool=[...srcWords];
-  srcWords.forEach(w=>{
-    const s=S.wordStats[w.word];
-    if(s&&s.att>0&&s.cor/s.att<0.6)pool.push({...w});
-  });
+  if(part!==2){
+    srcWords.forEach(w=>{
+      const s=S.wordStats[w.word];
+      if(s&&s.att>0&&s.cor/s.att<0.6)pool.push({...w});
+    });
+  }
   shuffle(pool);
   S.queue=pool;
   S.totalQs=pool.length;
@@ -1717,9 +2105,13 @@ function buildQuizRound(part){
   if(part===0){
     showStory('\uD83E\uDDE9','Weekly Quiz: Matching',
       `"Time for your weekly vocab check, bestie! Match all ${srcWords.length} words to their definitions. You've been studying \u2014 now PROVE IT!" \u2014 Lexicon`);
-  } else {
+  } else if(part===1){
     showStory('\u2694\uFE0F','Weekly Quiz: Sentences',
       `"Part 2! Only ${srcWords.length} words, but they're the tricky ones. Pick the sentence that uses each word correctly. Final boss energy! Let's GO!" \u2014 Lexicon`);
+  } else {
+    S.badgeProgress.teachBackCount=(S.badgeProgress.teachBackCount||0)+1;
+    showStory('\uD83C\uDF93','Bonus: Teach It Back',
+      `"Plot twist! Now YOU'RE the teacher, bestie! Pick the best hint to help a friend learn each word. Triple points! If you can teach it, you truly KNOW it!" \u2014 Lexicon`);
   }
 }
 
@@ -1764,7 +2156,7 @@ function updateHUD(){
 // ===== ROUND BANNER =====
 function showRoundBanner(){
   if(S.quizMode){
-    const label=S.round===0?'Part 1: Matching':'Part 2: Sentences';
+    const label=S.round===0?'Part 1: Matching':S.round===4?'Bonus: Teach It Back \uD83C\uDF93':'Part 2: Sentences';
     document.getElementById('roundBanner').innerHTML=`
       <span class="round-badge round-1-badge">\uD83D\uDCDD</span>
       <div class="round-name">${WEEKLY_QUIZ.label} \u2014 ${label}</div>
@@ -1810,6 +2202,7 @@ function showQuestion(){
 
   if(S.round===1) renderR1(card,entry);
   else if(S.round===2) renderR2(card,entry);
+  else if(S.round===4) renderTeachBack(card,entry);
   else renderR3(card,entry);
 
   // Fox Reveal: show a subtle hint with first letter of answer (word↔def rounds only)
@@ -2241,6 +2634,57 @@ function renderR3(card,entry){
   addHint(card,entry);
 }
 
+// Round 5: Teach It Back — pick the best hint for a friend
+function renderTeachBack(card,entry){
+  const isHintType=S.qIndex%2===0; // alternate between hint and sentence types
+  const p=document.createElement('div');
+  p.className='q-prompt';
+  if(isHintType){
+    p.innerHTML=`\uD83C\uDF93 Which hint would BEST help a friend learn <span class="word">${entry.word}</span>?`;
+  } else {
+    p.innerHTML=`\uD83C\uDF93 Which sentence BEST shows how to use <span class="word">${entry.word}</span>?`;
+  }
+  card.appendChild(p);
+
+  // Get teach data
+  const hintData=typeof TEACH_HINTS!=='undefined'?TEACH_HINTS[entry.word]:null;
+  const sentData=typeof TEACH_SENTENCES!=='undefined'?TEACH_SENTENCES[entry.word]:null;
+
+  let correct,wrongs;
+  if(isHintType&&hintData){
+    correct=hintData.best;
+    wrongs=[hintData.vague,hintData.wrong];
+  } else if(!isHintType&&sentData){
+    correct=sentData.best;
+    wrongs=[sentData.awkward,sentData.wrong];
+  } else {
+    // Fallback: use definition as correct, generate simple wrongs
+    correct=`It means: ${entry.def}`;
+    wrongs=[`It's a word from the book`,`It sounds like it means something fancy`];
+  }
+  const opts=[correct,...wrongs];
+  shuffle(opts);
+
+  const optDiv=document.createElement('div');
+  optDiv.className='opts';
+  const letters=['A','B','C'];
+  opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn._answer=o;
+    btn.innerHTML=`<span class="opt-letter">${letters[i]}</span>${o}`;
+    btn.onclick=()=>handleAnswer(btn,o,correct,optDiv);
+    optDiv.appendChild(btn);
+  });
+  card.appendChild(optDiv);
+
+  // No hints in Teach It Back — you're the teacher now!
+  const note=document.createElement('div');
+  note.style.cssText='font-family:Fredoka,sans-serif;font-size:.78rem;color:var(--text-dim);text-align:center;margin-top:8px';
+  note.textContent='\uD83C\uDFA4 You\'re the teacher now — no hints! Triple points per correct answer!';
+  card.appendChild(note);
+}
+
 function getDistractors(entry,field,count){
   const pool=S.words.filter(w=>w.word!==entry.word);
   shuffle(pool);
@@ -2435,12 +2879,12 @@ function renderMatchingGame(){
         if(S.streak>S.bestStreak)S.bestStreak=S.streak;
         S.wordStats[selectedWord.dataset.word].cor++;
 
-        let pts=10;
-        if(S.streak>=3)pts+=5;
-        pts+=5; // harder round bonus
+        let pts=5;
+        if(S.streak>=3)pts+=3;
+        pts+=2; // matching round bonus
         pts+=getBonusScoreFromPowers();
         if(hasPower('wordMaster')&&S.wordStats[selectedWord.dataset.word].mastered)pts+=getPowerScale('wordMaster');
-        pts=Math.round(pts*getPointsMultiplier());
+        pts=Math.round(pts*getPointsMultiplier()*getChapterMultiplier());
         S.score+=pts;
 
         const s=S.wordStats[selectedWord.dataset.word];
@@ -2452,9 +2896,10 @@ function renderMatchingGame(){
         selectedWord=null;
         matchedCount++;
         document.getElementById('matchProgress').textContent=`Matched: ${matchedCount} / ${batchSize}`;
-        showFB(true);
+        showFB(true,wordEntry);
         spawnSparkles();
         updateHUD();
+        saveProgress();
 
         // Check if batch complete
         if(matchedCount===batchSize){
@@ -2504,21 +2949,21 @@ function processAnswer(isCorrect){
     S.correct++;S.roundCorrect++;S.streak++;S.wrongRow=0;
     if(S.streak>S.bestStreak)S.bestStreak=S.streak;
     S.wordStats[word].cor++;
-    let pts=10;
-    if(S.streak>=3)pts+=5;
-    if(S.round>=2)pts+=5; // bonus for harder rounds
+    let pts=S.round===4?15:5; // triple points for Teach It Back
+    if(S.streak>=3)pts+=3;
+    if(S.round>=2&&S.round!==4)pts+=2; // bonus for harder rounds (not teach back, already tripled)
     pts+=getBonusScoreFromPowers();
     // Word master bonus for already-mastered words
     if(hasPower('wordMaster')&&S.wordStats[word]&&S.wordStats[word].mastered){
       pts+=getPowerScale('wordMaster');
     }
-    pts=Math.round(pts*getPointsMultiplier());
+    pts=Math.round(pts*getPointsMultiplier()*getChapterMultiplier());
     S.score+=pts;
 
     const s=S.wordStats[word];
     if(s.cor>=2&&s.cor/s.att>=0.75)s.mastered=true;
 
-    showFB(true);
+    showFB(true,entry);
     spawnSparkles();
   } else {
     S.wrong++;S.wrongRow++;
@@ -2549,18 +2994,49 @@ function processAnswer(isCorrect){
   }
   updateHUD();
 
-  // Auto-advance: correct=2s, wrong=3s (enough time to read feedback + see correct answer)
-  setTimeout(()=>{S.qIndex++;showQuestion()},isCorrect?2000:3000);
+  saveProgress();
+  if(isCorrect){
+    setTimeout(()=>{S.qIndex++;showQuestion()},2000);
+  } else {
+    // Show learning card after feedback fades
+    const entry2=entry;
+    setTimeout(()=>showLearnCard(entry2),2800);
+  }
+}
+
+function showLearnCard(entry){
+  const card=document.getElementById('learnCard');
+  const sents=SENTENCES[entry.word];
+  const sentence=sents&&sents.length?sents[Math.floor(Math.random()*sents.length)].replace(/___WORD___/g,`<strong style="color:var(--gold)">${entry.word}</strong>`):'';
+  card.innerHTML=`
+    <div class="learn-label">\uD83D\uDCDA Let's learn this one!</div>
+    <div class="learn-word">${entry.word}</div>
+    <div class="learn-pos">${entry.pos}</div>
+    <div class="learn-def">${entry.def}</div>
+    ${sentence?`<div class="learn-sentence">\uD83D\uDCAC ${sentence}</div>`:''}
+    <button class="learn-dismiss" onclick="dismissLearnCard()">Got it! \uD83D\uDC4D</button>
+  `;
+  document.getElementById('learnOv').classList.add('show');
+  S._learnTimer=setTimeout(dismissLearnCard,6000);
+}
+function dismissLearnCard(){
+  if(S._learnTimer){clearTimeout(S._learnTimer);S._learnTimer=null}
+  document.getElementById('learnOv').classList.remove('show');
+  S.qIndex++;showQuestion();
 }
 
 // ===== FEEDBACK =====
-function showFB(good){
+function showFB(good,entry){
   const ov=document.getElementById('fb');
   const t=document.getElementById('fbText');
   if(good){
     let msg=PRAISE[Math.floor(Math.random()*PRAISE.length)];
     if(S.streak>=5)msg+=` ${S.streak}x MEGA COMBO!`;
     else if(S.streak>=3)msg+=` ${S.streak}x streak!`;
+    // ~20% chance to show book quote bonus
+    if(entry&&BOOK_QUOTES[entry.word]&&Math.random()<0.2){
+      msg+=`\n\uD83D\uDCD6 "${BOOK_QUOTES[entry.word].slice(0,60)}..."`;
+    }
     t.className='feedback-text fb-good';t.textContent=msg;
   } else {
     t.className='feedback-text fb-bad';
@@ -2610,15 +3086,26 @@ function showRoundSummary(){
   for(const l of LEVELS)if(S.score>=l.min)rank=l.name;
   const acc=S.answered>0?Math.round(S.correct/S.answered*100):0;
 
-  const roundName=S.quizMode?(S.round===0?'Matching':'Sentence Challenge'):ROUND_INFO[S.round].title;
+  const roundName=S.quizMode?(S.round===0?'Matching':S.round===4?'Teach It Back':'Sentence Challenge'):ROUND_INFO[S.round].title;
 
   // Quiz mode: next part logic
   let isComplete, nextAction, nextLabel, replayAction;
   if(S.quizMode){
     const hasPartTwo=S.quizSentenceWords.length>0;
-    isComplete=S.round===3||(!hasPartTwo&&S.round===0);
-    nextAction='buildQuizRound(1)';
-    nextLabel='Part 2: Sentence Challenge \u2694\uFE0F';
+    if(S.round===0&&hasPartTwo){
+      isComplete=false;
+      nextAction='buildQuizRound(1)';
+      nextLabel='Part 2: Sentence Challenge \u2694\uFE0F';
+    } else if(S.round===0&&!hasPartTwo||S.round===3){
+      // After matching (no sentences) or after sentences → Teach It Back
+      isComplete=false;
+      nextAction='buildQuizRound(2)';
+      nextLabel='Bonus: Teach It Back \uD83C\uDF93';
+    } else if(S.round===4){
+      isComplete=true;
+    } else {
+      isComplete=true;
+    }
     replayAction='startWeeklyQuiz()';
   } else {
     isComplete=S.round===3;
@@ -2678,6 +3165,10 @@ function practiceMissed(){
   showStory('\uD83D\uDD04','Comeback Era','"Time to redeem yourself, bestie! These words tried to ratio you, but you\'re about to clap back. Let\'s get this W!" \u2014 Lexicon');
 }
 
+function confirmBackToMenu(){
+  if(confirm('Leave this round and go back to the menu? Your progress for this round won\'t be saved.'))showScreen('startScreen');
+}
+
 function redoCurrentRound(){
   if(S.quizMode){
     if(S.round===0) startWeeklyQuiz();
@@ -2696,10 +3187,41 @@ function updateStudyGuide(){
   const c=document.getElementById('studyContent');
   const words=S.words||[];
   if(!words.length){c.innerHTML='<p style="color:var(--text-dim)">Start a game to see your words here!</p>';return}
-  c.innerHTML=words.map(w=>
-    `<div class="study-word"><span class="sw-word">${w.word}</span><span class="sw-pos">${w.pos}</span><div class="sw-def">${w.def}</div></div>`
-  ).join('');
+
+  // Mastery legend
+  let html='<div class="mastery-legend"><span>\uD83D\uDD34 New</span><span>\uD83D\uDFE1 Learning</span><span>\uD83D\uDFE2 Good</span><span>\u2B50 Mastered</span></div>';
+
+  // Sort: weakest first (none → learning → good → mastered)
+  const sorted=[...words].sort((a,b)=>{
+    return getMasteryRank(a.word)-getMasteryRank(b.word);
+  });
+
+  html+=sorted.map(w=>{
+    const s=S.wordStats[w.word];
+    const m=getMasteryLevel(w.word);
+    const acc=s&&s.att>0?Math.round(s.cor/s.att*100):0;
+    const stats=s&&s.att>0?`${s.cor}/${s.att} correct (${acc}%)`:'not attempted';
+    const quote=typeof BOOK_QUOTES!=='undefined'&&BOOK_QUOTES[w.word]?`<div class="sw-quote">\uD83D\uDCD6 ${BOOK_QUOTES[w.word]}</div>`:'';
+    return `<div class="sw-mastery ${m.cls}">
+      <span class="sw-icon">${m.icon}</span>
+      <div class="sw-info">
+        <span class="sw-word">${w.word}</span> <span class="sw-pos">${w.pos}</span>
+        <div class="sw-def">${w.def}</div>
+        <div class="sw-stats">${stats}</div>
+        ${quote}
+      </div>
+    </div>`;
+  }).join('');
+  c.innerHTML=html;
 }
+function getMasteryLevel(word){
+  const s=S.wordStats[word];
+  if(!s||!s.att)return {icon:'\uD83D\uDD34',cls:'m-none',rank:0};
+  if(s.mastered)return {icon:'\u2B50',cls:'m-mastered',rank:3};
+  if(s.att>=2&&s.cor/s.att>=0.75)return {icon:'\uD83D\uDFE2',cls:'m-good',rank:2};
+  return {icon:'\uD83D\uDFE1',cls:'m-learning',rank:1};
+}
+function getMasteryRank(word){return getMasteryLevel(word).rank}
 function updateStudyBtnVisibility(){
   const btn=document.getElementById('studyBtn');
   // Show during gameplay except boss round (round 3) and weekly quiz mode
@@ -2729,7 +3251,8 @@ function viewWords(){
 // ===== PARENT =====
 function updateParent(){
   const c=document.getElementById('parentContent');
-  const mins=S.sessionStart?Math.floor((Date.now()-S.sessionStart)/60000):0;
+  const totalMs=(S.sessionStart?Date.now()-S.sessionStart:0)+(S._priorSessionTime||0);
+  const mins=Math.floor(totalMs/60000);
   const acc=S.answered>0?Math.round(S.correct/S.answered*100):0;
   const mastered=[],practice=[];
   Object.keys(S.wordStats).forEach(w=>{const s=S.wordStats[w];if(!s.att)return;if(s.mastered)mastered.push(w);else practice.push(w)});
@@ -2746,6 +3269,7 @@ function updateParent(){
     <div class="p-row"><span class="lbl">Current Round</span><span class="val">${S.round+1} of 3</span></div>
     ${mastered.length?`<div style="margin-top:14px"><h4 style="font-family:Fredoka,sans-serif;font-size:.82rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">\u2B50 Mastered (${mastered.length})</h4><div>${mastered.map(w=>`<span class="tag tag-good">${w}</span>`).join('')}</div></div>`:''}
     ${practice.length?`<div style="margin-top:12px"><h4 style="font-family:Fredoka,sans-serif;font-size:.82rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">\uD83D\uDCDD Needs Practice (${practice.length})</h4><div>${practice.map(w=>`<span class="tag tag-bad">${w}</span>`).join('')}</div></div>`:''}
+    <button class="btn btn-outline" style="margin-top:20px;color:var(--red);border-color:var(--red);font-size:.8rem;padding:8px 16px" onclick="resetProgress()">\uD83D\uDDD1\uFE0F Reset All Progress</button>
   `;
 }
 
@@ -3611,6 +4135,7 @@ function renderInventory(){
         renderInventory();
         updateShopWizard();
         updateMiniWizard();
+        saveProgress();
       };
       grid.appendChild(div);
     });
@@ -3623,7 +4148,7 @@ function renderInventory(){
     const ub=document.createElement('button');
     ub.className='btn btn-outline';ub.style.marginTop='10px';ub.style.fontSize='.8rem';ub.style.padding='8px 16px';
     ub.textContent='Unequip All';
-    ub.onclick=()=>{S.equipped={hat:null,pet:null,outfit:null};S.activePowers=[];renderInventory();updateShopWizard();updateMiniWizard()};
+    ub.onclick=()=>{S.equipped={hat:null,pet:null,outfit:null};S.activePowers=[];renderInventory();updateShopWizard();updateMiniWizard();saveProgress()};
     area.appendChild(ub);
   }
 
@@ -3640,15 +4165,18 @@ function gachaPull(tier){
   }
   S.score-=cost;
 
-  // Pick rarity
+  // Pick rarity (with pity system: guarantee rare+ after 8 common pulls)
   const odds=PULL_ODDS[tier];
   const roll=Math.random()*100;
   let rarity;
+  const pityActive=S.pityCounter>=8;
   if(roll<odds.mythic)rarity='mythic';
   else if(roll<odds.mythic+odds.legendary)rarity='legendary';
   else if(roll<odds.mythic+odds.legendary+odds.epic)rarity='epic';
-  else if(roll<odds.mythic+odds.legendary+odds.epic+odds.rare)rarity='rare';
+  else if(roll<odds.mythic+odds.legendary+odds.epic+odds.rare||pityActive)rarity='rare';
   else rarity='common';
+  // Update pity counter
+  if(rarity==='common'){S.pityCounter++}else{S.pityCounter=0}
 
   // Pick random item of that rarity
   const allOfRarity=[];
@@ -3667,6 +4195,7 @@ function gachaPull(tier){
   showGachaResult(item,isDupe,rarity);
   updateShopWizard();
   updatePullButtons();
+  saveProgress();
 }
 
 function showGachaResult(item,isDupe,rarity){
