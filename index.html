@@ -1,0 +1,3376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Quest for the Lost Library</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Fredoka:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0b0618;
+  --purple-deep:#150d2e;
+  --purple-mid:#2d1b69;
+  --purple:#7b4fcf;
+  --purple-glow:rgba(123,79,207,0.35);
+  --gold:#ffd700;
+  --gold-dim:#c9a800;
+  --gold-soft:rgba(255,215,0,0.12);
+  --teal:#36d6c3;
+  --teal-dark:#14b8a6;
+  --pink:#f472b6;
+  --pink-soft:rgba(244,114,182,0.15);
+  --red:#ef4444;
+  --green:#4ade80;
+  --green-soft:rgba(74,222,128,0.15);
+  --text:#ede5fb;
+  --text-dim:rgba(232,223,245,0.55);
+  --card:rgba(22,12,50,0.88);
+  --card-border:rgba(123,79,207,0.28);
+  --glass:rgba(255,255,255,0.04);
+  --radius:18px;
+}
+
+html{font-size:17px}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ===== AMBIENT ===== */
+.ambient{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 45%,rgba(123,79,207,0.25),transparent),
+    radial-gradient(ellipse 50% 40% at 85% 25%,rgba(54,214,195,0.12),transparent),
+    radial-gradient(ellipse 40% 50% at 50% 85%,rgba(244,114,182,0.1),transparent),
+    linear-gradient(175deg,#080414 0%,#0b0618 30%,#150d2e 100%);
+}
+.stars{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.star{
+  position:absolute;
+  width:2px;height:2px;
+  background:#fff;
+  border-radius:50%;
+  animation:twinkle var(--dur) ease-in-out infinite alternate;
+  opacity:0;
+}
+@keyframes twinkle{0%{opacity:0.1;transform:scale(0.8)}100%{opacity:var(--bright);transform:scale(1.2)}}
+
+/* Lightstick glow orbs */
+.orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(60px);
+  opacity:0.3;
+  pointer-events:none;
+  z-index:1;
+  animation:orbFloat 8s ease-in-out infinite alternate;
+}
+@keyframes orbFloat{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-30px) scale(1.1)}}
+
+/* ===== LAYOUT ===== */
+.screen{
+  display:none;
+  position:relative;z-index:10;
+  min-height:100vh;
+  padding:24px 16px;
+  flex-direction:column;
+  align-items:center;
+}
+.screen.active{display:flex}
+.screen-enter{animation:screenIn .5s cubic-bezier(.22,1,.36,1)}
+@keyframes screenIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.container{width:100%;max-width:640px}
+
+/* ===== TYPOGRAPHY ===== */
+.title{
+  font-family:'Cinzel Decorative',serif;
+  font-weight:900;
+  font-size:clamp(1.9rem,5.5vw,3.2rem);
+  text-align:center;
+  background:linear-gradient(135deg,var(--gold),#fff8dc,var(--gold),#ffe066);
+  background-size:200% 200%;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 24px rgba(255,215,0,0.35));
+  animation:shimmer 3s ease-in-out infinite;
+  line-height:1.25;
+  margin-bottom:6px;
+}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+.subtitle{
+  font-family:'Fredoka',sans-serif;
+  font-size:clamp(.95rem,2.5vw,1.2rem);
+  text-align:center;
+  color:var(--teal);
+  font-weight:600;
+  margin-bottom:20px;
+  letter-spacing:.5px;
+}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--card);
+  border:1.5px solid var(--card-border);
+  border-radius:var(--radius);
+  padding:24px;
+  backdrop-filter:blur(12px);
+  position:relative;
+}
+.card-glow{
+  box-shadow:0 0 40px var(--purple-glow),inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ===== GUARDIAN ===== */
+.guardian{text-align:center;margin-bottom:20px}
+.guardian-emoji{
+  font-size:3.2rem;
+  display:inline-block;
+  animation:float 2.5s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.guardian-name{
+  font-family:'Fredoka',sans-serif;
+  font-size:1.25rem;
+  font-weight:700;
+  color:var(--gold);
+  margin-top:6px;
+}
+.guardian-speech{
+  font-family:'Fredoka',sans-serif;
+  font-size:1.1rem;
+  line-height:1.7;
+  margin-top:10px;
+  color:var(--text);
+}
+.guardian-speech .glow{color:var(--gold);font-weight:700}
+.guardian-speech .teal{color:var(--teal);font-weight:600}
+.guardian-speech .pink{color:var(--pink);font-weight:600}
+
+/* ===== CHAPTER SELECT ===== */
+.chapter-title{
+  font-family:'Fredoka',sans-serif;
+  font-size:1.3rem;font-weight:700;
+  color:var(--gold);
+  text-align:center;
+  margin-bottom:14px;
+}
+.ch-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.ch-input{display:none}
+.ch-label{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:14px 6px;
+  border-radius:14px;
+  background:rgba(123,79,207,0.08);
+  border:2px solid rgba(123,79,207,0.25);
+  cursor:pointer;
+  font-family:'Fredoka',sans-serif;
+  font-size:1.05rem;font-weight:600;
+  transition:all .25s ease;
+  user-select:none;
+}
+.ch-label:hover{background:rgba(123,79,207,0.18);border-color:var(--purple);transform:translateY(-2px)}
+.ch-input:checked+.ch-label{
+  background:rgba(54,214,195,0.14);
+  border-color:var(--teal);
+  color:var(--teal);
+  box-shadow:0 0 18px rgba(54,214,195,0.15);
+}
+.ch-dot{
+  width:18px;height:18px;
+  border-radius:6px;
+  border:2px solid rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;
+  transition:all .25s;
+}
+.ch-input:checked+.ch-label .ch-dot{background:var(--teal);border-color:var(--teal)}
+
+/* ===== ROUND SELECTOR ===== */
+.round-select-grid{display:flex;flex-direction:column;gap:10px}
+.rd-input{display:none}
+.rd-label{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  border-radius:14px;
+  background:rgba(123,79,207,0.08);
+  border:2px solid rgba(123,79,207,0.25);
+  cursor:pointer;
+  transition:all .25s ease;
+  user-select:none;
+}
+.rd-label:hover{background:rgba(123,79,207,0.18);border-color:var(--purple);transform:translateY(-2px)}
+.rd-input:checked+.rd-label{
+  background:rgba(54,214,195,0.14);
+  border-color:var(--teal);
+  box-shadow:0 0 18px rgba(54,214,195,0.15);
+}
+.rd-num{
+  width:36px;height:36px;
+  border-radius:50%;
+  background:rgba(123,79,207,0.2);
+  border:2px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka',sans-serif;
+  font-size:1.1rem;font-weight:700;
+  color:rgba(255,255,255,0.6);
+  flex-shrink:0;
+  transition:all .25s;
+}
+.rd-input:checked+.rd-label .rd-num{
+  background:var(--teal);
+  border-color:var(--teal);
+  color:#0d0b1a;
+}
+.rd-info{display:flex;flex-direction:column;gap:2px}
+.rd-title{
+  font-family:'Fredoka',sans-serif;
+  font-size:1.05rem;font-weight:700;
+  color:var(--text);
+}
+.rd-input:checked+.rd-label .rd-title{color:var(--teal)}
+.rd-desc{
+  font-size:0.85rem;
+  color:rgba(255,255,255,0.5);
+  line-height:1.3;
+}
+
+/* ===== WEEKLY QUIZ TOGGLE ===== */
+.quiz-toggle{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px 0 6px}
+.quiz-switch{position:relative;width:56px;height:30px;cursor:pointer}
+.quiz-switch input{opacity:0;width:0;height:0}
+.quiz-slider{position:absolute;inset:0;background:rgba(255,255,255,0.1);border-radius:15px;transition:.3s;border:2px solid rgba(255,255,255,0.15)}
+.quiz-slider::before{content:'';position:absolute;height:22px;width:22px;left:3px;bottom:2px;background:#888;border-radius:50%;transition:.3s}
+.quiz-switch input:checked+.quiz-slider{background:linear-gradient(135deg,var(--teal),var(--green));border-color:var(--teal)}
+.quiz-switch input:checked+.quiz-slider::before{transform:translateX(25px);background:#fff}
+.quiz-status{font-family:Fredoka,sans-serif;font-size:1rem;font-weight:600;color:rgba(255,255,255,0.4);transition:.3s}
+.quiz-status.on{color:var(--teal)}
+.quiz-info{margin-top:10px;font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--text-dim);line-height:1.6}
+.quiz-info strong{color:var(--gold)}
+.quiz-week-label{font-size:1.05rem;color:var(--teal);margin-bottom:4px}
+
+/* ===== BUTTONS ===== */
+.btn{
+  font-family:'Fredoka',sans-serif;
+  font-weight:700;
+  border:none;border-radius:16px;
+  cursor:pointer;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+.btn:active{transform:scale(.95)!important}
+
+.btn-hero{
+  font-size:1.25rem;
+  padding:18px 52px;
+  background:linear-gradient(135deg,var(--gold),#ffe066);
+  color:#1a0a2e;
+  box-shadow:0 4px 28px rgba(255,215,0,0.35),inset 0 2px 0 rgba(255,255,255,0.25);
+}
+.btn-hero:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 36px rgba(255,215,0,0.45)}
+
+.btn-go{
+  font-size:1.05rem;
+  padding:14px 36px;
+  background:linear-gradient(135deg,var(--teal-dark),var(--teal));
+  color:#0b0618;
+  box-shadow:0 4px 18px rgba(54,214,195,0.25);
+}
+.btn-go:hover{transform:translateY(-2px) scale(1.03)}
+
+.btn-purple{
+  font-size:1rem;
+  padding:12px 28px;
+  background:linear-gradient(135deg,var(--purple),#9b6fe0);
+  color:#fff;
+  box-shadow:0 4px 18px var(--purple-glow);
+}
+.btn-purple:hover{transform:translateY(-2px) scale(1.03)}
+
+.btn-outline{
+  font-size:.9rem;
+  padding:10px 22px;
+  background:transparent;
+  border:2px solid var(--card-border);
+  color:var(--text);
+}
+.btn-outline:hover{border-color:var(--purple);background:rgba(123,79,207,0.1);transform:translateY(-1px)}
+
+/* ===== GAME HUD ===== */
+.hud{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  background:var(--card);
+  border:1.5px solid var(--card-border);
+  border-radius:16px;
+  backdrop-filter:blur(12px);
+  flex-wrap:wrap;gap:8px;
+  margin-bottom:14px;
+}
+.hud-score{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Fredoka',sans-serif;font-weight:700;font-size:1.25rem;
+}
+.hud-score .icon{font-size:1.5rem}
+.hud-score .val{color:var(--gold);min-width:35px;transition:all .3s}
+.score-pop{animation:pop .4s ease-out}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.5);color:#ffe066}100%{transform:scale(1)}}
+
+.hud-hearts{display:flex;gap:4px;font-size:1.5rem}
+.heart{display:inline-block;transition:all .3s}
+.heart.dead{filter:grayscale(1) opacity(0.25);animation:heartDie .5s ease}
+@keyframes heartDie{0%{transform:scale(1)}30%{transform:scale(1.3)}100%{transform:scale(.8)}}
+
+.hud-streak{
+  font-family:'Fredoka',sans-serif;font-size:1.05rem;
+  color:var(--pink);font-weight:700;min-width:50px;text-align:right;
+}
+.streak-fire{animation:firePulse .5s ease-in-out infinite alternate}
+@keyframes firePulse{from{transform:scale(1)}to{transform:scale(1.15)}}
+
+.hud-rank{
+  font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:600;
+  color:var(--teal);text-align:center;width:100%;
+  padding-top:6px;border-top:1px solid rgba(123,79,207,0.15);
+  background:linear-gradient(90deg,rgba(123,79,207,0.06),rgba(244,114,182,0.06),rgba(54,214,195,0.06));
+  border-radius:8px;margin-top:2px;padding:6px 8px;
+}
+
+/* Progress */
+.progress{
+  width:100%;height:30px;
+  background:rgba(22,12,50,0.7);
+  border-radius:15px;
+  border:1.5px solid var(--card-border);
+  position:relative;overflow:hidden;
+  margin-bottom:16px;
+}
+.progress-bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--purple),var(--teal),var(--gold));
+  background-size:200% 100%;
+  animation:progShimmer 2s linear infinite;
+  border-radius:13px;
+  transition:width .6s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes progShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.progress-label{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Fredoka',sans-serif;font-size:.9rem;font-weight:700;
+  color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);z-index:2;
+}
+
+/* Round banner */
+.round-banner{
+  text-align:center;
+  margin-bottom:14px;
+  font-family:'Fredoka',sans-serif;
+}
+.round-badge{
+  display:inline-block;
+  padding:8px 22px;
+  border-radius:24px;
+  font-size:.9rem;font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+}
+.round-1-badge{background:rgba(123,79,207,0.2);color:var(--purple);border:1px solid var(--purple)}
+.round-2-badge{background:rgba(54,214,195,0.15);color:var(--teal);border:1px solid var(--teal)}
+.round-3-badge{background:rgba(244,114,182,0.15);color:var(--pink);border:1px solid var(--pink)}
+.round-4-badge{background:rgba(255,215,0,0.15);color:var(--gold);border:1px solid var(--gold)}
+.round-name{
+  font-size:1.2rem;font-weight:700;
+  margin-top:6px;
+  color:var(--text);
+}
+
+/* Question card */
+.q-card{
+  background:var(--card);
+  border:1.5px solid var(--card-border);
+  border-radius:var(--radius);
+  padding:26px 22px;
+  backdrop-filter:blur(12px);
+  text-align:center;
+}
+.q-prompt{
+  font-family:'Fredoka',sans-serif;
+  font-size:clamp(1.2rem,3.5vw,1.55rem);
+  font-weight:600;
+  line-height:1.55;
+  margin-bottom:20px;
+}
+.q-prompt .word{color:var(--gold);font-weight:700;font-size:1.2em}
+.q-prompt .def{color:var(--teal);font-style:italic}
+
+.q-counter{
+  font-family:'Fredoka',sans-serif;
+  font-size:.88rem;
+  color:var(--text-dim);
+  margin-bottom:10px;
+}
+
+/* Options */
+.opts{
+  display:flex;flex-direction:column;
+  gap:10px;width:100%;
+}
+.opt{
+  font-family:'Fredoka',sans-serif;
+  font-size:1.1rem;font-weight:600;
+  padding:17px 20px;
+  border-radius:14px;
+  border:2px solid rgba(123,79,207,0.3);
+  background:rgba(45,27,105,0.25);
+  color:var(--text);
+  cursor:pointer;
+  transition:all .22s ease;
+  text-align:left;
+  position:relative;
+}
+.opt:hover:not(.locked){
+  border-color:var(--teal);
+  background:rgba(54,214,195,0.1);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(54,214,195,0.15);
+}
+.opt .opt-letter{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;
+  border-radius:8px;
+  background:rgba(123,79,207,0.2);
+  font-size:.9rem;font-weight:700;
+  color:var(--purple);
+  margin-right:10px;
+  flex-shrink:0;
+}
+.opt.correct{
+  border-color:var(--green)!important;
+  background:var(--green-soft)!important;
+  color:var(--green);
+  box-shadow:0 0 28px rgba(74,222,128,0.2);
+  animation:correctPop .4s ease;
+}
+.opt.correct .opt-letter{background:var(--green);color:#0b0618}
+.opt.wrong{
+  border-color:var(--red)!important;
+  background:rgba(239,68,68,0.1)!important;
+  color:rgba(252,165,165,0.9);
+  animation:wrongShake .45s ease;
+}
+.opt.locked{pointer-events:none;opacity:.55}
+.opt.reveal{border-color:var(--green)!important;background:rgba(74,222,128,0.08)!important;opacity:1!important}
+
+@keyframes correctPop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* Hint */
+.hint-btn{
+  font-family:'Fredoka',sans-serif;font-size:.95rem;font-weight:600;
+  padding:9px 18px;border-radius:20px;
+  border:1px solid rgba(255,215,0,0.3);
+  background:var(--gold-soft);
+  color:var(--gold);cursor:pointer;
+  transition:all .25s;margin-top:8px;
+}
+.hint-btn:hover:not(:disabled){background:rgba(255,215,0,0.2);transform:translateY(-1px)}
+.hint-btn:disabled{opacity:.35;cursor:default}
+
+.hint-text{
+  font-family:'Fredoka',sans-serif;font-size:1rem;
+  color:var(--gold-dim);font-style:italic;
+  padding:8px 14px;margin-top:6px;
+  background:rgba(255,215,0,0.05);border-radius:10px;
+  animation:fadeUp .35s ease-out;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== FEEDBACK OVERLAY ===== */
+.feedback{
+  position:fixed;inset:0;z-index:100;
+  display:none;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.feedback.show{display:flex}
+.feedback-text{
+  font-family:'Cinzel Decorative',serif;
+  font-size:clamp(1.6rem,5.5vw,2.8rem);font-weight:900;
+  text-align:center;padding:20px 36px;border-radius:20px;
+  animation:fbIn .45s cubic-bezier(.34,1.56,.64,1);
+}
+.fb-good{color:var(--green);text-shadow:0 0 36px rgba(74,222,128,0.45)}
+.fb-bad{
+  color:rgba(252,165,165,0.9);text-shadow:0 0 24px rgba(239,68,68,0.3);
+  font-family:'Fredoka',sans-serif;font-size:clamp(1.1rem,3.5vw,1.5rem);font-weight:600;
+}
+@keyframes fbIn{0%{opacity:0;transform:scale(.5) translateY(16px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+
+/* ===== STORY OVERLAY ===== */
+.story-overlay{
+  position:fixed;inset:0;z-index:90;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(6,3,14,0.88);padding:20px;
+}
+.story-overlay.show{display:flex}
+.story-box{
+  background:var(--card);
+  border:2px solid rgba(255,215,0,0.25);
+  border-radius:22px;padding:30px 26px;
+  max-width:500px;width:100%;
+  text-align:center;
+  animation:fbIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+.story-box .emoji{font-size:2.8rem;margin-bottom:8px}
+.story-box .room{
+  font-family:'Cinzel Decorative',serif;
+  font-size:1.3rem;font-weight:700;
+  color:var(--gold);margin-bottom:10px;
+}
+.story-box p{
+  font-family:'Fredoka',sans-serif;
+  font-size:1.1rem;line-height:1.65;margin-bottom:18px;
+}
+
+/* ===== SPARKLES ===== */
+.sparkles{position:fixed;inset:0;z-index:99;pointer-events:none;overflow:hidden}
+.spark{
+  position:absolute;border-radius:50%;
+  animation:sparkAnim .75s ease-out forwards;
+}
+@keyframes sparkAnim{
+  0%{transform:scale(0) translateY(0);opacity:1}
+  50%{transform:scale(1.3);opacity:1}
+  100%{transform:scale(0) translateY(-55px);opacity:0}
+}
+
+/* Screen shake */
+.shake{animation:shk .4s ease}
+@keyframes shk{0%,100%{transform:translateX(0)}15%{transform:translateX(-5px)}30%{transform:translateX(5px)}45%{transform:translateX(-3px)}60%{transform:translateX(3px)}}
+
+/* ===== SUMMARY ===== */
+.summary-screen{justify-content:center;gap:20px;padding:40px 20px}
+.sum-card{
+  background:var(--card);border:1.5px solid var(--card-border);
+  border-radius:22px;padding:30px 26px;
+  max-width:560px;width:100%;backdrop-filter:blur(12px);text-align:center;
+}
+.sum-title{font-family:'Cinzel Decorative',serif;font-size:1.5rem;font-weight:700;color:var(--gold);margin-bottom:4px}
+.sum-rank{font-family:'Fredoka',sans-serif;font-size:1rem;color:var(--teal);font-weight:600;margin-bottom:18px}
+
+.sum-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.stat{background:rgba(45,27,105,0.35);border-radius:14px;padding:14px 8px}
+.stat .num{font-family:'Fredoka',sans-serif;font-size:1.5rem;font-weight:700;color:var(--gold)}
+.stat .lbl{font-family:'Fredoka',sans-serif;font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+
+.words-section{text-align:left;margin:12px 0}
+.words-section h4{font-family:'Fredoka',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.words-section .tag{
+  display:inline-block;font-family:'Fredoka',sans-serif;font-size:.83rem;font-weight:600;
+  padding:4px 12px;border-radius:20px;margin:3px 4px;
+}
+.tag-good{background:var(--green-soft);color:var(--green);border:1px solid rgba(74,222,128,0.25)}
+.tag-bad{background:var(--gold-soft);color:var(--gold);border:1px solid rgba(255,215,0,0.25)}
+
+.sum-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+
+/* ===== PARENT ===== */
+.parent-btn{
+  position:fixed;top:10px;right:10px;z-index:150;
+  font-family:'Fredoka',sans-serif;font-size:.68rem;
+  padding:5px 10px;border-radius:8px;
+  border:1px solid rgba(123,79,207,0.25);
+  background:rgba(22,12,50,0.8);
+  color:var(--text-dim);cursor:pointer;
+  transition:all .25s;backdrop-filter:blur(5px);
+}
+.parent-btn:hover{color:var(--text);border-color:var(--purple)}
+.parent-panel{
+  position:fixed;top:0;right:-350px;width:330px;height:100%;z-index:160;
+  background:rgba(11,6,24,0.97);border-left:1.5px solid var(--card-border);
+  padding:22px 18px;overflow-y:auto;
+  transition:right .4s cubic-bezier(.34,1.56,.64,1);
+  backdrop-filter:blur(20px);
+}
+.parent-panel.open{right:0}
+.parent-panel h3{font-family:'Fredoka',sans-serif;color:var(--gold);font-size:1.05rem;margin-bottom:14px}
+.parent-panel .close{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text);cursor:pointer;font-size:1.2rem;opacity:.5}
+.parent-panel .close:hover{opacity:1}
+.p-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 0;border-bottom:1px solid rgba(123,79,207,0.1);
+  font-family:'Fredoka',sans-serif;font-size:.88rem;
+}
+.p-row .lbl{color:var(--text-dim)}.p-row .val{font-weight:700}
+
+/* ===== WORD LIST ===== */
+.wl-overlay{
+  position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;
+  background:rgba(6,3,14,0.9);padding:20px;
+}
+.wl-overlay.show{display:flex}
+.wl-card{
+  background:var(--card);border:1.5px solid var(--card-border);
+  border-radius:22px;padding:26px;max-width:580px;width:100%;
+  max-height:80vh;overflow-y:auto;backdrop-filter:blur(12px);
+}
+.wl-card h3{font-family:'Cinzel Decorative',serif;color:var(--gold);font-size:1.2rem;margin-bottom:14px;text-align:center}
+.wl-ch{margin-bottom:14px}
+.wl-ch h4{font-family:'Fredoka',sans-serif;color:var(--teal);font-size:.95rem;font-weight:700;margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid rgba(54,214,195,0.15)}
+.wl-item{font-family:'Fredoka',sans-serif;font-size:.88rem;padding:3px 0;line-height:1.4}
+.wl-item strong{color:var(--gold)}
+
+/* ===== GACHA SHOP ===== */
+.gacha-screen{justify-content:center;gap:20px;padding:36px 16px}
+
+/* Wizard Avatar — SVG based */
+.wizard-avatar{
+  position:relative;
+  width:220px;height:280px;
+  margin:0 auto 16px;
+}
+.wizard-avatar svg{width:100%;height:100%}
+
+.wizard-frame{
+  background:rgba(22,12,50,0.6);
+  border:2px solid var(--card-border);
+  border-radius:22px;
+  padding:20px;
+  position:relative;
+  overflow:visible;
+}
+.wizard-frame.rf-common{border-color:rgba(255,255,255,0.2)}
+.wizard-frame.rf-rare{border-color:var(--teal);box-shadow:0 0 20px rgba(54,214,195,0.2)}
+.wizard-frame.rf-epic{border-color:var(--purple);box-shadow:0 0 25px var(--purple-glow)}
+.wizard-frame.rf-legendary{border-color:var(--gold);box-shadow:0 0 35px rgba(255,215,0,0.3);animation:legendGlow 2s ease-in-out infinite}
+@keyframes legendGlow{0%,100%{box-shadow:0 0 25px rgba(255,215,0,0.2)}50%{box-shadow:0 0 50px rgba(255,215,0,0.5)}}
+.wizard-frame.rf-mythic{
+  border:2px solid transparent;position:relative;
+  box-shadow:0 0 40px rgba(255,100,200,0.25),0 0 60px rgba(100,100,255,0.15);
+  animation:mythicGlow 2.5s ease-in-out infinite;
+}
+.wizard-frame.rf-mythic::before{
+  content:'';position:absolute;inset:-3px;border-radius:24px;z-index:-1;
+  background:linear-gradient(135deg,#ff6ec7,#7b4fcf,#36d6c3,#ffd700,#ff6ec7);
+  background-size:300% 300%;
+  animation:divineBorder 3s ease-in-out infinite;
+}
+
+/* Gacha Pull Buttons */
+.gacha-pulls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.pull-btn{
+  font-family:'Fredoka',sans-serif;font-weight:700;
+  padding:18px 20px;border-radius:16px;border:2px solid;
+  cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;min-width:150px;
+  position:relative;overflow:hidden;
+}
+.pull-btn:hover:not(:disabled){transform:translateY(-3px) scale(1.03)}
+.pull-btn:disabled{opacity:.35;cursor:default;transform:none!important}
+.pull-basic{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.25);color:var(--text)}
+.pull-super{background:rgba(54,214,195,0.08);border-color:var(--teal);color:var(--teal)}
+.pull-mega{background:rgba(255,215,0,0.06);border-color:var(--gold);color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,0.12)}
+.pull-mega::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,rgba(255,215,0,0.1),transparent,rgba(255,215,0,0.1));border-radius:16px;animation:shimmer 3s ease-in-out infinite}
+.pull-divine{
+  background:linear-gradient(135deg,rgba(255,50,150,0.08),rgba(100,100,255,0.08),rgba(255,215,0,0.08));
+  border-color:transparent;color:#fff;
+  box-shadow:0 0 25px rgba(255,100,200,0.15),0 0 50px rgba(100,100,255,0.1);
+  position:relative;
+}
+.pull-divine::before{
+  content:'';position:absolute;inset:-2px;border-radius:18px;z-index:-1;
+  background:linear-gradient(135deg,#ff6ec7,#7b4fcf,#36d6c3,#ffd700,#ff6ec7);
+  background-size:300% 300%;
+  animation:divineBorder 3s ease-in-out infinite;
+}
+.pull-divine::after{
+  content:'';position:absolute;inset:0;border-radius:16px;
+  background:rgba(11,6,24,0.92);z-index:-1;
+}
+@keyframes divineBorder{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.pull-cost{font-size:.85rem;opacity:.7;margin-top:4px}
+.pull-odds{font-size:.65rem;opacity:.4;margin-top:2px}
+
+/* Gacha Result Overlay */
+.gacha-result{
+  position:fixed;inset:0;z-index:200;
+  display:none;align-items:center;justify-content:center;
+  background:rgba(6,3,14,0.92);padding:20px;
+}
+.gacha-result.show{display:flex}
+.gacha-card{
+  width:280px;
+  border-radius:24px;
+  padding:32px 24px;
+  text-align:center;
+  animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+@keyframes gachaReveal{
+  0%{opacity:0;transform:scale(.3) rotateY(180deg)}
+  50%{transform:scale(1.08) rotateY(0deg)}
+  100%{opacity:1;transform:scale(1) rotateY(0deg)}
+}
+.gr-common .gacha-card{background:linear-gradient(145deg,#2a2a3e,#1a1a2e);border:2px solid rgba(255,255,255,0.15)}
+.gr-rare .gacha-card{background:linear-gradient(145deg,#0d2e2e,#1a2e3e);border:2px solid var(--teal);box-shadow:0 0 30px rgba(54,214,195,0.2)}
+.gr-epic .gacha-card{background:linear-gradient(145deg,#2d1a4e,#1a0d3e);border:2px solid var(--purple);box-shadow:0 0 35px var(--purple-glow)}
+.gr-legendary .gacha-card{background:linear-gradient(145deg,#3e2e0d,#2e1a00);border:2px solid var(--gold);box-shadow:0 0 45px rgba(255,215,0,0.35);animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1),legendGlow 2s ease-in-out infinite}
+.gr-mythic .gacha-card{
+  background:linear-gradient(145deg,#1a0d2e,#0d1a2e,#2e0d1a);
+  border:2px solid transparent;
+  box-shadow:0 0 50px rgba(255,100,200,0.3),0 0 80px rgba(100,100,255,0.2),0 0 30px rgba(255,215,0,0.2);
+  animation:gachaReveal .8s cubic-bezier(.34,1.56,.64,1),mythicGlow 2.5s ease-in-out infinite;
+  position:relative;
+}
+.gr-mythic .gacha-card::before{
+  content:'';position:absolute;inset:-3px;border-radius:26px;z-index:-1;
+  background:linear-gradient(135deg,#ff6ec7,#7b4fcf,#36d6c3,#ffd700,#ff6ec7);
+  background-size:300% 300%;
+  animation:divineBorder 3s ease-in-out infinite;
+}
+@keyframes mythicGlow{
+  0%,100%{box-shadow:0 0 40px rgba(255,100,200,0.25),0 0 60px rgba(100,100,255,0.15)}
+  33%{box-shadow:0 0 50px rgba(100,100,255,0.3),0 0 80px rgba(54,214,195,0.2)}
+  66%{box-shadow:0 0 50px rgba(255,215,0,0.3),0 0 80px rgba(255,100,200,0.2)}
+}
+
+.gacha-item-emoji{font-size:4.5rem;margin-bottom:12px;display:block;filter:drop-shadow(0 4px 16px rgba(255,215,0,0.3))}
+.gacha-item-name{font-family:'Cinzel Decorative',serif;font-size:1.15rem;font-weight:700;margin-bottom:6px}
+.gacha-rarity-tag{
+  display:inline-block;font-family:'Fredoka',sans-serif;
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  padding:4px 14px;border-radius:20px;margin-bottom:10px;
+}
+.rt-common{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)}
+.rt-rare{background:rgba(54,214,195,0.12);color:var(--teal)}
+.rt-epic{background:rgba(123,79,207,0.15);color:#b794f6}
+.rt-legendary{background:rgba(255,215,0,0.12);color:var(--gold)}
+.rt-mythic{background:linear-gradient(135deg,rgba(255,100,200,0.15),rgba(100,100,255,0.15));color:#ff9de0;animation:mythicTagPulse 2s ease-in-out infinite}
+@keyframes mythicTagPulse{0%,100%{color:#ff9de0}33%{color:#9db4ff}66%{color:#ffd700}}
+.gacha-power{font-family:'Fredoka',sans-serif;font-size:.88rem;color:var(--pink);margin-bottom:8px;font-weight:600}
+.gacha-desc{font-family:'Fredoka',sans-serif;font-size:.88rem;color:var(--text-dim);line-height:1.5}
+.gacha-dupe{font-family:'Fredoka',sans-serif;font-size:.85rem;color:var(--gold);margin-top:10px;font-style:italic}
+
+/* Inventory */
+.inv-section{margin:14px 0}
+.inv-section h4{font-family:'Fredoka',sans-serif;font-size:.9rem;color:var(--teal);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.inv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.inv-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 4px;border-radius:14px;
+  cursor:pointer;transition:all .25s;
+  border:2px solid transparent;
+  background:rgba(45,27,105,0.15);
+}
+.inv-item:hover{background:rgba(123,79,207,0.15);transform:translateY(-2px)}
+.inv-item.equipped{border-color:var(--teal);background:rgba(54,214,195,0.08)}
+.inv-item.ir-rare{border-color:rgba(54,214,195,0.3)}
+.inv-item.ir-epic{border-color:rgba(123,79,207,0.3)}
+.inv-item.ir-legendary{border-color:rgba(255,215,0,0.3)}
+.inv-item.equipped.ir-rare{border-color:var(--teal);box-shadow:0 0 12px rgba(54,214,195,0.15)}
+.inv-item.equipped.ir-epic{border-color:var(--purple);box-shadow:0 0 12px var(--purple-glow)}
+.inv-item.equipped.ir-legendary{border-color:var(--gold);box-shadow:0 0 15px rgba(255,215,0,0.2)}
+.inv-item.ir-mythic{border-color:rgba(255,100,200,0.3);background:linear-gradient(135deg,rgba(255,100,200,0.05),rgba(100,100,255,0.05))}
+.inv-item.equipped.ir-mythic{border-color:#ff6ec7;box-shadow:0 0 20px rgba(255,100,200,0.25),0 0 40px rgba(100,100,255,0.1);animation:mythicInvPulse 2s ease-in-out infinite}
+@keyframes mythicInvPulse{0%,100%{border-color:#ff6ec7}33%{border-color:#7b4fcf}66%{border-color:#ffd700}}
+.inv-emoji{font-size:1.8rem;margin-bottom:4px}
+.inv-name{font-family:'Fredoka',sans-serif;font-size:.65rem;text-align:center;color:var(--text-dim);line-height:1.2}
+
+/* Power-up badges */
+.powerups-bar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.pu-badge{
+  font-family:'Fredoka',sans-serif;font-size:.72rem;font-weight:600;
+  padding:3px 10px;border-radius:12px;
+  background:rgba(244,114,182,0.1);
+  border:1px solid rgba(244,114,182,0.25);
+  color:var(--pink);
+  animation:fadeUp .35s ease-out;
+}
+
+/* Mini wizard in HUD — SVG */
+.hud-wizard{
+  display:flex;align-items:center;
+  padding:2px 4px;
+  border-radius:10px;
+  background:rgba(45,27,105,0.3);
+  cursor:pointer;
+  transition:all .25s;
+}
+.hud-wizard:hover{background:rgba(45,27,105,0.5);transform:scale(1.08)}
+.hw-svg{width:36px;height:48px}
+.hw-svg svg{width:100%;height:100%}
+
+/* Set bonus indicators */
+.set-bonus-active{font-family:Fredoka,sans-serif;font-size:.8rem;color:var(--teal);margin-top:6px;padding:4px 10px;background:rgba(54,214,195,0.1);border-radius:10px;border:1px solid rgba(54,214,195,0.2)}
+.set-bonus-partial{font-family:Fredoka,sans-serif;font-size:.7rem;color:var(--text-dim);margin-top:3px}
+
+/* === MATCHING GAME (Round 4) === */
+.match-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  max-width:600px;
+  margin:0 auto;
+}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-col-title{font-family:Fredoka,sans-serif;font-size:.85rem;color:var(--text-dim);text-align:center;margin-bottom:4px}
+.match-tile{
+  font-family:Fredoka,sans-serif;font-size:.85rem;
+  padding:12px 14px;
+  background:var(--card);border:2px solid var(--card-border);
+  border-radius:12px;cursor:pointer;
+  transition:all .2s;text-align:center;
+  color:var(--text);min-height:48px;
+  display:flex;align-items:center;justify-content:center;
+}
+.match-tile:hover:not(.matched):not(.selected){border-color:var(--purple);background:rgba(123,79,207,0.1)}
+.match-tile.selected{border-color:var(--teal);background:rgba(54,214,195,0.12);box-shadow:0 0 12px rgba(54,214,195,0.2)}
+.match-tile.matched{opacity:0.4;pointer-events:none;border-color:var(--green);background:rgba(74,222,128,0.08)}
+.match-tile.wrong-flash{animation:matchShake .4s ease-out;border-color:var(--red)}
+@keyframes matchShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.match-score{font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--gold);text-align:center;margin-bottom:8px}
+
+/* Gacha sparkle rain for legendary */
+.legendary-rain{position:fixed;inset:0;z-index:199;pointer-events:none;overflow:hidden}
+.g-sparkle{
+  position:absolute;
+  font-size:1.2rem;
+  animation:sparkleRain 1.5s ease-out forwards;
+  opacity:0;
+}
+@keyframes sparkleRain{
+  0%{opacity:0;transform:translateY(-20px) rotate(0deg)}
+  20%{opacity:1}
+  100%{opacity:0;transform:translateY(100vh) rotate(360deg)}
+}
+
+@media(max-width:600px){
+  .ch-grid{grid-template-columns:repeat(2,1fr)}
+  .sum-stats{grid-template-columns:1fr 1fr}
+  .hud{padding:10px 12px}
+  .q-card{padding:20px 16px}
+  .parent-panel{width:270px}
+  .gacha-pulls{flex-direction:column;align-items:center}
+  .pull-btn{min-width:200px}
+  .inv-grid{grid-template-columns:repeat(3,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+<div class="stars" id="stars"></div>
+<div class="sparkles" id="sparkles"></div>
+
+<!-- Glow orbs -->
+<div class="orb" style="width:200px;height:200px;background:rgba(123,79,207,0.3);top:10%;left:5%;animation-delay:0s"></div>
+<div class="orb" style="width:160px;height:160px;background:rgba(244,114,182,0.2);bottom:15%;right:8%;animation-delay:2s"></div>
+<div class="orb" style="width:140px;height:140px;background:rgba(54,214,195,0.15);top:50%;left:60%;animation-delay:4s"></div>
+
+<!-- Feedback -->
+<div class="feedback" id="fb"><div class="feedback-text" id="fbText"></div></div>
+
+<!-- Story overlay -->
+<div class="story-overlay" id="storyOv">
+  <div class="story-box">
+    <div class="emoji" id="storyEmoji">&#129497;&#8205;&#9794;&#65039;</div>
+    <div class="room" id="storyRoom"></div>
+    <p id="storyP"></p>
+    <button class="btn btn-hero" style="font-size:1rem;padding:14px 32px" id="storyBtn">Let's Go!</button>
+  </div>
+</div>
+
+<!-- Word list -->
+<div class="wl-overlay" id="wlOv">
+  <div class="wl-card">
+    <h3>All Words</h3>
+    <div id="wlContent"></div>
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn btn-purple" onclick="document.getElementById('wlOv').classList.remove('show')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Parent -->
+<button class="parent-btn" id="parentBtn">Parent View</button>
+<div class="parent-panel" id="parentPanel">
+  <button class="close" id="parentClose">&times;</button>
+  <h3>Parent Summary</h3>
+  <div id="parentContent"></div>
+</div>
+
+<!-- ===== START SCREEN ===== -->
+<div class="screen active" id="startScreen" style="justify-content:center;gap:22px;padding:36px 16px">
+  <div class="title">The Quest for the<br>Lost Library</div>
+  <div class="subtitle">A Vocabulary Adventure &#127908;&#127932;</div>
+
+  <div class="card card-glow container" style="text-align:center">
+    <div class="guardian">
+      <div class="guardian-emoji">&#129497;&#8205;&#9794;&#65039;</div>
+      <div class="guardian-name">Lexicon, Guardian of the Library</div>
+    </div>
+    <div class="guardian-speech">
+      "Yo, welcome bestie! &#128075; The Lost Library got absolutely <span class="pink">wrecked</span> by the Word Goblin (he's lowkey a menace fr fr). Only a true <span class="glow">Word Wizard</span> can fix it. Think of this as your <span class="teal">trainee arc</span> &mdash; three stages to prove you're ready for debut. No cap, you're about to <span class="pink">eat this up and leave no crumbs</span>. Let's COOK! &#128293;"
+    </div>
+  </div>
+
+  <div class="card container" style="text-align:center">
+    <div class="chapter-title">&#128221; Weekly Quiz Mode</div>
+    <div class="quiz-toggle">
+      <label class="quiz-switch">
+        <input type="checkbox" id="quizToggle" onchange="toggleQuizMode(this.checked)">
+        <span class="quiz-slider"></span>
+      </label>
+      <span class="quiz-status" id="quizStatus">OFF</span>
+    </div>
+    <div class="quiz-info" id="quizInfo" style="display:none">
+      <div class="quiz-week-label">&#127919; <span id="quizLabel"></span></div>
+      <div>Part 1: Matching &#8212; <strong><span id="quizMatchCount"></span> words</strong></div>
+      <div>Part 2: Sentences &#8212; <strong><span id="quizSentCount"></span> words</strong></div>
+    </div>
+  </div>
+
+  <div class="card container" id="chCard">
+    <div class="chapter-title">&#127926; Pick Your Setlist (Chapters)</div>
+    <div class="ch-grid" id="chGrid"></div>
+  </div>
+
+  <div class="card container" id="roundCard">
+    <div class="chapter-title">&#127918; Choose Your Starting Round</div>
+    <div class="round-select-grid" id="roundGrid">
+      <input type="radio" name="roundPick" class="rd-input" id="rd0" value="0" checked>
+      <label class="rd-label" for="rd0">
+        <span class="rd-num">1</span>
+        <span class="rd-info">
+          <span class="rd-title">Matching Game</span>
+          <span class="rd-desc">Match words to their definitions &mdash; connect the pairs! &#129513;</span>
+        </span>
+      </label>
+
+      <input type="radio" name="roundPick" class="rd-input" id="rd1" value="1">
+      <label class="rd-label" for="rd1">
+        <span class="rd-num">2</span>
+        <span class="rd-info">
+          <span class="rd-title">Word &#8594; Definition</span>
+          <span class="rd-desc">See the vocab word, pick the right definition from 5 choices</span>
+        </span>
+      </label>
+
+      <input type="radio" name="roundPick" class="rd-input" id="rd2" value="2">
+      <label class="rd-label" for="rd2">
+        <span class="rd-num">3</span>
+        <span class="rd-info">
+          <span class="rd-title">Definition &#8594; Word</span>
+          <span class="rd-desc">See the definition, find the matching vocab word from 5 choices</span>
+        </span>
+      </label>
+
+      <input type="radio" name="roundPick" class="rd-input" id="rd3" value="3">
+      <label class="rd-label" for="rd3">
+        <span class="rd-num">4</span>
+        <span class="rd-info">
+          <span class="rd-title">Sentence Challenge</span>
+          <span class="rd-desc">Pick which sentence uses the word correctly &mdash; final boss! &#9876;&#65039;&#127942;</span>
+        </span>
+      </label>
+    </div>
+  </div>
+
+  <button class="btn btn-hero" id="startBtn">Begin Quest! &#9889;</button>
+</div>
+
+<!-- ===== GAME SCREEN ===== -->
+<div class="screen" id="gameScreen" style="padding-top:12px;gap:10px">
+  <div class="container">
+    <div class="hud">
+      <div class="hud-wizard" id="hudWizard" onclick="openShopFromGame()" title="Your Wizard!"></div>
+      <div class="hud-score"><span class="icon">&#11088;</span><span class="val" id="hudScore">0</span></div>
+      <div class="hud-hearts" id="hudHearts"></div>
+      <div class="hud-streak" id="hudStreak"></div>
+      <div class="hud-rank" id="hudRank">Trainee</div>
+    </div>
+    <div class="powerups-bar" id="puBar"></div>
+    <div class="progress">
+      <div class="progress-bar" id="progBar" style="width:0%"></div>
+      <div class="progress-label" id="progLabel">1 / 18</div>
+    </div>
+    <div class="round-banner" id="roundBanner"></div>
+    <div id="questionArea"></div>
+  </div>
+</div>
+
+<!-- ===== SUMMARY SCREEN ===== -->
+<div class="screen summary-screen" id="sumScreen">
+  <div class="sum-card" id="sumCard"></div>
+</div>
+
+<!-- Gacha Result Overlay -->
+<div class="gacha-result" id="gachaResult">
+  <div class="gacha-card" id="gachaCard"></div>
+</div>
+<div class="legendary-rain" id="legendRain"></div>
+
+<!-- ===== GACHA SHOP SCREEN ===== -->
+<div class="screen gacha-screen" id="shopScreen">
+  <div class="container" style="text-align:center">
+    <div class="title" style="font-size:clamp(1.5rem,4.5vw,2.4rem);margin-bottom:4px">Wizard Drip Shop</div>
+    <div class="subtitle">spend your points, get that glow-up &#10024;</div>
+
+    <div class="card card-glow" style="margin-bottom:18px">
+      <div style="font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--text-dim);margin-bottom:8px">Your Points</div>
+      <div style="font-family:Fredoka,sans-serif;font-size:2rem;font-weight:700;color:var(--gold)" id="shopScore">0</div>
+      <div class="wizard-frame" id="shopWizFrame">
+        <div class="wizard-avatar" id="shopWizard"></div>
+      </div>
+      <div id="shopSetBonus" style="margin-top:6px"></div>
+      <div id="shopPowerups" style="margin-top:10px"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="chapter-title">&#127922; Pull for Items</div>
+      <div class="gacha-pulls">
+        <button class="pull-btn pull-basic" onclick="gachaPull('basic')">
+          <div>Basic Pull</div>
+          <div class="pull-cost">&#11088; 20 pts</div>
+          <div class="pull-odds">mostly common</div>
+        </button>
+        <button class="pull-btn pull-super" onclick="gachaPull('super')">
+          <div>Super Pull</div>
+          <div class="pull-cost">&#11088; 50 pts</div>
+          <div class="pull-odds">rare+ odds up!</div>
+        </button>
+        <button class="pull-btn pull-mega" onclick="gachaPull('mega')">
+          <div>MEGA Pull</div>
+          <div class="pull-cost">&#11088; 100 pts</div>
+          <div class="pull-odds">epic &amp; legendary!</div>
+        </button>
+        <button class="pull-btn pull-divine" onclick="gachaPull('divine')">
+          <div>&#10024; DIVINE Pull &#10024;</div>
+          <div class="pull-cost">&#11088; 250 pts</div>
+          <div class="pull-odds">mythic chance!</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="chapter-title">&#128092; Your Collection</div>
+      <div id="inventoryArea"></div>
+      <div style="font-family:Fredoka,sans-serif;font-size:.8rem;color:var(--text-dim);margin-top:10px">Tap an item to equip it!</div>
+    </div>
+
+    <button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="exitShop()">Back to Quest &#9889;</button>
+  </div>
+</div>
+
+<script>
+// ===== WEEKLY QUIZ CONFIG =====
+// Parent: update these 3 values each week!
+// matchWords = bold words (matching game)
+// sentenceWords = starred* words (sentence challenge)
+const WEEKLY_QUIZ={
+  label:'Ch 13–18 Quiz',
+  matchWords:['torrent','tribulations','reiterated','rigmarole','sublime',
+    'vale','inflection','ostentatiously','aesthetic','cloistered',
+    'staunchly','perusal','tenacity','relented','estranged'],
+  sentenceWords:['rigmarole','sublime','vale','aesthetic','staunchly']
+};
+
+// ===== DATA =====
+const VOCAB={
+  7:[
+    {word:'admonished',pos:'v.',def:'reprimanded, warned'},
+    {word:'glibly',pos:'adv.',def:'in a smooth but insincere manner, superficially'},
+    {word:'irreverence',pos:'n.',def:'lack of reverence or due respect'},
+    {word:'petition',pos:'n.',def:'a request'},
+    {word:'heathen',pos:'n.',def:'unbeliever; infidel'},
+    {word:'manse',pos:'n.',def:'residence of a minister'}
+  ],
+  8:[
+    {word:'imploring',pos:'adj.',def:'begging earnestly, entreating'},
+    {word:'deferring',pos:'v.',def:'postponing'},
+    {word:'discourse',pos:'v.',def:'to converse; to talk'},
+    {word:'rapt',pos:'adj.',def:'delighted; deeply moved'},
+    {word:'askance',pos:'adv.',def:'with a sideways glance of disgust or disapproval'},
+    {word:'diligently',pos:'adv.',def:'showing care and effort'}
+  ],
+  9:[
+    {word:'suppositions',pos:'n.',def:'assumptions; ideas'},
+    {word:'vagaries',pos:'n.',def:'strange ideas or acts'},
+    {word:'obtrusive',pos:'adj.',def:'unpleasantly noticeable'},
+    {word:'consternation',pos:'n.',def:'anxiety or dismay causing confusion'},
+    {word:'undauntedly',pos:'adv.',def:'without fear; courageously'},
+    {word:'reprehensible',pos:'adj.',def:'objectionable; unacceptable'}
+  ],
+  10:[
+    {word:'refractory',pos:'adj.',def:'stubborn, rebellious'},
+    {word:'obdurate',pos:'adj.',def:'stubborn; obstinate'},
+    {word:'penitent',pos:'n.',def:'a remorseful, repentant person'},
+    {word:'beseechingly',pos:'adv.',def:'pleadingly; imploringly'},
+    {word:'abasement',pos:'n.',def:'humiliation; degradation'},
+    {word:'officious',pos:'adj.',def:'excessively enthusiastic in offering help; meddlesome'}
+  ],
+  11:[
+    {word:'furbelows',pos:'n.',def:'ruffles or frills on a skirt or petticoat'},
+    {word:'dudgeon',pos:'n.',def:'a feeling of great resentment; rage'},
+    {word:'disconsolately',pos:'adv.',def:'in an unhappy or disappointed manner'},
+    {word:'ruddy',pos:'adj.',def:'rosy; healthy'},
+    {word:'rebukingly',pos:'adv.',def:'reproachfully; disapprovingly'},
+    {word:'hampered',pos:'v.',def:'prevented or hindered'}
+  ],
+  12:[
+    {word:'dubious',pos:'adj.',def:'uncertain, unreliable'},
+    {word:'vexed',pos:'adj.',def:'angered; irritated'},
+    {word:'resolute',pos:'adj.',def:'determined; decided'},
+    {word:'unheeded',pos:'adj.',def:'disregarded, unnoticed'},
+    {word:'tremulous',pos:'adj.',def:'timid; fearful'},
+    {word:'beguiled',pos:'v.',def:'distracted; charmed; entranced'}
+  ],
+  13:[
+    {word:'torrent',pos:'n.',def:'outpouring; flow'},
+    {word:'sallow',pos:'adj.',def:'a sickly yellow'},
+    {word:'brusquely',pos:'adv.',def:'abruptly; bluntly'},
+    {word:'dolefully',pos:'adv.',def:'with mourning or sadness'},
+    {word:'tribulations',pos:'n.',def:'trials; sufferings'},
+    {word:'bequeathed',pos:'v.',def:'left to a person by will; handed down'}
+  ],
+  14:[
+    {word:'confounded',pos:'v.',def:'confused'},
+    {word:'compunction',pos:'n.',def:'guilty conscience'},
+    {word:'reiterated',pos:'v.',def:'repeated'},
+    {word:'rigmarole',pos:'n.',def:'a rambling or meaningless story'},
+    {word:'beatification',pos:'n.',def:'making or being blessed'},
+    {word:'sublime',pos:'adj.',def:'supreme; splendid'}
+  ],
+  15:[
+    {word:'vale',pos:'n.',def:'valley'},
+    {word:'garret',pos:'n.',def:'attic'},
+    {word:'blithely',pos:'adv.',def:'light-heartedly; carelessly'},
+    {word:'drollery',pos:'n.',def:'comedy; clowning'},
+    {word:'inflection',pos:'n.',def:'a change in the pitch of the voice'},
+    {word:'ostentatiously',pos:'adv.',def:'in a showy, boastful manner'}
+  ],
+  16:[
+    {word:'revelled',pos:'v.',def:'delighted'},
+    {word:'aesthetic',pos:'adj.',def:'having to do with beauty'},
+    {word:'cloistered',pos:'adj.',def:'sheltered; secluded'},
+    {word:'personified',pos:'adj.',def:'embodied in human form'},
+    {word:'supplicant',pos:'n.',def:'humble beggar'},
+    {word:'prepense',pos:'adj.',def:'intentional, premeditated; planned'}
+  ],
+  17:[
+    {word:'staunchly',pos:'adv.',def:'faithfully, loyally'},
+    {word:'perusal',pos:'n.',def:'careful reading'},
+    {word:'effusion',pos:'n.',def:'an outpouring, unrestrained flow'},
+    {word:'perquisites',pos:'n.',def:'extra benefits, customary privileges'},
+    {word:'bedizened',pos:'v.',def:'adorned gaudily'},
+    {word:'tenacity',pos:'n.',def:'unwillingness to let go, stubbornness'}
+  ],
+  18:[
+    {word:'beaux',pos:'n.',def:'admirers, boyfriends'},
+    {word:'relented',pos:'v.',def:'yielded to compassion, shown mercy'},
+    {word:'estranged',pos:'v.',def:'alienated; separated'},
+    {word:'consequent',pos:'adj.',def:'logically consistent'},
+    {word:'irradiated',pos:'v.',def:'show upon, lit up'},
+    {word:'glens',pos:'n.',def:'narrow, secluded valleys'}
+  ]
+};
+
+const SENTENCES={
+  admonished:['The teacher ___WORD___ the students for talking during the test.','Mom ___WORD___ me for leaving my shoes in the hallway.'],
+  glibly:['He ___WORD___ made excuses for not doing his homework.','She ___WORD___ promised to clean her room, but never did.'],
+  irreverence:['His ___WORD___ toward the rules got him in trouble.','The comedian was known for her ___WORD___ toward authority.'],
+  petition:['The students signed a ___WORD___ asking for longer recess.','She submitted a ___WORD___ to the principal for a new school mascot.'],
+  heathen:['The villagers called anyone who disagreed a ___WORD___.','In the old story, the knight had to convince the ___WORD___.'],
+  manse:['The old ___WORD___ sat at the edge of the churchyard.','The minister lived in the beautiful ___WORD___ next door.'],
+  imploring:['With ___WORD___ eyes, the puppy begged for a treat.','She gave her dad an ___WORD___ look, hoping he\'d say yes.'],
+  deferring:['She kept ___WORD___ her chores until the last minute.','He was always ___WORD___ his decision about what to eat.'],
+  discourse:['The scholars enjoyed a lively ___WORD___ about ancient history.','They would ___WORD___ for hours about their favorite books.'],
+  rapt:['The children sat in ___WORD___ attention during the magic show.','She was ___WORD___ by the beautiful sunset over the ocean.'],
+  askance:['She looked ___WORD___ at the strange food on her plate.','He glanced ___WORD___ at the person cutting in line.'],
+  diligently:['She studied ___WORD___ for her vocabulary test.','The ant worked ___WORD___ all summer long.'],
+  suppositions:['His ___WORD___ about the mystery turned out to be correct.','Don\'t make ___WORD___ without knowing the facts first.'],
+  vagaries:['The ___WORD___ of the weather ruined their picnic plans.','Her ___WORD___ made it hard to predict what she\'d do next.'],
+  obtrusive:['The loud music was ___WORD___ and bothered everyone.','The bright neon sign was ___WORD___ against the quiet neighborhood.'],
+  consternation:['There was great ___WORD___ when the power went out during the show.','To her ___WORD___, she realized she forgot her speech at home.'],
+  undauntedly:['She ___WORD___ climbed the tall mountain despite the storm.','He ___WORD___ stood up to the bully in the schoolyard.'],
+  reprehensible:['Cheating on a test is ___WORD___ behavior.','The villain\'s actions in the story were truly ___WORD___.'],
+  refractory:['The ___WORD___ child refused to follow any instructions.','The ___WORD___ horse wouldn\'t let anyone ride it.'],
+  obdurate:['Despite everyone\'s advice, she remained ___WORD___ in her decision.','The ___WORD___ mule refused to budge from the road.'],
+  penitent:['The ___WORD___ thief returned everything he had stolen.','Looking ___WORD___, the boy apologized for breaking the vase.'],
+  beseechingly:['The child looked ___WORD___ at her mother for one more cookie.','He ___WORD___ asked the teacher for extra time on the test.'],
+  abasement:['The bully\'s cruelty was a form of ___WORD___ toward others.','She felt a wave of ___WORD___ after her embarrassing mistake.'],
+  officious:['The ___WORD___ neighbor kept telling everyone how to mow their lawn.','Nobody liked the ___WORD___ hall monitor who made up extra rules.'],
+  furbelows:['The fancy dress was covered in ___WORD___ and lace.','She added ___WORD___ to the costume to make it look fancier.'],
+  dudgeon:['He left the room in high ___WORD___ after being insulted.','Her ___WORD___ was obvious from the angry look on her face.'],
+  disconsolately:['She sat ___WORD___ on the bench after losing the game.','The puppy whimpered ___WORD___ when its owner left.'],
+  ruddy:['His ___WORD___ cheeks showed he had been playing outside in the cold.','She had a ___WORD___ glow after running around the playground.'],
+  rebukingly:['The teacher looked at him ___WORD___ when he threw the paper airplane.','She spoke ___WORD___ to her brother for eating her dessert.'],
+  hampered:['The heavy rain ___WORD___ their progress on the hike.','Her broken arm ___WORD___ her ability to play the piano.'],
+  dubious:['She gave the mystery meat a ___WORD___ look before tasting it.','His excuse for being late sounded ___WORD___.'],
+  vexed:['She was ___WORD___ by the impossible math problem.','The loud construction noise ___WORD___ the entire neighborhood.'],
+  resolute:['She was ___WORD___ in her decision to finish the race.','With a ___WORD___ look, he opened the door to the dark room.'],
+  unheeded:['The warning signs went ___WORD___ and the hikers got lost.','Her advice was ___WORD___ and they made the same mistake.'],
+  tremulous:['Her ___WORD___ voice revealed how nervous she was on stage.','With a ___WORD___ hand, he reached for the spider.'],
+  beguiled:['The audience was ___WORD___ by the magician\'s amazing tricks.','She was ___WORD___ by the beautiful melody of the song.'],
+  torrent:['A ___WORD___ of rain flooded the streets in minutes.','She unleashed a ___WORD___ of words, barely stopping to breathe.'],
+  sallow:['After weeks of being sick, his face looked pale and ___WORD___.','The ___WORD___ complexion of the patient worried the doctor.'],
+  brusquely:['He ___WORD___ told her to move out of the way.','The shopkeeper ___WORD___ refused to answer any more questions.'],
+  dolefully:['The dog stared ___WORD___ at the door, waiting for its owner.','She ___WORD___ packed her bags, sad to leave her friends behind.'],
+  tribulations:['Despite many ___WORD___, the family stayed strong together.','The ___WORD___ of the long journey tested their patience.'],
+  bequeathed:['Her grandmother ___WORD___ the antique necklace to her in her will.','The old professor ___WORD___ his entire book collection to the library.'],
+  confounded:['The magic trick ___WORD___ the audience completely.','She was ___WORD___ by the impossible math problem.'],
+  compunction:['He felt no ___WORD___ about eating the last slice of cake.','She had a pang of ___WORD___ after lying to her friend.'],
+  reiterated:['The teacher ___WORD___ the instructions one more time for clarity.','Mom ___WORD___ that we needed to be home before dark.'],
+  rigmarole:['Getting a passport involves such a tiresome ___WORD___ of paperwork.','He launched into a long ___WORD___ about his weekend that made no sense.'],
+  beatification:['The ceremony celebrated the ___WORD___ of the beloved nun.','The ___WORD___ process required proof of a miracle.'],
+  sublime:['The sunset over the ocean was absolutely ___WORD___.','The orchestra delivered a ___WORD___ performance that moved everyone to tears.'],
+  vale:['The little village was nestled in a quiet green ___WORD___.','Mist settled over the ___WORD___ as morning broke.'],
+  garret:['The struggling artist lived in a tiny ___WORD___ above the bakery.','She climbed the narrow stairs to the dusty ___WORD___.'],
+  blithely:['She ___WORD___ skipped through the park without a care in the world.','He ___WORD___ ignored the warning signs posted on the fence.'],
+  drollery:['The clown\'s ___WORD___ had the children laughing for hours.','His sense of ___WORD___ made even boring meetings entertaining.'],
+  inflection:['The rise in her ___WORD___ showed she was asking a question.','His voice had a sad ___WORD___ that revealed his true feelings.'],
+  ostentatiously:['She ___WORD___ displayed her new designer bag for everyone to see.','He ___WORD___ waved his award around the room.'],
+  revelled:['The kids ___WORD___ in the freedom of summer vacation.','She ___WORD___ in every moment of the concert.'],
+  aesthetic:['The ___WORD___ beauty of the garden took her breath away.','She rearranged her room for a more ___WORD___ look.'],
+  cloistered:['The nuns lived a ___WORD___ life away from the busy city.','He had a ___WORD___ childhood, rarely leaving the small town.'],
+  personified:['With her grace and poise, she was elegance ___WORD___.','He was kindness ___WORD___, always helping everyone around him.'],
+  supplicant:['The ___WORD___ knelt before the king and begged for mercy.','Like a ___WORD___, she pleaded with her parents for a later curfew.'],
+  prepense:['The crime was clearly ___WORD___, planned weeks in advance.','His ___WORD___ cruelty showed he had thought about it beforehand.'],
+  staunchly:['She ___WORD___ defended her best friend against the gossip.','He ___WORD___ believed that honesty is always the best policy.'],
+  perusal:['After a careful ___WORD___ of the menu, she ordered the pasta.','His ___WORD___ of the contract revealed a hidden clause.'],
+  effusion:['Her ___WORD___ of gratitude was so heartfelt it made everyone smile.','The poet\'s ___WORD___ of emotion filled every line of the poem.'],
+  perquisites:['Free lunches were one of the ___WORD___ of working at the tech company.','The ___WORD___ of the job included a company car and travel expenses.'],
+  bedizened:['The float was ___WORD___ with glitter, ribbons, and flashing lights.','She arrived at the party ___WORD___ in layers of gaudy jewelry.'],
+  tenacity:['Her ___WORD___ in studying paid off with a perfect test score.','The team\'s ___WORD___ kept them fighting until the final whistle.'],
+  beaux:['Anne imagined having many ___WORD___ lining up to court her.','In the old days, young women kept a list of their ___WORD___.'],
+  relented:['After much begging, Dad finally ___WORD___ and let us get a puppy.','The storm ___WORD___ and the sun broke through the clouds.'],
+  estranged:['The two sisters had been ___WORD___ for years after their argument.','He felt ___WORD___ from his old friends after moving to a new city.'],
+  consequent:['Her argument was logical and ___WORD___ from start to finish.','The detective\'s ___WORD___ reasoning led straight to the culprit.'],
+  irradiated:['The morning sun ___WORD___ the stained glass windows beautifully.','Her face was ___WORD___ with joy when she heard the good news.'],
+  glens:['They hiked through the shady ___WORD___ between the mountains.','The ___WORD___ were filled with wildflowers in the spring.']
+};
+
+// ===== PRAISE & ENCOURAGEMENT =====
+const PRAISE=[
+  'SLAY! \u2728','Let her cook! \uD83D\uDC69\u200D\uD83C\uDF73','No cap, that was fire! \uD83D\uDD25',
+  'Ate and left NO crumbs!','Main character energy!','Absolutely iconic!',
+  'Lowkey genius bestie!','Lexicon is SHOOK!','You understood the assignment!',
+  'Giving boss energy fr fr!','Period! \uD83D\uDC85','It\'s giving perfection!','Sheeeesh!',
+  'Stan-worthy answer!','Center stage energy! \uD83C\uDFE4','That was bussin!',
+  'Comeback era? Nah, you never left!','The Word Goblin is crying rn \uD83D\uDE2D',
+  'ENCORE! ENCORE!','Standing ovation! \uD83D\uDC4F',
+  'OK go off then!! \uD83D\uDCAF','You just bodied that question!',
+  'Living rent-free in Lexicon\'s mind!','That answer hits different!',
+  'You\'re the IT girl of this library! \uD83D\uDC51','Vocals, visuals, AND vocabulary!',
+  'This is YOUR era and everyone knows it!','Ugh your mind is so powerful!',
+  'The library just gave you a lightstick! \uD83D\uDD26','Fancam-worthy moment right there!',
+  'You\'re literally the ace of this group!','Album of the year energy!',
+  'The crowd is SCREAMING for you!','Mic drop! \uD83C\uDF99\uFE0F',
+  'Chart-topping answer bestie!','You just went viral in the library!',
+  'Bias-wrecker energy for real!','Even the Word Goblin had to clap!',
+  'That was a PERFECT ALL-KILL! \uD83C\uDFAF','Debut of the century right here!'
+];
+const ENCOURAGE=[
+  'Not the vibe, but we bounce back! \uD83D\uDCAA',
+  'The Word Goblin is lowkey toxic \u2014 you\'ll body him next time!',
+  'Plot twist incoming \u2014 you\'re about to slay!',
+  'No worries bestie, even idols miss a step sometimes!',
+  'That was sus, but your comeback era starts NOW!',
+  'It\'s giving "almost" \u2014 next one is yours fr!',
+  'The Goblin caught you lacking, but you\'re still that girl! \uD83D\uDC85',
+  'Not this Word Goblin thinking he won \u2014 stay tuned!',
+  'Main character plot armor activated \u2014 next one\'s yours!',
+  'Nah that question was rigged, you\'re still iconic!',
+  'Even K-pop legends have a B-side \u2014 keep going!',
+  'The Goblin thought he ate... he did NOT \uD83D\uDE44',
+  'That\'s just your villain origin story \u2014 redemption arc incoming!',
+  'Shake it off, you\'re still THAT girl!',
+  'OK the Word Goblin got lucky, it won\'t happen again!',
+  'Your next answer is gonna be SO fire it makes up for this!'
+];
+
+const LEVELS=[
+  {name:'Trainee \uD83C\uDF1F',min:0},
+  {name:'Rookie Idol \uD83C\uDFA4',min:30},
+  {name:'Main Vocalist \uD83C\uDFB5',min:70},
+  {name:'Center Stage \uD83C\uDFE4',min:130},
+  {name:'K-pop Legend \uD83D\uDC51',min:220}
+];
+
+const ROUND_INFO=[
+  {
+    num:1,
+    title:'Matching Game',
+    badge:'round-1-badge',
+    desc:'Match words to their definitions! Connect the pairs, slay the grid! \uD83E\uDDE9',
+    stories:[
+      {emoji:'\uD83E\uDDE9',room:'The Mirror Chamber',text:'"The walls are covered in enchanted mirrors, each reflecting a word and its meaning. But they\'re all MIXED UP! Only a true K-pop stan with vocab skills can reconnect them. Let\'s go, bestie!" \u2014 Lexicon'},
+      {emoji:'\uD83D\uDEAA',room:'The Entrance Hall',text:'"You step through the ancient doors and the bass DROPS. Magical mirrors everywhere! Match every word to its meaning. Your debut era starts NOW, bestie!" \u2014 Lexicon'}
+    ]
+  },
+  {
+    num:2,
+    title:'Word \u2192 Definition',
+    badge:'round-2-badge',
+    desc:'I say the word, you pick the definition. Level up era! \uD83D\uDCDA',
+    stories:[
+      {emoji:'\uD83D\uDCDA',room:'The Whispering Stacks',text:'"The enchanted books are whispering fan chants \u2014 they\'re hyping YOU up! Show them what you\'ve got, trainee!"'},
+      {emoji:'\uD83E\uDDE9',room:'The Puzzle Chamber',text:'"Glowing runes pulse on the walls like stage lights at a concert. The Word Goblin scrambled everything, but you\'re too cracked for his games!" \u2014 Lexicon'}
+    ]
+  },
+  {
+    num:3,
+    title:'Definition \u2192 Word',
+    badge:'round-3-badge',
+    desc:'I give you the meaning, you find the word. Boss mode! \uD83D\uDD25',
+    stories:[
+      {emoji:'\uD83C\uDFB6',room:'The Echo Hall',text:'"The walls echo with word magic. Each correct answer rings out like an encore. The crowd (of enchanted books) is going FERAL!"'},
+      {emoji:'\uD83E\uDDE9',room:'The Puzzle Chamber',text:'"Glowing runes pulse on the walls. The Word Goblin scrambled everything, but you\'re too cracked for his games. Let him cook? Nah \u2014 let YOU cook!" \u2014 Lexicon'}
+    ]
+  },
+  {
+    num:4,
+    title:'Sentence Challenge',
+    badge:'round-4-badge',
+    desc:'Pick the sentence that uses the word correctly. Final boss! \u2694\uFE0F\uD83C\uDFC6',
+    stories:[
+      {emoji:'\uD83D\uDC7A',room:'The Word Goblin\'s Lair',text:'"You hear cackling ahead! The Word Goblin is there, but honestly? He\'s giving flop era energy. You\'re about to end his whole career. SLAY HIM, BESTIE!" \u2014 Lexicon'},
+      {emoji:'\uD83C\uDFF0',room:'The Grand Archive',text:'"The final chamber! Golden light floods the room like a sold-out concert finale. Confetti falls. Lightsticks wave. This is YOUR moment! ENCORE TIME!"'}
+    ]
+  }
+];
+
+// ===== GACHA ITEMS (48 total: 16 per category) =====
+// Each item: {id, name, emoji, rarity, power, powerTier(1-4), set(null|string), desc}
+const GACHA_ITEMS={
+  hats:[
+    // Common (4)
+    {id:'hat_cap',name:'Trainee Cap',emoji:'\uD83E\uDDE2',rarity:'common',power:'bonusScore',powerTier:1,set:null,desc:'Standard issue! +1 pt per correct'},
+    {id:'hat_bow',name:'Ribbon Bow',emoji:'\uD83C\uDF80',rarity:'common',power:'cheerBoost',powerTier:1,set:null,desc:'Cute bow! Praise lasts longer'},
+    {id:'hat_beanie',name:'Cozy Beanie',emoji:'\uD83E\uDDE2',rarity:'common',power:'softLanding',powerTier:1,set:null,desc:'Warm & safe! First miss costs no heart'},
+    {id:'hat_hairclip',name:'Star Hair Clip',emoji:'\u2B50',rarity:'common',power:'xpMultiplier',powerTier:1,set:null,desc:'Sparkly clip! +5% bonus points'},
+    // Rare (4)
+    {id:'hat_headphones',name:'K-pop Headphones',emoji:'\uD83C\uDFA7',rarity:'rare',power:'freeHint',powerTier:2,set:'kpop',desc:'Whispers hints! 1 free hint per round'},
+    {id:'hat_tophat',name:'Fancy Top Hat',emoji:'\uD83C\uDFA9',rarity:'rare',power:'bonusScore',powerTier:2,set:null,desc:'+2 pts per correct! Classy vibes'},
+    {id:'hat_flowercrown',name:'Flower Crown',emoji:'\uD83C\uDF3B',rarity:'rare',power:'restoreHeart',powerTier:2,set:'nature',desc:'Bloom power! +1 heart at round start'},
+    {id:'hat_beret',name:'Artist Beret',emoji:'\uD83C\uDFA8',rarity:'rare',power:'foxReveal',powerTier:2,set:null,desc:'Creative vision! Shows first letter'},
+    // Epic (4)
+    {id:'hat_crown',name:'Royal Crown',emoji:'\uD83D\uDC51',rarity:'epic',power:'restoreHeart',powerTier:3,set:'royal',desc:'Royal healing! +1 heart + heal on streak'},
+    {id:'hat_catears',name:'Neko Ears',emoji:'\uD83D\uDC31',rarity:'epic',power:'comboExtender',powerTier:3,set:null,desc:'Cat reflexes! Streak survives 2 misses'},
+    {id:'hat_astronaut',name:'Space Helmet',emoji:'\uD83D\uDE80',rarity:'epic',power:'eliminate',powerTier:3,set:'space',desc:'Scan & eliminate 2 wrong answers!'},
+    {id:'hat_pirate',name:'Pirate Bandana',emoji:'\uD83C\uDFF4\u200D\u2620\uFE0F',rarity:'epic',power:'streakShield',powerTier:3,set:'ocean',desc:'Pirate grit! Streak shield x2'},
+    // Legendary (3)
+    {id:'hat_flame',name:'Flame Crown',emoji:'\uD83D\uDD25',rarity:'legendary',power:'eliminate',powerTier:4,set:null,desc:'Burns away 3 wrong answers!'},
+    {id:'hat_galaxy',name:'Galaxy Tiara',emoji:'\u2728\uD83D\uDC8E',rarity:'legendary',power:'doublePoints',powerTier:4,set:null,desc:'Written in the stars! 2x ALL points'},
+    {id:'hat_icecrown',name:'Ice Crown',emoji:'\u2744\uFE0F\uD83D\uDC51',rarity:'legendary',power:'revive',powerTier:4,set:null,desc:'Frozen power! Full heart revive + bonus'},
+    // Mythic (1)
+    {id:'hat_aurora',name:'Aurora Crown',emoji:'\uD83C\uDF0C\uD83D\uDC51',rarity:'mythic',power:'mythicWisdom',powerTier:4,set:null,desc:'The Library bows to you! Free hints + eliminate + 2x points'}
+  ],
+  pets:[
+    // Common (4)
+    {id:'pet_chick',name:'Baby Chick',emoji:'\uD83D\uDC25',rarity:'common',power:'cheerBoost',powerTier:1,set:null,desc:'Cheeps encouragement! Praise lasts longer'},
+    {id:'pet_bunny',name:'Snow Bunny',emoji:'\uD83D\uDC30',rarity:'common',power:'softLanding',powerTier:1,set:null,desc:'Cushions your fall! First miss = no heart lost'},
+    {id:'pet_hamster',name:'Study Hamster',emoji:'\uD83D\uDC39',rarity:'common',power:'bonusScore',powerTier:1,set:null,desc:'Tiny helper! +1 pt per correct'},
+    {id:'pet_kitten',name:'Calico Kitten',emoji:'\uD83D\uDC08',rarity:'common',power:'xpMultiplier',powerTier:1,set:null,desc:'Purring luck! +5% bonus points'},
+    // Rare (4)
+    {id:'pet_cat',name:'Lucky Cat',emoji:'\uD83D\uDC31',rarity:'rare',power:'bonusScore',powerTier:2,set:'kpop',desc:'+2 bonus points per correct! Maneki-neko vibes'},
+    {id:'pet_fox',name:'Mystic Fox',emoji:'\uD83E\uDD8A',rarity:'rare',power:'foxReveal',powerTier:2,set:null,desc:'Sly hint! Shows the first letter'},
+    {id:'pet_owl',name:'Library Owl',emoji:'\uD83E\uDD89',rarity:'rare',power:'freeHint',powerTier:2,set:'nature',desc:'Wise companion! 1 free hint per round'},
+    {id:'pet_panda',name:'Bamboo Panda',emoji:'\uD83D\uDC3C',rarity:'rare',power:'wordMaster',powerTier:2,set:null,desc:'Zen focus! +4 pts for mastered words'},
+    // Epic (4)
+    {id:'pet_dragon',name:'Baby Dragon',emoji:'\uD83D\uDC09',rarity:'epic',power:'streakShield',powerTier:3,set:null,desc:'Protects your streak x2 per round!'},
+    {id:'pet_unicorn',name:'Sparkle Unicorn',emoji:'\uD83E\uDD84',rarity:'epic',power:'restoreHeart',powerTier:3,set:'royal',desc:'Magical healing! +1 heart at round start'},
+    {id:'pet_miniphoenix',name:'Mini Phoenix',emoji:'\uD83E\uDD85\u2728',rarity:'epic',power:'revive',powerTier:3,set:null,desc:'Fiery friend! Restores 3 hearts on KO'},
+    {id:'pet_crystalwolf',name:'Crystal Wolf',emoji:'\uD83D\uDC3A\uD83D\uDC8E',rarity:'epic',power:'eliminate',powerTier:3,set:null,desc:'Pack instinct! Eliminate 2 wrong answers'},
+    // Legendary (3)
+    {id:'pet_phoenix',name:'Phoenix',emoji:'\uD83D\uDD25\uD83E\uDD85',rarity:'legendary',power:'revive',powerTier:4,set:null,desc:'Full heart revive + streak bonus!'},
+    {id:'pet_stardragon',name:'Celestial Dragon',emoji:'\uD83C\uDF1F\uD83D\uDC32',rarity:'legendary',power:'eliminate',powerTier:4,set:'space',desc:'Cosmic fire eliminates 3 wrong answers!'},
+    {id:'pet_goldtiger',name:'Golden Tiger',emoji:'\uD83D\uDC2F\u2728',rarity:'legendary',power:'doublePoints',powerTier:4,set:null,desc:'Tiger power! 2x ALL points!'},
+    // Mythic (1)
+    {id:'pet_kitsune',name:'Nine-Tail Kitsune',emoji:'\uD83E\uDD8A\uD83D\uDD25\u2728',rarity:'mythic',power:'mythicGuardian',powerTier:4,set:null,desc:'Ancient spirit! Revive + streak shield + bonus score ALL at once'}
+  ],
+  outfits:[
+    // Common (4)
+    {id:'out_hoodie',name:'Cozy Hoodie',emoji:'\uD83E\uDDE5',rarity:'common',power:'softLanding',powerTier:1,set:null,desc:'Comfy & safe! First miss costs no heart'},
+    {id:'out_tshirt',name:'Fan T-Shirt',emoji:'\uD83D\uDC55',rarity:'common',power:'cheerBoost',powerTier:1,set:null,desc:'Rep your fave! Praise lasts longer'},
+    {id:'out_uniform',name:'School Blazer',emoji:'\uD83D\uDC54',rarity:'common',power:'bonusScore',powerTier:1,set:null,desc:'Study hard! +1 pt per correct'},
+    {id:'out_pajamas',name:'Star Pajamas',emoji:'\uD83C\uDF1B',rarity:'common',power:'xpMultiplier',powerTier:1,set:null,desc:'Dreamy vibes! +5% bonus points'},
+    // Rare (4)
+    {id:'out_jacket',name:'Idol Jacket',emoji:'\uD83E\uDDE5\u2728',rarity:'rare',power:'freeHint',powerTier:2,set:'kpop',desc:'Stage-ready! 1 free hint per round'},
+    {id:'out_cape',name:'Wizard Cape',emoji:'\uD83E\uDDB8',rarity:'rare',power:'streakShield',powerTier:2,set:null,desc:'Swoosh! Streak shield x1'},
+    {id:'out_denim',name:'Denim Vest',emoji:'\uD83E\uDDE5',rarity:'rare',power:'comboExtender',powerTier:2,set:null,desc:'Cool vibes! Streak survives 1 miss'},
+    {id:'out_sailor',name:'Sailor Dress',emoji:'\u2693',rarity:'rare',power:'bonusScore',powerTier:2,set:'ocean',desc:'Anchors aweigh! +2 pts per correct'},
+    // Epic (4)
+    {id:'out_sparkle',name:'Sparkle Suit',emoji:'\uD83D\uDC8E',rarity:'epic',power:'bonusScore',powerTier:3,set:null,desc:'+3 bonus points per correct answer!'},
+    {id:'out_hanbok',name:'Magic Hanbok',emoji:'\uD83D\uDC58',rarity:'epic',power:'wordMaster',powerTier:3,set:null,desc:'Traditional power! +6 pts for mastered words'},
+    {id:'out_fairy',name:'Fairy Dress',emoji:'\uD83E\uDDDA',rarity:'epic',power:'freeHint',powerTier:3,set:'nature',desc:'Enchanted! 2 free hints per round'},
+    {id:'out_spacesuit',name:'Space Suit',emoji:'\uD83D\uDC69\u200D\uD83D\uDE80',rarity:'epic',power:'eliminate',powerTier:3,set:'space',desc:'Houston, eliminate 2 wrong answers!'},
+    // Legendary (3)
+    {id:'out_galaxy',name:'Galaxy Robe',emoji:'\uD83C\uDF0C',rarity:'legendary',power:'doublePoints',powerTier:4,set:null,desc:'Cosmic drip! 2x ALL points!'},
+    {id:'out_gold',name:'Golden Armor',emoji:'\u2694\uFE0F\u2728',rarity:'legendary',power:'eliminate',powerTier:4,set:null,desc:'Deflects 3 wrong answers away!'},
+    {id:'out_crystal',name:'Crystal Dress',emoji:'\uD83D\uDC8E\u2728',rarity:'legendary',power:'revive',powerTier:4,set:'royal',desc:'Crystalline magic! Full heart revive!'},
+    // Mythic (1)
+    {id:'out_celestial',name:'Celestial Hanbok',emoji:'\uD83C\uDF1F\uD83D\uDC58\u2728',rarity:'mythic',power:'mythicAura',powerTier:4,set:null,desc:'Woven from starlight! +Heart + eliminate + streak shield ALL at once'}
+  ]
+};
+
+// ===== POWER SCALING =====
+const POWER_SCALES={
+  bonusScore:[1,2,3,5],
+  freeHint:[1,1,2,3],
+  eliminate:[1,2,2,3],
+  doublePoints:[1.25,1.5,1.75,2],
+  streakShield:[1,1,2,3],
+  restoreHeart:[1,1,1,2],
+  revive:[2,2,3,3], // hearts restored
+  xpMultiplier:[1.05,1.1,1.15,1.2],
+  wordMaster:[2,4,6,8], // bonus pts for mastered words
+  comboExtender:[1,1,2,2], // wrong answers before streak breaks
+  luckyPull:[2,5,8,12], // % added to rare+ odds
+};
+
+// ===== SET BONUSES =====
+const SET_BONUSES={
+  ocean:{name:'Ocean Set',items:['hat_pirate','out_sailor','pet_owl'],bonus:'comboExtender',tier:3,desc:'Waves carry your streak! \uD83C\uDF0A'},
+  space:{name:'Space Set',items:['hat_astronaut','out_spacesuit','pet_stardragon'],bonus:'xpMultiplier',tier:3,desc:'Cosmic knowledge boost! \uD83D\uDE80'},
+  kpop:{name:'K-pop Set',items:['hat_headphones','out_jacket','pet_cat'],bonus:'doublePoints',tier:2,desc:'Main character energy! \uD83C\uDFA4'},
+  royal:{name:'Royal Set',items:['hat_crown','out_crystal','pet_unicorn'],bonus:'restoreHeart',tier:4,desc:'Royal protection! \uD83D\uDC51'},
+  nature:{name:'Nature Set',items:['hat_flowercrown','out_fairy','pet_owl'],bonus:'luckyPull',tier:3,desc:'Nature\'s luck! \uD83C\uDF3F'}
+};
+
+const PULL_ODDS={
+  basic:  {common:55,rare:30,epic:13,legendary:2,mythic:0},
+  super:  {common:20,rare:40,epic:30,legendary:10,mythic:0},
+  mega:   {common:0,rare:15,epic:50,legendary:35,mythic:0},
+  divine: {common:0,rare:0,epic:20,legendary:55,mythic:25}
+};
+const PULL_COST={basic:20,super:50,mega:100,divine:250};
+const DUPE_REFUND={common:5,rare:15,epic:30,legendary:60,mythic:125};
+
+// ===== STATE =====
+const S={
+  chapters:[7,8,9],
+  words:[],
+  wordStats:{},
+  round:0, // 0,1,2
+  qIndex:0,
+  queue:[],
+  score:0,
+  hearts:3,
+  streak:0,
+  bestStreak:0,
+  answered:0,
+  correct:0,
+  wrong:0,
+  wrongRow:0,
+  roundWords:[],
+  roundCorrect:0,
+  roundTotal:0,
+  sessionStart:null,
+  totalQs:0,
+  midStoryShown:false,
+  // Gacha
+  inventory:[],       // array of item ids
+  equipped:{hat:null,pet:null,outfit:null},
+  activePowers:[],    // powers active this round
+  freeHints:0,        // free hints available this round
+  streakShielded:false,// streak shield used?
+  reviveUsed:false,   // phoenix revive used?
+  eliminateUsed:false, // eliminate used this round?
+  softLandingUsed:false, // soft landing used?
+  returnTo:'sumScreen', // where to go back from shop
+  quizMode:false,       // true when running weekly quiz
+  quizMatchWords:[],    // resolved vocab entries for matching part
+  quizSentenceWords:[]  // resolved vocab entries for sentence part
+};
+
+// ===== INIT =====
+function init(){
+  makeStars();
+  buildChapters();
+  document.getElementById('startBtn').onclick=startGame;
+  document.getElementById('storyBtn').onclick=dismissStory;
+  document.getElementById('parentBtn').onclick=()=>{document.getElementById('parentPanel').classList.toggle('open');updateParent()};
+  document.getElementById('parentClose').onclick=()=>document.getElementById('parentPanel').classList.remove('open');
+  updateMiniWizard();
+}
+
+function makeStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<50;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${1.5+Math.random()*3}s;--bright:${0.3+Math.random()*0.7};animation-delay:${Math.random()*3}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px`;
+    c.appendChild(s);
+  }
+}
+
+function buildChapters(){
+  const g=document.getElementById('chGrid');
+  for(let ch=7;ch<=18;ch++){
+    const ck=[7,8,9].includes(ch)?'checked':'';
+    g.innerHTML+=`<input type="checkbox" class="ch-input" id="c${ch}" value="${ch}" ${ck}><label class="ch-label" for="c${ch}"><span class="ch-dot">\u2713</span>Ch ${ch}</label>`;
+  }
+}
+
+function toggleQuizMode(on){
+  S.quizMode=on;
+  document.getElementById('chCard').style.display=on?'none':'';
+  document.getElementById('roundCard').style.display=on?'none':'';
+  const info=document.getElementById('quizInfo');
+  const status=document.getElementById('quizStatus');
+  info.style.display=on?'':'none';
+  status.textContent=on?'ON':'OFF';
+  status.className='quiz-status'+(on?' on':'');
+  if(on){
+    document.getElementById('quizLabel').textContent=WEEKLY_QUIZ.label;
+    document.getElementById('quizMatchCount').textContent=WEEKLY_QUIZ.matchWords.length;
+    document.getElementById('quizSentCount').textContent=WEEKLY_QUIZ.sentenceWords.length;
+  }
+}
+
+// ===== START =====
+function startGame(){
+  if(S.quizMode){startWeeklyQuiz();return}
+  const cks=document.querySelectorAll('.ch-input:checked');
+  if(!cks.length)return alert('Pick at least one chapter, bestie!');
+
+  S.chapters=Array.from(cks).map(c=>+c.value);
+  S.words=[];
+  S.chapters.forEach(ch=>VOCAB[ch].forEach(e=>S.words.push({...e,ch})));
+  S.words.forEach(w=>{if(!S.wordStats[w.word])S.wordStats[w.word]={att:0,cor:0,mastered:false}});
+
+  S.score=0;S.hearts=3;S.streak=0;S.bestStreak=0;S.answered=0;S.correct=0;S.wrong=0;S.wrongRow=0;
+  S.round=0;S.qIndex=0;
+  S.sessionStart=S.sessionStart||Date.now();
+
+  const selectedRound=document.querySelector('.rd-input:checked');
+  const startRound=selectedRound?+selectedRound.value:0;
+  buildRound(startRound);
+}
+
+function buildRound(roundNum){
+  S.round=roundNum;
+  S.qIndex=0;
+  S.roundWords=[];
+  S.roundCorrect=0;
+  S.roundTotal=0;
+  S.hearts=3;
+  S.midStoryShown=false;
+
+  let pool=[...S.words];
+  // Add extra copies of missed words for spaced repetition
+  S.words.forEach(w=>{
+    const s=S.wordStats[w.word];
+    if(s&&s.att>0&&s.cor/s.att<0.6)pool.push({...w});
+  });
+  shuffle(pool);
+  S.queue=pool;
+  S.totalQs=pool.length;
+
+  showScreen('gameScreen');
+  applyRoundStartPowers();
+  updateMiniWizard();
+  // Show round story
+  const info=ROUND_INFO[roundNum];
+  const story=info.stories[0];
+  showStory(story.emoji,story.room,story.text);
+}
+
+// ===== WEEKLY QUIZ =====
+function startWeeklyQuiz(){
+  // Build lookup of all vocab entries by word
+  const allWords={};
+  Object.keys(VOCAB).forEach(ch=>{
+    VOCAB[ch].forEach(e=>{allWords[e.word]={...e,ch:+ch}});
+  });
+
+  S.quizMatchWords=WEEKLY_QUIZ.matchWords.map(w=>allWords[w]).filter(Boolean);
+  S.quizSentenceWords=WEEKLY_QUIZ.sentenceWords.map(w=>allWords[w]).filter(Boolean);
+
+  // S.words = union of both lists (for wordStats tracking)
+  const seen=new Set();
+  S.words=[];
+  [...S.quizMatchWords,...S.quizSentenceWords].forEach(e=>{
+    if(!seen.has(e.word)){seen.add(e.word);S.words.push(e)}
+  });
+  S.words.forEach(w=>{if(!S.wordStats[w.word])S.wordStats[w.word]={att:0,cor:0,mastered:false}});
+
+  S.score=0;S.hearts=3;S.streak=0;S.bestStreak=0;
+  S.answered=0;S.correct=0;S.wrong=0;S.wrongRow=0;
+  S.round=0;S.qIndex=0;
+  S.sessionStart=S.sessionStart||Date.now();
+
+  buildQuizRound(0);
+}
+
+function buildQuizRound(part){
+  // part 0 = matching (S.round=0), part 1 = sentences (S.round=3)
+  S.round=part===0?0:3;
+  S.qIndex=0;
+  S.roundWords=[];
+  S.roundCorrect=0;
+  S.roundTotal=0;
+  S.hearts=3;
+  S.midStoryShown=false;
+
+  const srcWords=part===0?S.quizMatchWords:S.quizSentenceWords;
+  let pool=[...srcWords];
+  srcWords.forEach(w=>{
+    const s=S.wordStats[w.word];
+    if(s&&s.att>0&&s.cor/s.att<0.6)pool.push({...w});
+  });
+  shuffle(pool);
+  S.queue=pool;
+  S.totalQs=pool.length;
+
+  showScreen('gameScreen');
+  applyRoundStartPowers();
+  updateMiniWizard();
+
+  if(part===0){
+    showStory('\uD83E\uDDE9','Weekly Quiz: Matching',
+      `"Time for your weekly vocab check, bestie! Match all ${srcWords.length} words to their definitions. You've been studying \u2014 now PROVE IT!" \u2014 Lexicon`);
+  } else {
+    showStory('\u2694\uFE0F','Weekly Quiz: Sentences',
+      `"Part 2! Only ${srcWords.length} words, but they're the tricky ones. Pick the sentence that uses each word correctly. Final boss energy! Let's GO!" \u2014 Lexicon`);
+  }
+}
+
+// ===== SCREENS =====
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  el.classList.remove('screen-enter');
+  void el.offsetWidth;
+  el.classList.add('screen-enter');
+}
+
+// ===== HUD =====
+function updateHUD(){
+  const sc=document.getElementById('hudScore');
+  sc.textContent=S.score;sc.classList.remove('score-pop');void sc.offsetWidth;sc.classList.add('score-pop');
+
+  const h=document.getElementById('hudHearts');
+  h.innerHTML='';
+  for(let i=0;i<3;i++){const s=document.createElement('span');s.className='heart'+(i>=S.hearts?' dead':'');s.textContent='\u2764\uFE0F';h.appendChild(s)}
+
+  const st=document.getElementById('hudStreak');
+  if(S.streak>=3)st.innerHTML=`<span class="streak-fire">\uD83D\uDD25 ${S.streak}x COMBO!</span>`;
+  else if(S.streak>0)st.textContent=`${S.streak}x`;
+  else st.textContent='';
+
+  let rank=LEVELS[0].name;
+  for(const l of LEVELS)if(S.score>=l.min)rank=l.name;
+  document.getElementById('hudRank').textContent=rank;
+
+  const pct=S.totalQs>0?((S.qIndex)/S.totalQs*100):0;
+  document.getElementById('progBar').style.width=pct+'%';
+  document.getElementById('progLabel').textContent=`${S.qIndex} / ${S.totalQs}`;
+}
+
+// ===== ROUND BANNER =====
+function showRoundBanner(){
+  if(S.quizMode){
+    const label=S.round===0?'Part 1: Matching':'Part 2: Sentences';
+    document.getElementById('roundBanner').innerHTML=`
+      <span class="round-badge round-1-badge">\uD83D\uDCDD</span>
+      <div class="round-name">${WEEKLY_QUIZ.label} \u2014 ${label}</div>
+    `;
+    return;
+  }
+  const info=ROUND_INFO[S.round];
+  document.getElementById('roundBanner').innerHTML=`
+    <span class="round-badge ${info.badge}">Round ${info.num}</span>
+    <div class="round-name">${info.title}</div>
+  `;
+}
+
+// ===== QUESTION =====
+function showQuestion(){
+  if(S.qIndex>=S.queue.length){
+    showRoundSummary();
+    return;
+  }
+
+  // Matching game: render full grid batch instead of single question
+  if(S.round===0){
+    renderMatchingGame();
+    return;
+  }
+
+  showRoundBanner();
+  updateHUD();
+
+  const entry=S.queue[S.qIndex];
+  const area=document.getElementById('questionArea');
+  area.innerHTML='';
+
+  const card=document.createElement('div');
+  card.className='q-card';card.id='qCard';
+  area.appendChild(card);
+
+  // Counter
+  const counter=document.createElement('div');
+  counter.className='q-counter';
+  counter.textContent=`Question ${S.qIndex+1} of ${S.totalQs}`;
+  card.appendChild(counter);
+
+  if(S.round===1) renderR1(card,entry);
+  else if(S.round===2) renderR2(card,entry);
+  else renderR3(card,entry);
+
+  // Fox Reveal: show a subtle hint with first letter of answer (word↔def rounds only)
+  if(hasPower('foxReveal')&&(S.round===1||S.round===2)){
+    const answer=S.round===1?entry.def:entry.word;
+    const hint=document.createElement('div');
+    hint.className='hint-text';
+    hint.style.marginTop='6px';hint.style.fontSize='.85rem';
+    hint.textContent=`\uD83E\uDD8A Fox whispers: starts with "${answer[0].toUpperCase()}..."`;
+    card.appendChild(hint);
+  }
+}
+
+// Round 1: Word shown, pick the definition (5 options)
+function renderR1(card,entry){
+  const p=document.createElement('div');
+  p.className='q-prompt';
+  p.innerHTML=`What does <span class="word">${entry.word}</span> mean?`;
+  card.appendChild(p);
+
+  const options=getDistractors(entry,'def',4);
+  renderOptions(card,options,entry.def);
+  addHint(card,entry);
+}
+
+// Round 2: Definition shown, pick the word (5 options)
+function renderR2(card,entry){
+  const p=document.createElement('div');
+  p.className='q-prompt';
+  p.innerHTML=`Which word means:<br><span class="def">"${entry.def}"</span>`;
+  card.appendChild(p);
+
+  const options=getDistractors(entry,'word',4);
+  renderOptions(card,options,entry.word);
+  addHint(card,entry);
+}
+
+// Round 3: Sentence challenge, 2 options
+function renderR3(card,entry){
+  const p=document.createElement('div');
+  p.className='q-prompt';
+  p.innerHTML=`Which sentence uses <span class="word">${entry.word}</span> correctly?`;
+  card.appendChild(p);
+
+  const sentences=SENTENCES[entry.word];
+  const correctSent=sentences?sentences[Math.floor(Math.random()*sentences.length)].replace(/___WORD___/g,entry.word):`She ${entry.word} the assignment diligently.`;
+  // Wrong sentences: mix of wrong-context, confused-with-similar-word, wrong-part-of-speech, subtle misuse
+  // NOT just "opposite of definition" — uses variety so patterns aren't guessable
+  const WRONG_SENTENCES={
+    admonished:[
+      'She admonished her friend with a big hug and a gift.', // opposite: treating it as praise
+      'The coach admonished the team by handing out trophies after the win.', // wrong context: reward not warning
+      'He admonished the recipe by adding extra salt to the soup.' // nonsense usage: treating it like "adjusted"
+    ],
+    glibly:[
+      'She glibly poured over every detail, double-checking her notes.', // opposite: careful not glib
+      'The scientist glibly presented her research with charts and footnotes.', // wrong context: thorough presentation
+      'He glibly tied his shoes, struggling with the laces for five minutes.' // wrong meaning: treating it as "clumsily"
+    ],
+    irreverence:[
+      'Her irreverence for her grandmother was shown when she sent flowers.', // confused: reverence vs irreverence
+      'The museum was full of irreverence, with beautiful paintings on every wall.', // treating it like "elegance"
+      'He showed irreverence by standing at attention during the national anthem.' // opposite: respectful act
+    ],
+    petition:[
+      'The teacher graded each petition with a red pen.', // confused with "essay" or "test"
+      'She signed the petition to confirm she received her package.', // confused with "receipt"
+      'He filed a petition in his binder next to his math notes.' // treating it like "worksheet"
+    ],
+    heathen:[
+      'The heathen spent every morning reading scripture to the children.', // opposite: devout person
+      'She earned the title of heathen by volunteering at the church.', // wrong context
+      'The heathen was a type of plant that grew wild in the garden.' // treating it as a different word entirely
+    ],
+    manse:[
+      'They rented a manse on the beach for their summer vacation.', // confused with generic "house/mansion"
+      'The manse downtown had the best burgers and milkshakes.', // treating it like "restaurant"
+      'Every student decorated their own manse for the school art fair.' // treating it like "project/display"
+    ],
+    imploring:[
+      'She gave an imploring wave goodbye as the bus pulled away.', // wrong context: casual not begging
+      'His imploring laugh filled the room during the comedy show.', // doesn\'t fit: laughing isn\'t begging
+      'The imploring instructions on the box explained how to build the toy.' // treating it like "detailed"
+    ],
+    deferring:[
+      'She was deferring through the channels, looking for something to watch.', // confused with "flipping/surfing"
+      'He kept deferring the ball back and forth during the tennis match.', // confused with a physical action
+      'By deferring across the finish line first, she won the gold medal.' // confused with "dashing/sprinting"
+    ],
+    discourse:[
+      'She bought a new discourse to wear to the school dance.', // treating it like "dress" (sounds similar)
+      'The runner completed the discourse in under twenty minutes.', // confused with "course"
+      'He followed the discourse on the map to find the hidden treasure.' // confused with "course/path"
+    ],
+    rapt:[
+      'He rapt on the door three times and waited for someone to answer.', // confused with "rapped" (knocked)
+      'She rapt the present in shiny gold paper for the birthday party.', // confused with "wrapped"
+      'The rapt in the ceiling let rainwater drip into a bucket below.' // treating it like a noun/"gap"
+    ],
+    askance:[
+      'She danced askance across the stage during the ballet recital.', // treating it like "gracefully"
+      'The dog ran askance through the park, chasing after squirrels.', // treating it like "quickly/sideways" physically
+      'He read the book askance, holding it tilted at an angle on his desk.' // treating it literally as "sideways" not disapprovingly
+    ],
+    diligently:[
+      'He diligently skipped every other question on the worksheet.', // wrong: careless action
+      'She diligently tossed her backpack on the floor and turned on the TV.', // wrong: lazy action
+      'The cat diligently knocked the glass off the table and walked away.' // funny mismatch: cat being careless
+    ],
+    suppositions:[
+      'The suppositions in her essay were direct quotes from the textbook.', // confused with "citations"
+      'He packed his suppositions into a suitcase before the trip.', // treating it like a physical object
+      'The math test had ten suppositions, each worth five points.' // confused with "questions/problems"
+    ],
+    vagaries:[
+      'She packed her vagaries into a neat row on the bookshelf.', // treating it like physical objects
+      'The vagaries of his daily routine never changed once in ten years.', // opposite: routine is predictable
+      'He ordered the vagaries from the menu and enjoyed every bite.' // treating it like a food/item
+    ],
+    obtrusive:[
+      'The soft background music was perfectly obtrusive during dinner.', // opposite: subtle not noticeable
+      'Her obtrusive kindness went completely unnoticed by everyone.', // contradiction
+      'The tiny ladybug was obtrusive as it sat quietly on a leaf.' // wrong: small quiet thing isn\'t obtrusive
+    ],
+    consternation:[
+      'She screamed with consternation when she opened her birthday presents.', // confused with "excitement"
+      'The team celebrated with consternation after winning the championship.', // wrong context: celebration
+      'His consternation grew as the roller coaster climbed higher, and he laughed.' // mixed signals
+    ],
+    undauntedly:[
+      'He undauntedly asked for directions since the path was clearly marked.', // no courage needed
+      'She undauntedly ate her lunch at the same table she always sat at.', // mundane action, no bravery
+      'The cat undauntedly napped in the warm patch of sunlight.' // no challenge to overcome
+    ],
+    reprehensible:[
+      'The charity\'s reprehensible work helped thousands of families.', // opposite: good deed
+      'Her reprehensible painting won first prize at the art show.', // treating it like "remarkable"
+      'The reprehensible weather made it a perfect day for a picnic.' // treating it like "wonderful"
+    ],
+    refractory:[
+      'The refractory student raised her hand and answered every question politely.', // opposite
+      'His refractory attitude made him the teacher\'s favorite helper.', // confused: obedient not rebellious
+      'The refractory recipe was easy to follow and turned out perfectly.' // treating it like "straightforward"
+    ],
+    obdurate:[
+      'She was so obdurate that she agreed with whatever anyone suggested.', // opposite: easily swayed
+      'His obdurate listening skills made him a great therapist.', // confused: "attentive" not stubborn
+      'The obdurate clay was easy to mold into any shape she wanted.' // opposite: flexible not rigid
+    ],
+    penitent:[
+      'The penitent winner held up her trophy and thanked the judges.', // wrong context: proud not remorseful
+      'He felt penitent after acing the test he studied so hard for.', // wrong: no guilt in success
+      'The penitent chef smiled as customers praised her famous dessert.' // wrong context: satisfied not sorry
+    ],
+    beseechingly:[
+      'He beseechingly announced the winners with a megaphone at the rally.', // treating it like "loudly/proudly"
+      'She beseechingly organized her closet, sorting everything by color.', // treating it like "carefully"
+      'The coach beseechingly benched the player for breaking team rules.' // treating it like "sternly"
+    ],
+    abasement:[
+      'The standing ovation was a moment of abasement for the performer.', // confused with "achievement"
+      'She accepted the abasement award for highest grades in her class.', // treating it like an honor
+      'His abasement was clear when he smiled and shook the principal\'s hand.' // wrong context: pride not shame
+    ],
+    officious:[
+      'The officious librarian quietly shelved books without saying a word.', // opposite: minding own business
+      'She was so officious that she let everyone figure things out themselves.', // opposite: hands-off
+      'The officious cat slept on the couch, ignoring everyone who walked by.' // funny mismatch
+    ],
+    furbelows:[
+      'He tightened the furbelows on his bicycle to stop the wheels from wobbling.', // treating it like "bolts/nuts"
+      'The mechanic replaced the furbelows under the hood of the car.', // treating it like machine parts
+      'She sharpened her furbelows before starting the woodworking project.' // treating it like tools
+    ],
+    dudgeon:[
+      'He sat in quiet dudgeon, peacefully reading his favorite novel.', // wrong: peaceful not angry
+      'Her dudgeon was obvious from the way she hummed happily to herself.', // opposite: happy not resentful
+      'The dudgeon of the crowd was clear as they cheered and clapped.' // opposite: celebration not rage
+    ],
+    disconsolately:[
+      'She disconsolately accepted the award, beaming with pride.', // opposite: happy not sad
+      'He disconsolately high-fived his teammates after scoring the goal.', // wrong context: celebrating
+      'The puppy disconsolately wagged its tail as its owner returned home.' // opposite: joyful reunion
+    ],
+    ruddy:[
+      'His ruddy face looked pale and washed-out under the bright lights.', // opposite: pale not rosy
+      'The ruddy sky was dark gray and overcast with heavy clouds.', // opposite: gray not rosy
+      'She described the ruddy painting as colorless and dull.' // contradiction
+    ],
+    rebukingly:[
+      'The audience clapped rebukingly, demanding an encore performance.', // confused with "enthusiastically"
+      'She whispered rebukingly into his ear, telling him a funny secret.', // wrong context: playful not scolding
+      'He rebukingly offered her the last slice of pizza with a big grin.' // treating it like "generously"
+    ],
+    hampered:[
+      'The tailwind hampered the sailboat, pushing it swiftly across the lake.', // opposite: helped not hindered
+      'Her extra practice hampered her performance, and she played perfectly.', // opposite: helped
+      'The clear instructions hampered the students as they built the project.' // opposite: instructions help
+    ],
+    dubious:[
+      'The plan was so dubious that everyone immediately agreed it was perfect.', // contradiction
+      'She gave a dubious thumbs-up, absolutely certain it would work.', // contradiction
+      'His dubious directions led them straight to the restaurant without a single wrong turn.' // opposite: reliable
+    ],
+    vexed:[
+      'She was vexed by the surprise party her friends threw, and thanked them all.', // wrong: grateful not irritated
+      'The gentle rain vexed the garden, helping the flowers grow tall.', // confused with "nourished"
+      'He was so vexed by the compliment that he blushed and said thank you.' // wrong: flattered not irritated
+    ],
+    resolute:[
+      'She was resolute about dinner, changing between pizza and tacos five times.', // opposite: indecisive
+      'His resolute shrug showed he didn\'t really have an opinion either way.', // opposite: apathetic
+      'The resolute leaf blew wherever the wind carried it.' // metaphor for opposite: no determination
+    ],
+    unheeded:[
+      'The unheeded fire alarm sent everyone rushing out of the building.', // opposite: if heeded, they\'d rush out
+      'Her unheeded recipe became the most popular dish at the potluck.', // confused: if unheeded, it wouldn\'t be popular
+      'The unheeded map guided the hikers safely back to camp.' // opposite: if unheeded, it wouldn\'t guide
+    ],
+    tremulous:[
+      'Her tremulous voice boomed across the stadium as she led the cheer.', // opposite: strong not shaky
+      'He played the drums with tremulous confidence, never missing a beat.', // contradiction: steady not timid
+      'The tremulous captain fearlessly steered the ship through the storm.' // opposite: fearless not fearful
+    ],
+    beguiled:[
+      'She was beguiled by the instruction manual and fell asleep reading it.', // wrong: manuals aren\'t charming
+      'The traffic jam beguiled the commuters on their way to work.', // wrong: traffic isn\'t enchanting
+      'He was beguiled by the long list of chores he had to finish.' // wrong: chores aren\'t captivating
+    ],
+    torrent:[
+      'A gentle torrent of snowflakes drifted softly to the ground.', // wrong: torrent implies force, not gentleness
+      'She spoke in a torrent, whispering so quietly no one could hear.', // wrong: torrent = outpouring, not whispering
+      'The torrent of silence in the room was deafening.' // wrong: torrent means flow/outpouring, silence doesn\'t flow
+    ],
+    sallow:[
+      'After a day at the beach, her skin looked sallow and sun-kissed.', // wrong: sallow = sickly yellow, not healthy tan
+      'The sallow roses bloomed bright red in the garden.', // wrong: sallow means sickly yellow, not bright
+      'His sallow cheeks were rosy and full of color.' // wrong: direct contradiction
+    ],
+    brusquely:[
+      'She brusquely handed him the gift with a warm, lingering hug.', // wrong: brusquely = abruptly, not warmly
+      'He brusquely spent three hours carefully explaining every detail.', // wrong: brusque is quick/blunt, not careful/lengthy
+      'The host brusquely welcomed each guest with a long personal speech.' // wrong: brusquely means bluntly/shortly
+    ],
+    dolefully:[
+      'She dolefully jumped for joy when she won the prize.', // wrong: dolefully = with sadness, not joy
+      'The team dolefully celebrated their championship victory.', // wrong: celebrating isn\'t mournful
+      'He dolefully told the funniest joke anyone had ever heard.' // wrong: doleful = sad, not funny
+    ],
+    tribulations:[
+      'The vacation was full of tribulations like sunny beaches and great food.', // wrong: tribulations = sufferings, not pleasures
+      'She enjoyed the tribulations of winning award after award.', // wrong: tribulations aren\'t enjoyable rewards
+      'The tribulations of the spa day left her completely relaxed.' // wrong: spa days aren\'t trials/sufferings
+    ],
+    bequeathed:[
+      'He bequeathed his lunch to his friend by stealing it off the table.', // wrong: bequeath = leave by will, not steal
+      'She bequeathed her old toys by throwing them in the trash.', // wrong: bequeath = hand down, not discard
+      'The company bequeathed the employees by firing them all.' // wrong: bequeath = leave/give, not fire
+    ],
+    confounded:[
+      'The simple instructions confounded her because they were so easy.', // wrong: confounded = confused, easy things don\'t confuse
+      'He was confounded by the answer since he had studied it all week.', // wrong: studying should reduce confusion
+      'She felt confounded after everything went exactly as planned.' // wrong: expected outcomes don\'t confuse
+    ],
+    compunction:[
+      'She felt compunction after receiving a wonderful surprise party.', // wrong: compunction = guilt, surprise parties don\'t cause guilt
+      'His compunction grew as he won more and more prizes.', // wrong: winning doesn\'t cause guilty conscience
+      'The compunction of eating her favorite dessert was overwhelming.' // wrong: enjoying dessert isn\'t guilt-inducing (without context)
+    ],
+    reiterated:[
+      'She reiterated something completely new that nobody had heard before.', // wrong: reiterate = repeat, not say new things
+      'He reiterated by changing his opinion to the opposite view.', // wrong: reiterate = repeat same thing, not change
+      'The singer reiterated by performing a brand new unreleased song.' // wrong: reiterate = repeat, not debut
+    ],
+    rigmarole:[
+      'The rigmarole of the story was clear, concise, and to the point.', // wrong: rigmarole = rambling/meaningless, not concise
+      'His rigmarole explanation helped everyone understand immediately.', // wrong: rigmarole = meaningless rambling
+      'The short, one-sentence rigmarole was easy to follow.' // wrong: rigmarole implies long and rambling
+    ],
+    beatification:[
+      'The beatification ceremony was held to punish the wrongdoer.', // wrong: beatification = blessing, not punishment
+      'His beatification at school meant he was expelled for bad behavior.', // wrong: confused with a negative outcome
+      'The beatification of the villain surprised no one.' // wrong: villains aren\'t typically blessed
+    ],
+    sublime:[
+      'The sublime meal was so bad we couldn\'t eat a single bite.', // wrong: sublime = supreme/splendid, not bad
+      'The movie was sublime, with terrible acting and a boring plot.', // wrong: contradiction
+      'Everyone agreed the sublime painting was ugly and forgettable.' // wrong: sublime = splendid, not ugly
+    ],
+    vale:[
+      'From the top of the vale, she could see for miles around.', // wrong: vale = valley, you\'d be at the bottom
+      'The vale rose high above the surrounding mountains.', // wrong: a valley doesn\'t rise above mountains
+      'They sailed across the vast vale in their ship.' // wrong: confused with a body of water
+    ],
+    garret:[
+      'The garret was a spacious basement with high ceilings.', // wrong: garret = attic, not basement
+      'They swam in the garret behind the house all summer.', // wrong: confused with pool/garden
+      'The underground garret stayed cool even in summer.' // wrong: garret is at the TOP of a building
+    ],
+    blithely:[
+      'She blithely worried about every possible thing that could go wrong.', // wrong: blithely = carelessly/lightheartedly, not worrying
+      'He blithely agonized over the difficult decision for weeks.', // wrong: blithely = carefree, not agonizing
+      'She blithely panicked when she realized she forgot her homework.' // wrong: blithely and panicked contradict
+    ],
+    drollery:[
+      'His drollery brought tears of sadness to the whole audience.', // wrong: drollery = comedy, not sadness
+      'The funeral was marked by an abundance of drollery.', // wrong: funerals don\'t feature comedy
+      'Her drollery was so serious that nobody dared to smile.' // wrong: drollery = clowning/comedy, not seriousness
+    ],
+    inflection:[
+      'His voice had no inflection, rising and falling with great emotion.', // wrong: contradicts "no inflection"
+      'The inflection of the written essay could be heard clearly.', // wrong: written text doesn\'t have vocal pitch
+      'She spoke in a perfect monotone, full of interesting inflections.' // wrong: monotone = no pitch changes
+    ],
+    ostentatiously:[
+      'He ostentatiously hid the trophy in his closet where nobody could see.', // wrong: ostentatiously = showily, not hiding
+      'She ostentatiously donated to charity without telling a single person.', // wrong: ostentatious = showy, not secret
+      'He ostentatiously blended into the crowd, trying not to be noticed.' // wrong: ostentatious = boastful/showy
+    ],
+    revelled:[
+      'She revelled in the boredom of the long, empty afternoon.', // wrong: revelled = delighted, boredom isn\'t delightful
+      'He revelled in his punishment and asked for more chores.', // wrong: punishment isn\'t something you delight in
+      'They revelled in the terrible weather that ruined their plans.' // wrong: bad weather doesn\'t bring delight
+    ],
+    aesthetic:[
+      'The aesthetic qualities of the junkyard made it a popular tourist spot.', // wrong: junkyards aren\'t known for beauty
+      'She chose the outfit for its aesthetic comfort, not its looks.', // wrong: aesthetic = about beauty, not comfort
+      'The aesthetic value of the noise was appreciated by music critics.' // wrong: random noise isn\'t about beauty
+    ],
+    cloistered:[
+      'Her cloistered lifestyle meant she was always out at parties.', // wrong: cloistered = sheltered/secluded, not social
+      'The cloistered neighborhood was known for its busy nightlife.', // wrong: cloistered = secluded, not busy
+      'He lived a cloistered life, traveling to a new country every week.' // wrong: constant travel isn\'t secluded
+    ],
+    personified:[
+      'Cruelty personified, she always helped everyone she met.', // wrong: helping people is the opposite of cruelty
+      'He was laziness personified, working eighteen hours a day.', // wrong: working long hours contradicts laziness
+      'She was chaos personified, keeping everything perfectly organized.' // wrong: organized contradicts chaos
+    ],
+    supplicant:[
+      'The supplicant demanded the king give him what he deserved.', // wrong: supplicants beg humbly, not demand
+      'As a proud supplicant, she refused to ask anyone for help.', // wrong: supplicant = humble beggar
+      'The supplicant arrogantly ordered the servants around.' // wrong: supplicant = humble, not arrogant
+    ],
+    prepense:[
+      'The prepense accident happened completely by surprise.', // wrong: prepense = intentional, accidents aren\'t planned
+      'His prepense stumble was purely accidental and unplanned.', // wrong: prepense means the opposite of accidental
+      'The prepense discovery caught the scientist totally off guard.' // wrong: prepense = planned, discoveries off guard aren\'t planned
+    ],
+    staunchly:[
+      'He staunchly abandoned his friends when they needed him most.', // wrong: staunchly = loyally, not abandoning
+      'She staunchly betrayed the team by sharing their secrets.', // wrong: staunchly = faithfully, not betraying
+      'They staunchly wavered on their decision, changing it every day.' // wrong: staunchly = firmly, not wavering
+    ],
+    perusal:[
+      'After a quick perusal, he had thoroughly memorized every detail.', // wrong: perusal = careful reading, quick contradicts
+      'Her perusal of the book meant she only glanced at the cover.', // wrong: perusal = careful reading, not a glance
+      'His perusal involved skimming the first sentence and moving on.' // wrong: perusal = careful/thorough reading
+    ],
+    effusion:[
+      'His quiet effusion of emotion went completely unnoticed by everyone.', // wrong: effusion = unrestrained outpouring, not quiet
+      'Her effusion was carefully measured and reserved.', // wrong: effusion = unrestrained, not measured
+      'The effusion of silence filled the empty room.' // wrong: effusion = outpouring/flow, silence doesn\'t pour
+    ],
+    perquisites:[
+      'The perquisites of detention included staying late and missing recess.', // wrong: perquisites = benefits/privileges, detention isn\'t a perk
+      'Losing your allowance was one of the perquisites of bad grades.', // wrong: losing things aren\'t perks
+      'The perquisites of the punishment made nobody want the job.' // wrong: punishments aren\'t perks
+    ],
+    bedizened:[
+      'The bedizened room was bare and completely empty.', // wrong: bedizened = adorned gaudily, not bare
+      'She arrived bedizened in her simplest plain white t-shirt.', // wrong: bedizened = gaudily adorned, not simple
+      'The bedizened Christmas tree had nothing on it at all.' // wrong: bedizened = decorated gaudily
+    ],
+    tenacity:[
+      'His tenacity meant he gave up after the first try.', // wrong: tenacity = stubbornness/persistence, not giving up
+      'Her tenacity was shown by how quickly she abandoned the project.', // wrong: tenacity = not letting go
+      'With great tenacity, he surrendered at the first sign of trouble.' // wrong: tenacity = persistence
+    ],
+    beaux:[
+      'Her beaux were all her female best friends from school.', // wrong: beaux = male admirers/boyfriends
+      'The beaux gathered to play basketball at the women\'s league.', // wrong: confused with a general group
+      'She introduced her beaux as her collection of teddy bears.' // wrong: beaux = admirers, not objects
+    ],
+    relented:[
+      'She relented and became even stricter with the rules.', // wrong: relented = gave in/showed mercy, not got stricter
+      'The teacher relented by adding three more pages of homework.', // wrong: relenting = yielding, not adding burden
+      'He relented and doubled down on his harsh punishment.' // wrong: relented = showed mercy, not increased harshness
+    ],
+    estranged:[
+      'The estranged sisters talked on the phone every single day.', // wrong: estranged = separated/alienated, not close
+      'They were estranged, always finishing each other\'s sentences.', // wrong: estranged means distant, not close
+      'The estranged couple spent every holiday happily together.' // wrong: estranged = alienated
+    ],
+    consequent:[
+      'His consequent argument jumped randomly from topic to topic.', // wrong: consequent = logically consistent, not random
+      'Her consequent reasoning made no sense and contradicted itself.', // wrong: consequent = logical, not contradictory
+      'The consequent speech was full of gaps and logical fallacies.' // wrong: consequent = logically consistent
+    ],
+    irradiated:[
+      'The dark cave was irradiated, making it impossible to see anything.', // wrong: irradiated = lit up, dark cave contradicts
+      'The room was irradiated with complete and total darkness.', // wrong: irradiated = lit up, not darkened
+      'Her face was irradiated with gloom and deep sadness.' // wrong: irradiated = lit up/shone, not gloomy
+    ],
+    glens:[
+      'The glens towered above the clouds like mountain peaks.', // wrong: glens = narrow valleys, they don\'t tower
+      'From the glens, they looked down at the valleys far below.', // wrong: glens ARE valleys
+      'The wide, open glens stretched as far as the eye could see.' // wrong: glens = narrow and secluded, not wide and open
+    ]
+  };
+  const wordWrongs=WRONG_SENTENCES[entry.word];
+  const wrongSent=wordWrongs?wordWrongs[Math.floor(Math.random()*wordWrongs.length)]:`The ${entry.word} moment made everyone feel completely bored and unimpressed.`;
+
+  const opts=[correctSent,wrongSent];
+  shuffle(opts);
+
+  const optDiv=document.createElement('div');
+  optDiv.className='opts';
+  const letters=['A','B'];
+  opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn._answer=o;
+    btn.innerHTML=`<span class="opt-letter">${letters[i]}</span>${o}`;
+    btn.onclick=()=>handleAnswer(btn,o,correctSent,optDiv);
+    optDiv.appendChild(btn);
+  });
+  card.appendChild(optDiv);
+  addHint(card,entry);
+}
+
+function getDistractors(entry,field,count){
+  const pool=S.words.filter(w=>w.word!==entry.word);
+  shuffle(pool);
+  const ds=pool.slice(0,count).map(w=>field==='word'?w.word:w.def);
+  const correct=field==='word'?entry.word:entry.def;
+  const all=[...ds,correct];
+  shuffle(all);
+  return all;
+}
+
+function renderOptions(card,options,correctAnswer){
+  const optDiv=document.createElement('div');
+  optDiv.className='opts';
+  const letters=['A','B','C','D','E'];
+
+  // Eliminate power-up: hide 2 wrong options (once per round)
+  let eliminated=[];
+  if(hasPower('eliminate')&&!S.eliminateUsed){
+    S.eliminateUsed=true;
+    const wrongOpts=options.filter(o=>o!==correctAnswer);
+    shuffle(wrongOpts);
+    eliminated=wrongOpts.slice(0,2);
+  }
+
+  options.forEach((o,i)=>{
+    if(eliminated.includes(o))return; // skip eliminated options
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn._answer=o;
+    btn.innerHTML=`<span class="opt-letter">${letters[i]}</span>${o}`;
+    btn.onclick=()=>handleAnswer(btn,o,correctAnswer,optDiv);
+    optDiv.appendChild(btn);
+  });
+  card.appendChild(optDiv);
+}
+
+function handleAnswer(btn,selected,correct,container){
+  const isCorrect=selected===correct;
+  container.querySelectorAll('.opt').forEach(b=>{
+    b.classList.add('locked');
+  });
+  if(isCorrect){
+    btn.classList.add('correct');
+  } else {
+    btn.classList.add('wrong');
+    // Highlight the correct answer
+    container.querySelectorAll('.opt').forEach(b=>{
+      if(b._answer===correct)b.classList.add('reveal');
+    });
+  }
+  processAnswer(isCorrect);
+}
+
+function addHint(card,entry){
+  const btn=document.createElement('button');
+  btn.className='hint-btn';
+  const isFree=S.freeHints>0;
+  btn.textContent=isFree?'\uD83D\uDCA1 Free Hint!':'\uD83D\uDCA1 Hint (-5 pts)';
+  if(isFree)btn.style.borderColor='var(--teal)';
+  let used=false;
+  btn.onclick=()=>{
+    if(used)return;
+    used=true;
+    if(isFree){S.freeHints--}else{S.score=Math.max(0,S.score-5)}
+    btn.disabled=true;btn.textContent='Hint used!';
+    const ht=document.createElement('div');
+    ht.className='hint-text';
+
+    if(S.round===1){
+      // Word → Definition: Show a sentence for context, NOT the definition itself
+      const sents=SENTENCES[entry.word];
+      if(sents&&sents.length){
+        const s=sents[Math.floor(Math.random()*sents.length)].replace(/___WORD___/g,entry.word);
+        ht.textContent=`${entry.pos} — Used in a sentence: "${s}"`;
+      } else {
+        ht.textContent=`It's a ${entry.pos} — think about how this word sounds and what it could mean!`;
+      }
+    } else if(S.round===2){
+      // Definition → Word: They see the definition, need help finding the word
+      const halfWord=entry.word.slice(0,Math.ceil(entry.word.length/2));
+      ht.textContent=`The word starts with "${halfWord}..." (${entry.word.length} letters, ${entry.pos})`;
+    } else if(S.round===3){
+      // Sentence Challenge: help them understand what the word means
+      ht.textContent=`"${entry.word}" means: ${entry.def} (${entry.pos})`;
+    } else {
+      // Matching game: give part of speech
+      ht.textContent=`"${entry.word}" is a ${entry.pos} — think about its meaning!`;
+    }
+
+    card.appendChild(ht);
+    updateHUD();
+  };
+  card.appendChild(btn);
+}
+
+// ===== MATCHING GAME (Round 4) =====
+function renderMatchingGame(){
+  showRoundBanner();
+  updateHUD();
+  const area=document.getElementById('questionArea');
+  area.innerHTML='';
+
+  // Take batch of up to 6 words from queue
+  const batchSize=Math.min(6,S.queue.length-S.qIndex);
+  const batch=S.queue.slice(S.qIndex,S.qIndex+batchSize);
+
+  const card=document.createElement('div');
+  card.className='q-card';card.id='qCard';
+  area.appendChild(card);
+
+  const counter=document.createElement('div');
+  counter.className='q-counter';
+  counter.textContent=`Match ${S.qIndex+1}-${S.qIndex+batchSize} of ${S.totalQs}`;
+  card.appendChild(counter);
+
+  const prompt=document.createElement('div');
+  prompt.className='q-prompt';
+  prompt.textContent='Tap a word, then tap its matching definition!';
+  card.appendChild(prompt);
+
+  const scoreDiv=document.createElement('div');
+  scoreDiv.className='match-score';
+  scoreDiv.id='matchProgress';
+  scoreDiv.textContent=`Matched: 0 / ${batchSize}`;
+  card.appendChild(scoreDiv);
+
+  const grid=document.createElement('div');
+  grid.className='match-grid';
+
+  // Words column (left)
+  const wordCol=document.createElement('div');
+  wordCol.className='match-col';
+  wordCol.innerHTML='<div class="match-col-title">Words</div>';
+
+  // Definitions column (right)
+  const defCol=document.createElement('div');
+  defCol.className='match-col';
+  defCol.innerHTML='<div class="match-col-title">Definitions</div>';
+
+  // Shuffle definitions separately
+  const shuffledDefs=[...batch];
+  shuffle(shuffledDefs);
+
+  // Track match state
+  let selectedWord=null;
+  let matchedCount=0;
+
+  batch.forEach((entry,i)=>{
+    const tile=document.createElement('div');
+    tile.className='match-tile';
+    tile.textContent=entry.word;
+    tile.dataset.word=entry.word;
+    tile.dataset.type='word';
+    tile.onclick=()=>handleMatchClick(tile);
+    wordCol.appendChild(tile);
+  });
+
+  shuffledDefs.forEach((entry,i)=>{
+    const tile=document.createElement('div');
+    tile.className='match-tile';
+    tile.textContent=entry.def;
+    tile.dataset.word=entry.word; // correct word for this def
+    tile.dataset.type='def';
+    tile.onclick=()=>handleMatchClick(tile);
+    defCol.appendChild(tile);
+  });
+
+  grid.appendChild(wordCol);
+  grid.appendChild(defCol);
+  card.appendChild(grid);
+
+  function handleMatchClick(tile){
+    if(tile.classList.contains('matched'))return;
+
+    if(tile.dataset.type==='word'){
+      // Select/deselect word
+      wordCol.querySelectorAll('.match-tile').forEach(t=>t.classList.remove('selected'));
+      if(selectedWord===tile){selectedWord=null;return}
+      tile.classList.add('selected');
+      selectedWord=tile;
+    } else if(tile.dataset.type==='def'&&selectedWord){
+      // Check match
+      const wordEntry=batch.find(e=>e.word===selectedWord.dataset.word);
+      const isCorrect=tile.dataset.word===selectedWord.dataset.word;
+
+      if(!S.roundWords.includes(selectedWord.dataset.word))S.roundWords.push(selectedWord.dataset.word);
+      S.wordStats[selectedWord.dataset.word].att++;
+      S.answered++;S.roundTotal++;
+
+      if(isCorrect){
+        S.correct++;S.roundCorrect++;S.streak++;S.wrongRow=0;
+        if(S.streak>S.bestStreak)S.bestStreak=S.streak;
+        S.wordStats[selectedWord.dataset.word].cor++;
+
+        let pts=10;
+        if(S.streak>=3)pts+=5;
+        pts+=5; // harder round bonus
+        pts+=getBonusScoreFromPowers();
+        if(hasPower('wordMaster')&&S.wordStats[selectedWord.dataset.word].mastered)pts+=getPowerScale('wordMaster');
+        pts=Math.round(pts*getPointsMultiplier());
+        S.score+=pts;
+
+        const s=S.wordStats[selectedWord.dataset.word];
+        if(s.cor>=2&&s.cor/s.att>=0.75)s.mastered=true;
+
+        selectedWord.classList.add('matched');
+        tile.classList.add('matched');
+        selectedWord.classList.remove('selected');
+        selectedWord=null;
+        matchedCount++;
+        document.getElementById('matchProgress').textContent=`Matched: ${matchedCount} / ${batchSize}`;
+        showFB(true);
+        spawnSparkles();
+        updateHUD();
+
+        // Check if batch complete
+        if(matchedCount===batchSize){
+          setTimeout(()=>{
+            S.qIndex+=batchSize;
+            showQuestion(); // next batch or summary
+          },1500);
+        }
+      } else {
+        // Wrong match
+        S.wrong++;S.wrongRow++;
+        if(hasPower('comboExtender')&&S.comboMisses<getPowerScale('comboExtender')){S.comboMisses++}
+        else if(hasPower('streakShield')&&S.streakShielded<S.streakShieldMax){S.streakShielded++}
+        else {S.streak=0;S.comboMisses=0}
+        if(hasPower('softLanding')&&!S.softLandingUsed){S.softLandingUsed=true}
+        else {S.hearts=Math.max(0,S.hearts-1)}
+        if(S.hearts===0)applyRevive();
+
+        tile.classList.add('wrong-flash');
+        selectedWord.classList.add('wrong-flash');
+        selectedWord.classList.remove('selected');
+        const prevWord=selectedWord;
+        selectedWord=null;
+        showFB(false);
+        updateHUD();
+        document.getElementById('gameScreen').classList.add('shake');
+        setTimeout(()=>{
+          document.getElementById('gameScreen').classList.remove('shake');
+          tile.classList.remove('wrong-flash');
+          prevWord.classList.remove('wrong-flash');
+        },400);
+      }
+    }
+  }
+}
+
+// ===== PROCESS ANSWER =====
+function processAnswer(isCorrect){
+  const entry=S.queue[S.qIndex];
+  const word=entry.word;
+
+  S.answered++;S.roundTotal++;
+  if(!S.roundWords.includes(word))S.roundWords.push(word);
+  S.wordStats[word].att++;
+
+  if(isCorrect){
+    S.correct++;S.roundCorrect++;S.streak++;S.wrongRow=0;
+    if(S.streak>S.bestStreak)S.bestStreak=S.streak;
+    S.wordStats[word].cor++;
+    let pts=10;
+    if(S.streak>=3)pts+=5;
+    if(S.round>=2)pts+=5; // bonus for harder rounds
+    pts+=getBonusScoreFromPowers();
+    // Word master bonus for already-mastered words
+    if(hasPower('wordMaster')&&S.wordStats[word]&&S.wordStats[word].mastered){
+      pts+=getPowerScale('wordMaster');
+    }
+    pts=Math.round(pts*getPointsMultiplier());
+    S.score+=pts;
+
+    const s=S.wordStats[word];
+    if(s.cor>=2&&s.cor/s.att>=0.75)s.mastered=true;
+
+    showFB(true);
+    spawnSparkles();
+  } else {
+    S.wrong++;S.wrongRow++;
+    // Combo extender: streak survives X misses
+    if(hasPower('comboExtender')&&S.comboMisses<getPowerScale('comboExtender')){
+      S.comboMisses++;
+      // streak preserved via combo extender!
+    }
+    // Streak shield: protect streak X times per round
+    else if(hasPower('streakShield')&&S.streakShielded<S.streakShieldMax){
+      S.streakShielded++;
+      // streak preserved via shield!
+    } else {
+      S.streak=0;S.comboMisses=0;
+    }
+    // Soft landing: first wrong answer costs no heart
+    if(hasPower('softLanding')&&!S.softLandingUsed){
+      S.softLandingUsed=true;
+      // heart preserved!
+    } else {
+      S.hearts=Math.max(0,S.hearts-1);
+    }
+    // Revive: restore hearts when they hit 0
+    if(S.hearts===0)applyRevive();
+    showFB(false);
+    document.getElementById('gameScreen').classList.add('shake');
+    setTimeout(()=>document.getElementById('gameScreen').classList.remove('shake'),400);
+  }
+  updateHUD();
+
+  // Auto-advance: correct=2s, wrong=3s (enough time to read feedback + see correct answer)
+  setTimeout(()=>{S.qIndex++;showQuestion()},isCorrect?2000:3000);
+}
+
+// ===== FEEDBACK =====
+function showFB(good){
+  const ov=document.getElementById('fb');
+  const t=document.getElementById('fbText');
+  if(good){
+    let msg=PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    if(S.streak>=5)msg+=` ${S.streak}x MEGA COMBO!`;
+    else if(S.streak>=3)msg+=` ${S.streak}x streak!`;
+    t.className='feedback-text fb-good';t.textContent=msg;
+  } else {
+    t.className='feedback-text fb-bad';
+    t.textContent=ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)];
+  }
+  const cheerTime=hasPower('cheerBoost')?2500:1800;
+  ov.classList.add('show');
+  setTimeout(()=>ov.classList.remove('show'),good?cheerTime:2700);
+}
+
+function spawnSparkles(){
+  const c=document.getElementById('sparkles');
+  const colors=['#ffd700','#4ade80','#36d6c3','#f472b6','#fff','#9b6fe0'];
+  for(let i=0;i<18;i++){
+    const s=document.createElement('div');
+    s.className='spark';
+    const sz=4+Math.random()*8;
+    s.style.cssText=`left:${25+Math.random()*50}%;top:${25+Math.random()*35}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*0.3}s;width:${sz}px;height:${sz}px`;
+    c.appendChild(s);
+    setTimeout(()=>s.remove(),900);
+  }
+}
+
+// ===== STORY =====
+function showStory(emoji,room,text){
+  document.getElementById('storyEmoji').textContent=emoji;
+  document.getElementById('storyRoom').textContent=room;
+  document.getElementById('storyP').textContent=text;
+  document.getElementById('storyOv').classList.add('show');
+}
+function dismissStory(){
+  document.getElementById('storyOv').classList.remove('show');
+  showQuestion();
+}
+
+// ===== ROUND SUMMARY =====
+function showRoundSummary(){
+  S.hearts=3;
+  const mastered=[],practice=[];
+  S.roundWords.forEach(w=>{
+    const s=S.wordStats[w];
+    if(s.mastered||(s.cor>0&&s.cor/s.att>=0.75))mastered.push(w);
+    else practice.push(w);
+  });
+
+  let rank=LEVELS[0].name;
+  for(const l of LEVELS)if(S.score>=l.min)rank=l.name;
+  const acc=S.answered>0?Math.round(S.correct/S.answered*100):0;
+
+  const roundName=S.quizMode?(S.round===0?'Matching':'Sentence Challenge'):ROUND_INFO[S.round].title;
+
+  // Quiz mode: next part logic
+  let isComplete, nextAction, nextLabel, replayAction;
+  if(S.quizMode){
+    const hasPartTwo=S.quizSentenceWords.length>0;
+    isComplete=S.round===3||(!hasPartTwo&&S.round===0);
+    nextAction='buildQuizRound(1)';
+    nextLabel='Part 2: Sentence Challenge \u2694\uFE0F';
+    replayAction='startWeeklyQuiz()';
+  } else {
+    isComplete=S.round===3;
+    nextAction=`buildRound(${S.round+1})`;
+    nextLabel=ROUND_INFO[S.round+1]?`Next Round: ${ROUND_INFO[S.round+1].title} \u2192`:'';
+    replayAction='buildRound(0)';
+  }
+  const hasNext=!isComplete;
+
+  // Wizard SVG on summary
+  const wizSvg=buildWizard(getWizardSvgOpts('_sum'));
+
+  const sumTitle=S.quizMode
+    ?(isComplete?'Weekly Quiz Complete!':('Part 1 Complete! \uD83C\uDFA4'))
+    :(isComplete?'Quest Complete!':'Round '+(S.round+1)+' Complete!');
+
+  const c=document.getElementById('sumCard');
+  c.innerHTML=`
+    <div style="width:120px;height:160px;margin:0 auto 10px">${wizSvg}</div>
+    <div style="font-size:2.5rem;margin-bottom:6px">${isComplete?'\uD83C\uDFC6':'\uD83C\uDFA4'}</div>
+    <div class="sum-title">${sumTitle}</div>
+    <div class="sum-rank">${rank}</div>
+    <div style="font-family:Fredoka,sans-serif;font-size:.9rem;color:var(--text-dim);margin-bottom:16px">${roundName}</div>
+
+    <div class="sum-stats">
+      <div class="stat"><div class="num">${S.score}</div><div class="lbl">Score</div></div>
+      <div class="stat"><div class="num">${acc}%</div><div class="lbl">Accuracy</div></div>
+      <div class="stat"><div class="num">${S.bestStreak}x</div><div class="lbl">Best Streak</div></div>
+    </div>
+
+    ${mastered.length?`<div class="words-section"><h4 style="color:var(--green)">\u2B50 Mastered</h4><div>${mastered.map(w=>`<span class="tag tag-good">${w}</span>`).join('')}</div></div>`:''}
+    ${practice.length?`<div class="words-section"><h4 style="color:var(--gold)">\uD83D\uDCDD Needs Practice</h4><div>${practice.map(w=>`<span class="tag tag-bad">${w}</span>`).join('')}</div></div>`:''}
+
+    <div class="sum-actions">
+      <button class="btn btn-purple" style="font-size:1.1rem;padding:16px 36px;background:linear-gradient(135deg,#9b6fe0,var(--gold));color:#1a0a2e" onclick="openShop('sumScreen')">
+        \uD83C\uDFB0 Wizard Drip Shop \u2728
+      </button>
+      ${hasNext?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="${nextAction}">${nextLabel}</button>`:''}
+      ${practice.length?`<button class="btn btn-go" onclick="practiceMissed()">Comeback Era (Practice Missed) \uD83D\uDD04</button>`:''}
+      ${isComplete?`<button class="btn btn-hero" style="font-size:1.05rem;padding:14px 36px" onclick="${replayAction}">Play Again! \uD83D\uDD01</button>`:''}
+      <button class="btn btn-outline" onclick="viewWords()">View All Words \uD83D\uDCDA</button>
+      <button class="btn btn-outline" onclick="showScreen('startScreen')">Change Setlist \uD83C\uDFB5</button>
+    </div>
+  `;
+  showScreen('sumScreen');
+}
+
+function practiceMissed(){
+  const missed=S.words.filter(w=>{const s=S.wordStats[w.word];return s&&s.att>0&&!s.mastered});
+  if(!missed.length){buildRound(S.round);return}
+  shuffle(missed);
+  S.queue=missed;
+  S.qIndex=0;S.totalQs=missed.length;
+  S.roundWords=[];S.roundCorrect=0;S.roundTotal=0;S.hearts=3;S.midStoryShown=false;
+  showScreen('gameScreen');
+  showStory('\uD83D\uDD04','Comeback Era','"Time to redeem yourself, bestie! These words tried to ratio you, but you\'re about to clap back. Let\'s get this W!" \u2014 Lexicon');
+}
+
+function viewWords(){
+  const c=document.getElementById('wlContent');c.innerHTML='';
+  S.chapters.forEach(ch=>{
+    const sec=document.createElement('div');sec.className='wl-ch';
+    sec.innerHTML=`<h4>Chapter ${ch}</h4>`;
+    VOCAB[ch].forEach(e=>{
+      const s=S.wordStats[e.word];
+      const icon=s&&s.mastered?'\u2B50':(s&&s.att>0?'\uD83D\uDCDD':'\u2796');
+      const d=document.createElement('div');d.className='wl-item';
+      d.innerHTML=`${icon} <strong>${e.word}</strong> (${e.pos}) ${e.def}`;
+      sec.appendChild(d);
+    });
+    c.appendChild(sec);
+  });
+  document.getElementById('wlOv').classList.add('show');
+}
+
+// ===== PARENT =====
+function updateParent(){
+  const c=document.getElementById('parentContent');
+  const mins=S.sessionStart?Math.floor((Date.now()-S.sessionStart)/60000):0;
+  const acc=S.answered>0?Math.round(S.correct/S.answered*100):0;
+  const mastered=[],practice=[];
+  Object.keys(S.wordStats).forEach(w=>{const s=S.wordStats[w];if(!s.att)return;if(s.mastered)mastered.push(w);else practice.push(w)});
+
+  c.innerHTML=`
+    <div class="p-row"><span class="lbl">Total Score</span><span class="val" style="color:var(--gold)">${S.score}</span></div>
+    <div class="p-row"><span class="lbl">Answered</span><span class="val">${S.answered}</span></div>
+    <div class="p-row"><span class="lbl">Correct</span><span class="val" style="color:var(--green)">${S.correct}</span></div>
+    <div class="p-row"><span class="lbl">Wrong</span><span class="val" style="color:var(--red)">${S.wrong}</span></div>
+    <div class="p-row"><span class="lbl">Accuracy</span><span class="val">${acc}%</span></div>
+    <div class="p-row"><span class="lbl">Best Streak</span><span class="val">${S.bestStreak}x</span></div>
+    <div class="p-row"><span class="lbl">Time</span><span class="val">${mins} min</span></div>
+    <div class="p-row"><span class="lbl">Chapters</span><span class="val">${S.chapters.join(', ')}</span></div>
+    <div class="p-row"><span class="lbl">Current Round</span><span class="val">${S.round+1} of 3</span></div>
+    ${mastered.length?`<div style="margin-top:14px"><h4 style="font-family:Fredoka,sans-serif;font-size:.82rem;color:var(--green);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">\u2B50 Mastered (${mastered.length})</h4><div>${mastered.map(w=>`<span class="tag tag-good">${w}</span>`).join('')}</div></div>`:''}
+    ${practice.length?`<div style="margin-top:12px"><h4 style="font-family:Fredoka,sans-serif;font-size:.82rem;color:var(--gold);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">\uD83D\uDCDD Needs Practice (${practice.length})</h4><div>${practice.map(w=>`<span class="tag tag-bad">${w}</span>`).join('')}</div></div>`:''}
+  `;
+}
+
+// ===== UTILS =====
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+// ===== SVG WIZARD BUILDER =====
+// Maps each gacha item to SVG parameters: {svgType, svgColors}
+// Hat types: 'galaxy','cap','crown','aurora' | Outfit types: 'blue','sparkle','gold','celestial' | Pet types: null,'dragon','kitsune'
+const ITEM_SVG_MAP={
+  // Hats — each gets a unique SVG type
+  hat_cap:{svgType:'cap'},                                    // Trainee Cap — red baseball cap
+  hat_bow:{svgType:'bow'},                                    // Ribbon Bow — pink bow
+  hat_beanie:{svgType:'beanie'},                              // Cozy Beanie — orange knit cap
+  hat_hairclip:{svgType:'hairclip'},                          // Star Hair Clip — subtle gold star
+  hat_headphones:{svgType:'galaxy',headphones:true},          // K-pop Headphones — wizard hat + headphones
+  hat_tophat:{svgType:'tophat'},                              // Fancy Top Hat — tall purple top hat
+  hat_flowercrown:{svgType:'flowercrown'},                    // Flower Crown — ring of flowers
+  hat_beret:{svgType:'beret'},                                // Artist Beret — red beret
+  hat_crown:{svgType:'crown',hatColor:'default'},             // Royal Crown — gold crown
+  hat_catears:{svgType:'catears'},                            // Neko Ears — pink cat ears
+  hat_astronaut:{svgType:'galaxy'},                           // Space Helmet — galaxy wizard hat
+  hat_pirate:{svgType:'bandana'},                             // Pirate Bandana — red bandana with skull
+  hat_flame:{svgType:'crown',hatColor:'fire'},                // Flame Crown — red/orange crown
+  hat_galaxy:{svgType:'galaxy'},                              // Galaxy Tiara — galaxy wizard hat (legendary)
+  hat_icecrown:{svgType:'crown',hatColor:'ice'},              // Ice Crown — blue ice crown
+  hat_aurora:{svgType:'aurora'},                              // Aurora Crown — rainbow mythic hat
+  // Pets — dragon/kitsune get SVG, others show emoji
+  pet_chick:{svgType:null},pet_bunny:{svgType:null},pet_hamster:{svgType:null},pet_kitten:{svgType:null},
+  pet_cat:{svgType:null},pet_fox:{svgType:null},pet_owl:{svgType:null},pet_panda:{svgType:null},
+  pet_dragon:{svgType:'dragon'},pet_unicorn:{svgType:null},pet_miniphoenix:{svgType:null},pet_crystalwolf:{svgType:null},
+  pet_phoenix:{svgType:null},pet_stardragon:{svgType:'dragon'},pet_goldtiger:{svgType:null},
+  pet_kitsune:{svgType:'kitsune'},
+  // Outfits — each gets unique robe color via robeHue
+  out_hoodie:{svgType:'blue',robeHue:'orange'},               // Cozy Hoodie — warm orange robe
+  out_tshirt:{svgType:'blue',robeHue:'pink'},                 // Fan T-Shirt — pink robe
+  out_uniform:{svgType:'blue',robeHue:'blue'},                // School Blazer — classic blue robe
+  out_pajamas:{svgType:'blue',robeHue:'purple'},              // Star Pajamas — purple robe
+  out_jacket:{svgType:'sparkle',robeHue:'purple'},            // Idol Jacket — purple sparkle robe
+  out_cape:{svgType:'blue',robeHue:'purple'},                 // Wizard Cape — purple robe
+  out_denim:{svgType:'blue',robeHue:'teal'},                  // Denim Vest — teal robe
+  out_sailor:{svgType:'blue',robeHue:'blue'},                 // Sailor Dress — navy blue robe
+  out_sparkle:{svgType:'sparkle',robeHue:'blue'},             // Sparkle Suit — blue sparkle robe
+  out_hanbok:{svgType:'sparkle',robeHue:'pink'},              // Magic Hanbok — pink sparkle robe
+  out_fairy:{svgType:'sparkle',robeHue:'green'},              // Fairy Dress — green sparkle robe
+  out_spacesuit:{svgType:'sparkle',robeHue:'teal'},           // Space Suit — teal sparkle robe
+  out_galaxy:{svgType:'gold'},                                // Galaxy Robe — gold (legendary)
+  out_gold:{svgType:'gold'},                                  // Golden Armor — gold (legendary)
+  out_crystal:{svgType:'gold'},                               // Crystal Dress — gold (legendary)
+  out_celestial:{svgType:'celestial'}                         // Celestial Hanbok — rainbow (mythic)
+};
+
+function buildWizard(opts={}){
+  const {hat='galaxy',outfit='blue',pet=null,petEmoji=null,headphones=false,idSuffix='',robeHue='blue',hatColor='default'}=opts;
+  const id=s=>`${s}${idSuffix}`;
+
+  // Robe color palettes — so different outfits produce different colored robes
+  const ROBE_PAL={
+    blue:{m:'#2d6fd4',d:'#1a4fa0',dd:'#14397a'},
+    pink:{m:'#d44fa0',d:'#a01a6f',dd:'#7a144f'},
+    green:{m:'#2da06f',d:'#1a7a4f',dd:'#145a3a'},
+    orange:{m:'#d4882d',d:'#a0651a',dd:'#7a4a14'},
+    purple:{m:'#7b4fcf',d:'#5a2d9e',dd:'#3a1a6e'},
+    red:{m:'#cf4f5f',d:'#9e2d3d',dd:'#6e1a2a'},
+    teal:{m:'#36b6c3',d:'#1a8a94',dd:'#14686e'},
+  };
+  const rp=ROBE_PAL[robeHue]||ROBE_PAL.blue;
+
+  let defs=`<defs>
+    <linearGradient id="${id('galaxyHat')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6b3fa0"/><stop offset="25%" stop-color="#4a2d8a"/>
+      <stop offset="50%" stop-color="#2e5cb8"/><stop offset="75%" stop-color="#7b4fcf"/>
+      <stop offset="100%" stop-color="#c05ab8"/>
+    </linearGradient>
+    <linearGradient id="${id('goldTrim')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/><stop offset="50%" stop-color="#c8a84e"/><stop offset="100%" stop-color="#ffd700"/>
+    </linearGradient>
+    <radialGradient id="${id('crystalGlow')}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/><stop offset="40%" stop-color="#64d8ff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#64d8ff" stop-opacity="0"/>
+    </radialGradient>`;
+
+  if(outfit==='blue'||outfit==='sparkle'){
+    defs+=`<linearGradient id="${id('robeMain')}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${rp.m}"/><stop offset="100%" stop-color="${rp.d}"/>
+    </linearGradient>
+    <linearGradient id="${id('robeDark')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="${rp.d}"/><stop offset="100%" stop-color="${rp.dd}"/>
+    </linearGradient>`;
+  }
+  if(outfit==='sparkle'){
+    defs+=`<linearGradient id="${id('sparkleGrad')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64d8ff"/><stop offset="50%" stop-color="#c77dff"/><stop offset="100%" stop-color="#ff6ec7"/>
+    </linearGradient>`;
+  }
+  if(outfit==='gold'){
+    defs+=`<linearGradient id="${id('goldRobe')}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700"/><stop offset="50%" stop-color="#c8a84e"/><stop offset="100%" stop-color="#ffd700"/>
+    </linearGradient>
+    <linearGradient id="${id('robeDark')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b8942e"/><stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>`;
+  }
+  if(outfit==='celestial'){
+    defs+=`<linearGradient id="${id('celestialGrad')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6ec7"><animate attributeName="stop-color" values="#ff6ec7;#7b4fcf;#36d6c3;#ffd700;#ff6ec7" dur="4s" repeatCount="indefinite"/></stop>
+      <stop offset="50%" stop-color="#7b4fcf"><animate attributeName="stop-color" values="#7b4fcf;#36d6c3;#ffd700;#ff6ec7;#7b4fcf" dur="4s" repeatCount="indefinite"/></stop>
+      <stop offset="100%" stop-color="#36d6c3"><animate attributeName="stop-color" values="#36d6c3;#ffd700;#ff6ec7;#7b4fcf;#36d6c3" dur="4s" repeatCount="indefinite"/></stop>
+    </linearGradient>
+    <linearGradient id="${id('robeDark')}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3a1a5e"/><stop offset="100%" stop-color="#1a2a5e"/>
+    </linearGradient>
+    <radialGradient id="${id('auroraGlow')}" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ff6ec7" stop-opacity="0.15"><animate attributeName="stop-color" values="#ff6ec7;#64d8ff;#ffd700;#ff6ec7" dur="5s" repeatCount="indefinite"/></stop>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>`;
+  }
+  defs+=`</defs>`;
+
+  const staffColor=outfit==='gold'?'#ffd700':outfit==='celestial'?'#ffd700':'#a07828';
+  const crystalColor=outfit==='celestial'?'#ff6ec7':'#64d8ff';
+  const trimRef=id('goldTrim');
+  const robeRef=outfit==='sparkle'?id('sparkleGrad'):outfit==='gold'?id('goldRobe'):outfit==='celestial'?id('celestialGrad'):id('robeMain');
+  const robeDarkRef=id('robeDark');
+
+  let auroraBack=outfit==='celestial'?`<ellipse cx="150" cy="180" rx="120" ry="100" fill="url(#${id('auroraGlow')})"/>`:'';
+
+  let staff=`<line x1="225" y1="95" x2="240" y2="360" stroke="${staffColor}" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="225" cy="65" r="14" fill="url(#${id('crystalGlow')})"><animate attributeName="r" values="12;16;12" dur="2.5s" repeatCount="indefinite"/></circle>
+    <path d="M218,58 L225,48 L232,58 L232,72 L225,78 L218,72 Z" fill="${crystalColor}" opacity="0.6" stroke="${crystalColor}" stroke-width="0.5"/>
+    <circle cx="222" cy="60" r="2" fill="#fff" opacity="0.8"><animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite"/></circle>
+    <circle cx="225" cy="65" r="24" fill="${crystalColor}" opacity="0.08"><animate attributeName="r" values="20;28;20" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.05;0.15;0.05" dur="3s" repeatCount="indefinite"/></circle>`;
+
+  let robe=`<path d="M100,200 Q95,280 85,370 L215,370 Q210,280 200,200 Z" fill="url(#${robeDarkRef})"/>
+    <path d="M108,200 Q105,270 95,370 L150,370 L150,200 Z" fill="url(#${robeRef})"/>
+    <path d="M192,200 Q195,270 205,370 L150,370 L150,200 Z" fill="url(#${robeRef})"/>
+    <path d="M140,210 L136,370 L164,370 L160,210 Z" fill="rgba(0,0,0,0.15)"/>`;
+
+  if(outfit==='sparkle'){
+    const sc=['#fff','#ffd700','#64d8ff','#ff6ec7','#c77dff'];
+    for(let i=0;i<12;i++){const cx=80+Math.random()*120,cy=155+Math.random()*200,r=1+Math.random()*2.5,c=sc[i%5],dur=1+Math.random()*2,del=Math.random()*2.5;
+      robe+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="0.6"><animate attributeName="opacity" values="0.2;1;0.2" dur="${dur}s" repeatCount="indefinite" begin="${del}s"/></circle>`;}
+  }
+  if(outfit==='celestial'){
+    const ch=['★','✦','✧','⋆'];
+    for(let i=0;i<8;i++){const x=82+Math.random()*130,y=155+Math.random()*200,s=5+Math.random()*8,c=['#fff','#ffd700','#64d8ff','#ff6ec7'][i%4],dur=1.5+Math.random()*2,del=Math.random()*3;
+      robe+=`<text x="${x}" y="${y}" font-size="${s}" fill="${c}" opacity="0.6"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="${dur}s" repeatCount="indefinite" begin="${del}s"/>${ch[i%4]}</text>`;}
+  }
+  if(outfit==='blue'){
+    robe+=`<circle cx="115" cy="270" r="1.5" fill="#64d8ff" opacity="0.5"/><circle cx="125" cy="280" r="1" fill="#64d8ff" opacity="0.4"/>
+    <line x1="115" y1="270" x2="125" y2="280" stroke="#64d8ff" stroke-width="0.5" opacity="0.3"/>
+    <circle cx="180" cy="260" r="1.5" fill="#64d8ff" opacity="0.5"/><circle cx="188" cy="275" r="1" fill="#64d8ff" opacity="0.4"/>
+    <line x1="180" y1="260" x2="188" y2="275" stroke="#64d8ff" stroke-width="0.5" opacity="0.3"/>`;
+  }
+
+  let trim=`<path d="M85,358 Q150,365 215,358 L215,370 Q150,377 85,370 Z" fill="url(#${trimRef})"/>
+    <line x1="108" y1="200" x2="95" y2="370" stroke="#c8a84e" stroke-width="3"/>
+    <line x1="192" y1="200" x2="205" y2="370" stroke="#c8a84e" stroke-width="3"/>`;
+
+  const beltGem=outfit==='gold'?'#e74c3c':outfit==='celestial'?'#fff':'#e74c3c';
+  let belt=`<rect x="100" y="225" width="100" height="10" rx="4" fill="url(#${trimRef})" stroke="#8B6914" stroke-width="1"/>
+    <circle cx="150" cy="230" r="9" fill="#c8a84e" stroke="#8B6914" stroke-width="1.5"/><circle cx="150" cy="230" r="5" fill="${beltGem}"/>
+    <circle cx="120" cy="230" r="4" fill="#2ecc71" opacity="0.8"/><circle cx="180" cy="230" r="4" fill="#2ecc71" opacity="0.8"/>`;
+
+  let sleeves=`<path d="M108,200 Q80,220 65,260 Q62,268 70,270 L95,245 Q100,230 108,215 Z" fill="url(#${robeRef})"/>
+    <path d="M192,200 Q210,215 225,245 Q228,255 222,258 L200,235 Q196,220 192,210 Z" fill="url(#${robeRef})"/>
+    <path d="M65,255 Q70,270 78,265" stroke="#c8a84e" stroke-width="2.5" fill="none"/>
+    <path d="M220,243 Q225,255 218,253" stroke="#c8a84e" stroke-width="2.5" fill="none"/>`;
+
+  let hands=`<circle cx="72" cy="264" r="10" fill="#f5d5a8"/><circle cx="68" cy="260" r="3" fill="#f5d5a8"/><circle cx="222" cy="252" r="10" fill="#f5d5a8"/>`;
+  let book=`<g transform="translate(38,246) rotate(-15)"><rect x="0" y="0" width="44" height="34" rx="3" fill="#7b4fcf"/>
+    <rect x="2" y="2" width="40" height="30" rx="2" fill="#9b6ee6"/><line x1="22" y1="2" x2="22" y2="32" stroke="#6b3fa0" stroke-width="1.5"/>
+    <rect x="5" y="7" width="14" height="2.5" rx="1" fill="#ffd700" opacity="0.8"/><rect x="5" y="12" width="11" height="1.5" rx="0.75" fill="#ffd700" opacity="0.5"/>
+    <text x="12" y="25" text-anchor="middle" font-size="8" fill="#ffd700">★</text><rect x="21" y="4" width="1" height="26" fill="#f5e6c8" opacity="0.4"/></g>`;
+
+  let collar=`<path d="M125,188 Q150,198 175,188 L175,200 Q150,210 125,200 Z" fill="url(#${robeRef})"/>
+    <path d="M125,188 Q150,195 175,188" stroke="#c8a84e" stroke-width="2.5" fill="none"/>
+    <circle cx="150" cy="195" r="6" fill="#ffd700" stroke="#8B6914" stroke-width="1"/><circle cx="150" cy="195" r="3" fill="#ff8c00"/>`;
+
+  let head=`<circle cx="150" cy="155" r="42" fill="#f5d5a8"/>
+    <ellipse cx="118" cy="170" rx="11" ry="6" fill="#ffb5a0" opacity="0.4"/>
+    <ellipse cx="182" cy="170" rx="11" ry="6" fill="#ffb5a0" opacity="0.4"/>`;
+
+  let hair=`<path d="M108,130 Q110,115 130,112 Q150,110 170,112 Q190,115 192,130 L192,140 Q185,128 150,125 Q115,128 108,140 Z" fill="#6b3a1a"/>
+    <path d="M112,130 Q120,120 135,118 Q145,117 150,120" fill="#7a4420" opacity="0.7"/>
+    <path d="M188,130 Q180,120 165,118 Q155,117 150,120" fill="#7a4420" opacity="0.7"/>
+    <path d="M108,138 Q98,145 94,160 Q90,175 88,195 Q86,210 84,230 Q82,245 80,260" stroke="#6b3a1a" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M108,138 Q98,145 94,160 Q90,175 88,195 Q86,210 84,230 Q82,245 80,260" stroke="#7a4420" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="80" cy="262" r="5" fill="#ff6ec7"/><circle cx="80" cy="262" r="3" fill="#ff9de0"/>
+    <path d="M192,138 Q202,145 206,160 Q210,175 212,195 Q214,210 216,230 Q218,245 220,260" stroke="#6b3a1a" stroke-width="12" fill="none" stroke-linecap="round"/>
+    <path d="M192,138 Q202,145 206,160 Q210,175 212,195 Q214,210 216,230 Q218,245 220,260" stroke="#7a4420" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <circle cx="220" cy="262" r="5" fill="#ff6ec7"/><circle cx="220" cy="262" r="3" fill="#ff9de0"/>`;
+
+  let face=`<line x1="139" y1="155" x2="161" y2="155" stroke="#666" stroke-width="2"/>
+    <circle cx="132" cy="155" r="14" fill="none" stroke="#555" stroke-width="2.5"/><circle cx="132" cy="155" r="13" fill="#d4e8ff" opacity="0.08"/>
+    <circle cx="168" cy="155" r="14" fill="none" stroke="#555" stroke-width="2.5"/><circle cx="168" cy="155" r="13" fill="#d4e8ff" opacity="0.08"/>
+    <line x1="118" y1="152" x2="108" y2="145" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+    <line x1="182" y1="152" x2="192" y2="145" stroke="#555" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="132" cy="157" rx="6" ry="7" fill="#4a2810"/><ellipse cx="168" cy="157" rx="6" ry="7" fill="#4a2810"/>
+    <ellipse cx="132" cy="158" rx="5" ry="6" fill="#6b3fa0"/><ellipse cx="168" cy="158" rx="5" ry="6" fill="#6b3fa0"/>
+    <ellipse cx="132" cy="158" rx="3" ry="3.5" fill="#2d1b00"/><ellipse cx="168" cy="158" rx="3" ry="3.5" fill="#2d1b00"/>
+    <circle cx="129" cy="154" r="2.5" fill="#fff" opacity="0.9"/><circle cx="165" cy="154" r="2.5" fill="#fff" opacity="0.9"/>
+    <circle cx="135" cy="160" r="1.2" fill="#fff" opacity="0.6"/><circle cx="171" cy="160" r="1.2" fill="#fff" opacity="0.6"/>
+    <path d="M120,142 Q132,136 144,142" stroke="#6b3a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M156,142 Q168,136 180,142" stroke="#6b3a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle cx="150" cy="165" r="2.5" fill="#e8b898" opacity="0.6"/>
+    <path d="M136,176 Q150,188 164,176" stroke="#c47a5a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="122" cy="165" r="1" fill="#d4a880" opacity="0.4"/><circle cx="126" cy="168" r="1" fill="#d4a880" opacity="0.3"/>
+    <circle cx="174" cy="165" r="1" fill="#d4a880" opacity="0.4"/><circle cx="178" cy="168" r="1" fill="#d4a880" opacity="0.3"/>`;
+
+  // Crown color palettes
+  const CROWN_PAL={
+    default:{base:'#ffd700',mid:'#f0c030',band:'#c8a84e',gem1:'#e74c3c',gem2:'#3498db',gem3:'#2ecc71'},
+    fire:{base:'#ff6b35',mid:'#ff4500',band:'#cc3300',gem1:'#ffd700',gem2:'#ff0000',gem3:'#ff8c00'},
+    ice:{base:'#a8e6ff',mid:'#64d8ff',band:'#4fc3f7',gem1:'#e0f7ff',gem2:'#80deea',gem3:'#b2ebf2'},
+  };
+  const cp=CROWN_PAL[hatColor]||CROWN_PAL.default;
+
+  // Hat SVGs
+  let hatSvg='';
+  if(hat==='galaxy'){
+    hatSvg=`<ellipse cx="150" cy="128" rx="62" ry="14" fill="url(#${id('galaxyHat')})"/>
+      <path d="M92,128 Q100,80 125,55 Q140,30 155,20 Q150,50 168,60 Q190,85 208,128 Z" fill="url(#${id('galaxyHat')})"/>
+      <path d="M155,20 Q165,30 168,45 Q158,35 155,20 Z" fill="#9b59b6" opacity="0.5"/>
+      <path d="M92,124 Q150,115 208,124 L208,130 Q150,121 92,130 Z" fill="url(#${trimRef})"/>
+      <circle cx="150" cy="123" r="6" fill="#e74c3c" stroke="#8B6914" stroke-width="1"/>
+      <circle cx="120" cy="100" r="1.5" fill="#fff" opacity="0.7"><animate attributeName="opacity" values="0.3;0.9;0.3" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="140" cy="75" r="1" fill="#ffd700" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle cx="175" cy="90" r="1.5" fill="#64d8ff" opacity="0.7"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="1.8s" repeatCount="indefinite" begin="1s"/></circle>`;
+  } else if(hat==='cap'){
+    hatSvg=`<ellipse cx="150" cy="125" rx="50" ry="12" fill="#e74c3c"/>
+      <path d="M100,125 Q105,95 150,88 Q195,95 200,125 Z" fill="#e74c3c"/>
+      <path d="M108,122 Q112,100 150,93 Q188,100 192,122 Z" fill="#c0392b"/>
+      <path d="M88,128 Q68,122 62,132 Q68,140 95,133 Z" fill="#e74c3c"/>
+      <text x="150" y="114" text-anchor="middle" font-size="16" font-weight="bold" fill="#ffd700">★</text>`;
+  } else if(hat==='bow'){
+    hatSvg=`<path d="M150,112 Q118,95 128,115 Q138,120 150,112" fill="#ff6ec7"/>
+      <path d="M150,112 Q182,95 172,115 Q162,120 150,112" fill="#ff6ec7"/>
+      <path d="M150,112 Q120,98 130,114" fill="#ff9de0" opacity="0.5"/>
+      <path d="M150,112 Q180,98 170,114" fill="#ff9de0" opacity="0.5"/>
+      <circle cx="150" cy="112" r="6" fill="#ff1493"/>
+      <circle cx="150" cy="110" r="2" fill="#ff6ec7" opacity="0.6"/>
+      <path d="M144,118 Q136,132 132,140" stroke="#ff6ec7" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M156,118 Q164,132 168,140" stroke="#ff6ec7" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  } else if(hat==='beanie'){
+    hatSvg=`<path d="M105,132 Q108,98 150,90 Q192,98 195,132 Z" fill="#ff8c42"/>
+      <path d="M110,128 Q114,102 150,95 Q186,102 190,128 Z" fill="#ffaa60"/>
+      <path d="M105,126 Q150,118 195,126 L195,136 Q150,128 105,136 Z" fill="#e67e22"/>
+      <circle cx="150" cy="87" r="8" fill="#ff8c42"/>
+      <circle cx="148" cy="85" r="3" fill="#ffcc80" opacity="0.5"/>`;
+  } else if(hat==='flowercrown'){
+    hatSvg=`<path d="M105,125 Q128,115 150,114 Q172,115 195,125" stroke="#2ecc71" stroke-width="5" fill="none"/>
+      <circle cx="108" cy="124" r="7" fill="#ff6ec7"/><circle cx="108" cy="124" r="3" fill="#ffd700"/>
+      <circle cx="128" cy="118" r="7" fill="#ffd700"/><circle cx="128" cy="118" r="3" fill="#fff"/>
+      <circle cx="150" cy="115" r="8" fill="#ff4444"/><circle cx="150" cy="115" r="3.5" fill="#ffd700"/>
+      <circle cx="172" cy="118" r="7" fill="#64d8ff"/><circle cx="172" cy="118" r="3" fill="#fff"/>
+      <circle cx="192" cy="124" r="7" fill="#c77dff"/><circle cx="192" cy="124" r="3" fill="#ffd700"/>
+      <circle cx="118" cy="120" r="4" fill="#2ecc71" opacity="0.6"/>
+      <circle cx="140" cy="116" r="3" fill="#2ecc71" opacity="0.5"/>
+      <circle cx="160" cy="116" r="3" fill="#2ecc71" opacity="0.5"/>
+      <circle cx="182" cy="120" r="4" fill="#2ecc71" opacity="0.6"/>`;
+  } else if(hat==='beret'){
+    hatSvg=`<ellipse cx="142" cy="118" rx="46" ry="20" fill="#e74c3c"/>
+      <ellipse cx="142" cy="116" rx="40" ry="16" fill="#c0392b"/>
+      <circle cx="148" cy="104" r="5" fill="#e74c3c"/>
+      <path d="M100,122 Q142,112 192,122" stroke="#b03030" stroke-width="2" fill="none"/>`;
+  } else if(hat==='catears'){
+    hatSvg=`<path d="M108,132 Q150,122 192,132" stroke="#555" stroke-width="3.5" fill="none"/>
+      <path d="M118,132 L108,100 L136,122 Z" fill="#ff6ec7"/>
+      <path d="M122,128 L114,105 L134,122 Z" fill="#ffb5d5" opacity="0.6"/>
+      <path d="M182,132 L192,100 L164,122 Z" fill="#ff6ec7"/>
+      <path d="M178,128 L186,105 L166,122 Z" fill="#ffb5d5" opacity="0.6"/>`;
+  } else if(hat==='bandana'){
+    hatSvg=`<path d="M100,128 Q150,115 200,128 L200,140 Q150,127 100,140 Z" fill="#e74c3c"/>
+      <path d="M104,130 Q150,118 196,130 L196,136 Q150,124 104,136 Z" fill="#c0392b"/>
+      <path d="M96,134 Q82,124 84,138 Q88,146 100,138" fill="#c0392b"/>
+      <path d="M94,136 Q84,128 86,138 Q88,142 96,138" fill="#e74c3c"/>
+      <text x="150" y="136" text-anchor="middle" font-size="11" fill="#fff">☠</text>`;
+  } else if(hat==='tophat'){
+    hatSvg=`<ellipse cx="150" cy="122" rx="52" ry="11" fill="#2d1b69"/>
+      <rect x="112" y="68" width="76" height="54" rx="5" fill="#2d1b69"/>
+      <rect x="114" y="70" width="72" height="50" rx="4" fill="#3a2480"/>
+      <rect x="112" y="108" width="76" height="8" rx="2" fill="#c8a84e"/>
+      <circle cx="150" cy="112" r="4" fill="#ffd700"/>
+      <circle cx="140" cy="85" r="1" fill="#fff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="162" cy="78" r="1" fill="#ffd700" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>`;
+  } else if(hat==='hairclip'){
+    hatSvg=`<text x="122" y="125" font-size="18" fill="#ffd700">★</text>
+      <circle cx="127" cy="119" r="6" fill="#ffd700" opacity="0.3"><animate attributeName="opacity" values="0.1;0.5;0.1" dur="2s" repeatCount="indefinite"/><animate attributeName="r" values="4;8;4" dur="2s" repeatCount="indefinite"/></circle>`;
+  } else if(hat==='crown'){
+    // Crown with color variants (default gold, fire red/orange, ice blue)
+    hatSvg=`<path d="M110,122 L118,92 L128,108 L150,78 L172,108 L182,92 L190,122 Z" fill="${cp.base}"/>
+      <path d="M114,120 L120,95 L130,108 L150,82 L170,108 L180,95 L186,120 Z" fill="${cp.mid}"/>
+      <path d="M108,118 Q150,112 192,118 L192,126 Q150,120 108,126 Z" fill="${cp.band}" stroke="${cp.band}" stroke-width="1"/>
+      <circle cx="150" cy="86" r="5" fill="${cp.gem1}" stroke-width="0.5"/>
+      <circle cx="126" cy="102" r="4" fill="${cp.gem2}"/><circle cx="174" cy="102" r="4" fill="${cp.gem3}"/>
+      <circle cx="150" cy="78" r="3" fill="#fff" opacity="0.4"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="2s" repeatCount="indefinite"/></circle>`;
+    if(hatColor==='fire'){
+      hatSvg+=`<circle cx="135" cy="75" r="4" fill="#ff4500" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="165" cy="75" r="4" fill="#ff6b35" opacity="0.4"><animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.8s" repeatCount="indefinite" begin="0.3s"/></circle>`;
+    }
+    if(hatColor==='ice'){
+      hatSvg+=`<circle cx="130" cy="80" r="3" fill="#e0f7ff" opacity="0.5"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2s" repeatCount="indefinite"/></circle>
+        <circle cx="170" cy="80" r="3" fill="#b2ebf2" opacity="0.5"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>`;
+    }
+  } else if(hat==='aurora'){
+    hatSvg=`<ellipse cx="150" cy="128" rx="62" ry="14" fill="url(#${id('celestialGrad')})"/>
+      <path d="M92,128 Q100,78 125,52 Q140,28 155,18 Q150,48 168,58 Q190,83 208,128 Z" fill="url(#${id('celestialGrad')})"/>
+      <path d="M92,124 Q150,115 208,124 L208,130 Q150,121 92,130 Z" fill="url(#${trimRef})"/>
+      <circle cx="150" cy="123" r="6" fill="#fff" opacity="0.9"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/></circle>`;
+    for(let i=0;i<10;i++){const cx=100+Math.random()*100,cy=40+Math.random()*80,r=0.8+Math.random()*2,c=['#fff','#ffd700','#64d8ff','#ff6ec7','#36d6c3'][i%5],dur=1+Math.random()*2.5,del=Math.random()*3;
+      hatSvg+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${c}" opacity="0.6"><animate attributeName="opacity" values="0.2;1;0.2" dur="${dur}s" repeatCount="indefinite" begin="${del}s"/></circle>`;}
+  }
+
+  // Headphones
+  let hpSvg='';
+  if(headphones){
+    hpSvg=`<path d="M95,145 Q92,110 115,95" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M205,145 Q208,110 185,95" stroke="#333" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <rect x="82" y="138" width="22" height="32" rx="11" fill="#444" stroke="#333" stroke-width="1.5"/>
+      <rect x="85" y="141" width="16" height="26" rx="8" fill="#7b4fcf"/>
+      <rect x="196" y="138" width="22" height="32" rx="11" fill="#444" stroke="#333" stroke-width="1.5"/>
+      <rect x="199" y="141" width="16" height="26" rx="8" fill="#7b4fcf"/>`;
+  }
+
+  // Pet
+  let petSvg='';
+  if(pet==='dragon'){
+    petSvg=`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-10;0,0" dur="2.5s" repeatCount="indefinite"/>
+      <ellipse cx="50" cy="265" rx="22" ry="16" fill="#2ecc71"/>
+      <path d="M30,250 Q10,232 16,254 Q20,260 32,258 Z" fill="#27ae60" opacity="0.8"/>
+      <path d="M70,250 Q90,232 84,254 Q80,260 68,258 Z" fill="#27ae60" opacity="0.8"/>
+      <circle cx="50" cy="240" r="16" fill="#2ecc71"/>
+      <path d="M38,228 L33,215 L42,226 Z" fill="#c8a84e"/><path d="M62,228 L67,215 L58,226 Z" fill="#c8a84e"/>
+      <circle cx="42" cy="236" r="5" fill="#fff"/><circle cx="58" cy="236" r="5" fill="#fff"/>
+      <circle cx="43" cy="236" r="3" fill="#2d1b00"/><circle cx="59" cy="236" r="3" fill="#2d1b00"/>
+      <circle cx="42" cy="234" r="1.5" fill="#fff" opacity="0.8"/><circle cx="58" cy="234" r="1.5" fill="#fff" opacity="0.8"/>
+      <path d="M43,253 Q50,259 57,253" stroke="#1a6b3a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M72,268 Q90,278 85,264 Q82,258 76,264" fill="#2ecc71"/>
+      <circle cx="50" cy="262" r="5" fill="#ff6b35" opacity="0.4"><animate attributeName="opacity" values="0.2;0.7;0.2" dur="1.5s" repeatCount="indefinite"/><animate attributeName="r" values="4;7;4" dur="1.5s" repeatCount="indefinite"/></circle>
+    </g>`;
+  } else if(pet==='kitsune'){
+    petSvg=`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-8;0,0" dur="3s" repeatCount="indefinite"/>
+      <ellipse cx="50" cy="270" rx="22" ry="14" fill="#ff8c42"/>
+      <path d="M72,268 Q95,250 88,242" stroke="#ff8c42" stroke-width="4" fill="none" stroke-linecap="round"><animate attributeName="d" values="M72,268 Q95,250 88,242;M72,268 Q98,248 90,238;M72,268 Q95,250 88,242" dur="3s" repeatCount="indefinite"/></path>
+      <path d="M72,270 Q100,258 95,248" stroke="#ffaa60" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M70,272 Q98,268 96,258" stroke="#ff8c42" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="88" cy="242" r="3" fill="#ffd700" opacity="0.6"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite"/></circle>
+      <circle cx="95" cy="248" r="2.5" fill="#ff6ec7" opacity="0.5"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>
+      <circle cx="50" cy="248" r="14" fill="#ff8c42"/>
+      <path d="M38,238 L32,220 L44,234 Z" fill="#ff8c42"/><path d="M62,238 L68,220 L56,234 Z" fill="#ff8c42"/>
+      <circle cx="43" cy="246" r="4" fill="#fff"/><circle cx="57" cy="246" r="4" fill="#fff"/>
+      <circle cx="44" cy="246" r="2.5" fill="#e74c3c"/><circle cx="58" cy="246" r="2.5" fill="#e74c3c"/>
+      <circle cx="50" cy="253" r="2" fill="#2d1b00"/>
+      <line x1="30" y1="250" x2="40" y2="252" stroke="#ffcc99" stroke-width="0.8"/><line x1="60" y1="252" x2="70" y2="250" stroke="#ffcc99" stroke-width="0.8"/>
+    </g>`;
+  }
+  // Emoji fallback for pets without dedicated SVG
+  if(!pet&&petEmoji){
+    petSvg=`<g><animateTransform attributeName="transform" type="translate" values="0,0;0,-6;0,0" dur="2s" repeatCount="indefinite"/>
+      <circle cx="50" cy="260" r="24" fill="rgba(123,79,207,0.15)"/>
+      <text x="50" y="268" text-anchor="middle" font-size="32">${petEmoji}</text>
+    </g>`;
+  }
+
+  let boots=`<ellipse cx="125" cy="372" rx="18" ry="8" fill="#6b3a1a"/><ellipse cx="125" cy="370" rx="16" ry="6" fill="#8B4513"/>
+    <ellipse cx="175" cy="372" rx="18" ry="8" fill="#6b3a1a"/><ellipse cx="175" cy="370" rx="16" ry="6" fill="#8B4513"/>`;
+
+  return `<svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">${defs}
+    <g><animateTransform attributeName="transform" type="translate" values="0,0;0,-2;0,0" dur="4s" repeatCount="indefinite"/>
+    ${auroraBack}${staff}${robe}${trim}${belt}${sleeves}${hands}${book}${collar}${head}${hair}${face}${hatSvg}${hpSvg}${boots}
+    </g>${petSvg}</svg>`;
+}
+
+// Get SVG opts from equipped items
+function getWizardSvgOpts(suffix){
+  const hatItem=getEquippedItem('hat');
+  const petItem=getEquippedItem('pet');
+  const outfitItem=getEquippedItem('outfit');
+  const hatMap=hatItem?ITEM_SVG_MAP[hatItem.id]:null;
+  const petMap=petItem?ITEM_SVG_MAP[petItem.id]:null;
+  const outMap=outfitItem?ITEM_SVG_MAP[outfitItem.id]:null;
+  return {
+    hat:hatMap?hatMap.svgType:'galaxy',
+    outfit:outMap?outMap.svgType:'blue',
+    pet:petMap?petMap.svgType:null,
+    petEmoji:petItem&&(!petMap||!petMap.svgType)?petItem.emoji:null,
+    headphones:!!(hatMap&&hatMap.headphones),
+    robeHue:(outMap&&outMap.robeHue)||'blue',
+    hatColor:(hatMap&&hatMap.hatColor)||'default',
+    idSuffix:suffix||''
+  };
+}
+
+// ===== GACHA SYSTEM =====
+function getItem(id){
+  for(const cat of Object.values(GACHA_ITEMS)){
+    const found=cat.find(i=>i.id===id);
+    if(found)return found;
+  }
+  return null;
+}
+
+function getEquippedItem(slot){
+  if(!S.equipped[slot])return null;
+  return getItem(S.equipped[slot]);
+}
+
+function getActivePowers(){
+  const powers=[];
+  ['hat','pet','outfit'].forEach(slot=>{
+    const item=getEquippedItem(slot);
+    if(!item||!item.power)return;
+    // Mythic items grant multiple powers at tier 4
+    if(item.power==='mythicWisdom'){powers.push({name:'freeHint',tier:4},{name:'eliminate',tier:4},{name:'doublePoints',tier:4})}
+    else if(item.power==='mythicGuardian'){powers.push({name:'revive',tier:4},{name:'streakShield',tier:4},{name:'bonusScore',tier:4})}
+    else if(item.power==='mythicAura'){powers.push({name:'restoreHeart',tier:4},{name:'eliminate',tier:4},{name:'streakShield',tier:4})}
+    else powers.push({name:item.power,tier:item.powerTier||1});
+  });
+  // Check set bonus
+  const activeSet=getActiveSetBonus();
+  if(activeSet)powers.push({name:activeSet.bonus,tier:activeSet.tier});
+  return powers;
+}
+
+function getActiveSetBonus(){
+  const equipped=['hat','pet','outfit'].map(s=>S.equipped[s]).filter(Boolean);
+  for(const [key,set] of Object.entries(SET_BONUSES)){
+    if(set.items.every(id=>equipped.includes(id)))return set;
+  }
+  return null;
+}
+
+function getPowerTier(powerName){
+  // Get highest tier for a power among active powers
+  let best=0;
+  S.activePowers.forEach(p=>{if(p.name===powerName&&p.tier>best)best=p.tier});
+  return best;
+}
+
+function getPowerScale(powerName){
+  const tier=getPowerTier(powerName);
+  if(!tier||!POWER_SCALES[powerName])return 0;
+  return POWER_SCALES[powerName][tier-1]||0;
+}
+
+function hasPower(name){return S.activePowers.some(p=>p.name===name)}
+
+function updateMiniWizard(){
+  const el=document.getElementById('hudWizard');
+  if(!el)return;
+  const opts=getWizardSvgOpts('_mini');
+  el.innerHTML=`<div class="hw-svg">${buildWizard(opts)}</div>`;
+}
+
+function updateShopWizard(){
+  const frame=document.getElementById('shopWizFrame');
+  const wiz=document.getElementById('shopWizard');
+  if(!wiz)return;
+
+  const hat=getEquippedItem('hat');
+  const pet=getEquippedItem('pet');
+  const outfit=getEquippedItem('outfit');
+
+  // Find best rarity among equipped
+  const rarities=['common','rare','epic','legendary','mythic'];
+  let best='common';
+  [hat,pet,outfit].forEach(i=>{if(i&&rarities.indexOf(i.rarity)>rarities.indexOf(best))best=i.rarity});
+  frame.className='wizard-frame rf-'+best;
+
+  // Render SVG wizard
+  const opts=getWizardSvgOpts('_shop');
+  wiz.innerHTML=buildWizard(opts);
+
+  document.getElementById('shopScore').textContent=S.score;
+
+  // Set bonus indicator
+  const setBonus=getActiveSetBonus();
+  let setHTML='';
+  if(setBonus){
+    setHTML=`<div class="set-bonus-active">${setBonus.desc} <span style="color:var(--gold)">${setBonus.name} COMPLETE!</span></div>`;
+  } else {
+    // Show partial set progress
+    const equipped=['hat','pet','outfit'].map(s=>S.equipped[s]).filter(Boolean);
+    for(const [key,set] of Object.entries(SET_BONUSES)){
+      const count=set.items.filter(id=>equipped.includes(id)).length;
+      if(count>0&&count<3){
+        setHTML+=`<div class="set-bonus-partial">${set.name}: ${count}/3</div>`;
+      }
+    }
+  }
+  document.getElementById('shopSetBonus').innerHTML=setHTML;
+
+  // Show active powers
+  const powers=getActivePowers();
+  const puDiv=document.getElementById('shopPowerups');
+  if(powers.length){
+    const labels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Pts',restoreHeart:'\u2764\uFE0F +Heart',
+      eliminate:'\uD83D\uDD25 Eliminate',doublePoints:'\uD83D\uDCAB 2x Points',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive',
+      cheerBoost:'\uD83D\uDC25 Cheer Boost',softLanding:'\uD83D\uDC30 Soft Landing',foxReveal:'\uD83E\uDD8A Fox Hint',
+      xpMultiplier:'\uD83D\uDCAB XP Boost',wordMaster:'\uD83D\uDCDA Word Master',comboExtender:'\uD83D\uDD17 Combo+',luckyPull:'\uD83C\uDF40 Lucky Pull'};
+    puDiv.innerHTML=`<div class="powerups-bar">${powers.map(p=>`<span class="pu-badge">${labels[p.name]||p.name}</span>`).join('')}</div>`;
+  } else puDiv.innerHTML='';
+}
+
+function updatePowerupsBar(){
+  const bar=document.getElementById('puBar');
+  if(!bar)return;
+  const powers=S.activePowers;
+  if(!powers.length){bar.innerHTML='';return}
+  const labels={freeHint:'\uD83D\uDCA1 Hint',bonusScore:'\u2B50 +Pts',restoreHeart:'\u2764\uFE0F +Heart',
+    eliminate:'\uD83D\uDD25 Elim',doublePoints:'\uD83D\uDCAB 2x',streakShield:'\uD83D\uDEE1\uFE0F Shield',revive:'\uD83D\uDD25 Revive',
+    cheerBoost:'\uD83D\uDC25 Cheer',softLanding:'\uD83D\uDC30 Safe',foxReveal:'\uD83E\uDD8A Hint',
+    xpMultiplier:'\uD83D\uDCAB XP+',wordMaster:'\uD83D\uDCDA Master',comboExtender:'\uD83D\uDD17 Combo',luckyPull:'\uD83C\uDF40 Lucky'};
+  // Deduplicate by power name (show highest tier only)
+  const seen=new Set();
+  const unique=powers.filter(p=>{if(seen.has(p.name))return false;seen.add(p.name);return true});
+  bar.innerHTML=unique.map(p=>`<span class="pu-badge">${labels[p.name]||p.name}</span>`).join('');
+}
+
+function renderInventory(){
+  const area=document.getElementById('inventoryArea');
+  area.innerHTML='';
+  const cats=[['hats','Hats \uD83C\uDFA9','hat'],['pets','Pets \uD83D\uDC3E','pet'],['outfits','Outfits \uD83D\uDC55','outfit']];
+
+  cats.forEach(([catKey,label,slot])=>{
+    const owned=S.inventory.filter(id=>GACHA_ITEMS[catKey].some(i=>i.id===id));
+    if(!owned.length)return;
+
+    const sec=document.createElement('div');
+    sec.className='inv-section';
+    sec.innerHTML=`<h4>${label} (${owned.length}/${GACHA_ITEMS[catKey].length})</h4>`;
+    const grid=document.createElement('div');
+    grid.className='inv-grid';
+
+    owned.forEach(id=>{
+      const item=getItem(id);
+      const div=document.createElement('div');
+      const isEquipped=S.equipped[slot]===id;
+      div.className=`inv-item ir-${item.rarity}${isEquipped?' equipped':''}`;
+      const powerIcons={freeHint:'\uD83D\uDCA1',bonusScore:'\u2B50',restoreHeart:'\u2764\uFE0F',eliminate:'\uD83D\uDD25',doublePoints:'\uD83D\uDCAB',streakShield:'\uD83D\uDEE1\uFE0F',revive:'\uD83D\uDD25'};
+      div.innerHTML=`<span class="inv-emoji">${item.emoji}</span><span class="inv-name">${item.name}</span>${item.power?`<span style="font-size:.65rem;margin-top:2px">${powerIcons[item.power]||''}</span>`:''}${isEquipped?'<span style="font-size:.6rem;color:var(--teal);margin-top:2px">EQUIPPED</span>':''}`;
+      div.title=item.desc+(item.power?` (${item.power})`:'');
+      div.onclick=()=>{
+        if(isEquipped){S.equipped[slot]=null} else {S.equipped[slot]=id}
+        S.activePowers=getActivePowers();
+        renderInventory();
+        updateShopWizard();
+        updateMiniWizard();
+      };
+      grid.appendChild(div);
+    });
+    sec.appendChild(grid);
+    area.appendChild(sec);
+  });
+
+  // Unequip buttons
+  if(S.equipped.hat||S.equipped.pet||S.equipped.outfit){
+    const ub=document.createElement('button');
+    ub.className='btn btn-outline';ub.style.marginTop='10px';ub.style.fontSize='.8rem';ub.style.padding='8px 16px';
+    ub.textContent='Unequip All';
+    ub.onclick=()=>{S.equipped={hat:null,pet:null,outfit:null};S.activePowers=[];renderInventory();updateShopWizard();updateMiniWizard()};
+    area.appendChild(ub);
+  }
+
+  if(!S.inventory.length){
+    area.innerHTML='<div style="font-family:Fredoka,sans-serif;font-size:1rem;color:var(--text-dim);padding:20px">No items yet! Pull to start your collection \uD83C\uDFB0</div>';
+  }
+}
+
+function gachaPull(tier){
+  const cost=PULL_COST[tier];
+  if(S.score<cost){
+    alert(`Not enough points! You need ${cost} but have ${S.score}. Keep playing to earn more! \u2728`);
+    return;
+  }
+  S.score-=cost;
+
+  // Pick rarity
+  const odds=PULL_ODDS[tier];
+  const roll=Math.random()*100;
+  let rarity;
+  if(roll<odds.mythic)rarity='mythic';
+  else if(roll<odds.mythic+odds.legendary)rarity='legendary';
+  else if(roll<odds.mythic+odds.legendary+odds.epic)rarity='epic';
+  else if(roll<odds.mythic+odds.legendary+odds.epic+odds.rare)rarity='rare';
+  else rarity='common';
+
+  // Pick random item of that rarity
+  const allOfRarity=[];
+  Object.values(GACHA_ITEMS).forEach(cat=>{
+    cat.filter(i=>i.rarity===rarity).forEach(i=>allOfRarity.push(i));
+  });
+  const item=allOfRarity[Math.floor(Math.random()*allOfRarity.length)];
+
+  const isDupe=S.inventory.includes(item.id);
+  if(isDupe){
+    S.score+=DUPE_REFUND[rarity];
+  } else {
+    S.inventory.push(item.id);
+  }
+
+  showGachaResult(item,isDupe,rarity);
+  updateShopWizard();
+  updatePullButtons();
+}
+
+function showGachaResult(item,isDupe,rarity){
+  const ov=document.getElementById('gachaResult');
+  ov.className=`gacha-result show gr-${rarity}`;
+  const card=document.getElementById('gachaCard');
+
+  const powerLabels={freeHint:'\uD83D\uDCA1 Free Hint',bonusScore:'\u2B50 Bonus Points',restoreHeart:'\u2764\uFE0F +Heart',
+    eliminate:'\uD83D\uDD25 Eliminate Wrong Answers',doublePoints:'\uD83D\uDCAB Points Multiplier',streakShield:'\uD83D\uDEE1\uFE0F Streak Shield',revive:'\uD83D\uDD25 Revive Hearts',
+    cheerBoost:'\uD83D\uDC25 Praise Lasts Longer',softLanding:'\uD83D\uDC30 First Miss Costs No Heart',foxReveal:'\uD83E\uDD8A Shows First Letter',
+    xpMultiplier:'\uD83D\uDCAB XP Multiplier',wordMaster:'\uD83D\uDCDA Word Master Bonus',comboExtender:'\uD83D\uDD17 Combo Extender',luckyPull:'\uD83C\uDF40 Lucky Pull Boost',
+    mythicWisdom:'\uD83C\uDF0C Free Hints + Eliminate + 2x Points!',mythicGuardian:'\uD83E\uDD8A Revive + Shield + Bonus Pts!',mythicAura:'\uD83C\uDF1F +Heart + Eliminate + Shield!'};
+
+  card.innerHTML=`
+    <span class="gacha-item-emoji">${item.emoji}</span>
+    <div class="gacha-rarity-tag rt-${rarity}">${rarity}</div>
+    <div class="gacha-item-name" style="color:${rarity==='legendary'?'var(--gold)':rarity==='epic'?'#b794f6':rarity==='rare'?'var(--teal)':'var(--text)'}">${item.name}</div>
+    ${item.power?`<div class="gacha-power">${powerLabels[item.power]||item.power}</div>`:''}
+    <div class="gacha-desc">${item.desc}</div>
+    ${isDupe?`<div class="gacha-dupe">Already owned! +${DUPE_REFUND[rarity]} pts refund \uD83D\uDCB0</div>`:''}
+    <button class="btn btn-hero" style="font-size:.95rem;padding:12px 28px;margin-top:16px" onclick="closeGachaResult()">
+      ${isDupe?'Nice! \uD83D\uDCB0':'Equip & Continue \u2728'}
+    </button>
+  `;
+
+  // Sparkle effects for rare+
+  if(rarity!=='common'){
+    spawnSparkles();
+    if(rarity==='legendary')spawnLegendaryRain();
+    if(rarity==='mythic'){spawnLegendaryRain();setTimeout(spawnLegendaryRain,500);setTimeout(spawnSparkles,300)}
+  }
+}
+
+function spawnLegendaryRain(){
+  const c=document.getElementById('legendRain');
+  c.innerHTML='';
+  const emojis=['\u2728','\uD83D\uDCAB','\u2B50','\uD83C\uDF1F','\uD83D\uDD25','\uD83D\uDC8E','\uD83D\uDC51','\uD83C\uDF89'];
+  for(let i=0;i<30;i++){
+    const s=document.createElement('span');
+    s.className='g-sparkle';
+    s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    s.style.left=Math.random()*100+'%';
+    s.style.animationDelay=(Math.random()*1.2)+'s';
+    s.style.fontSize=(0.8+Math.random()*1.2)+'rem';
+    c.appendChild(s);
+  }
+  setTimeout(()=>c.innerHTML='',3000);
+}
+
+function closeGachaResult(){
+  document.getElementById('gachaResult').classList.remove('show');
+  document.getElementById('gachaResult').className='gacha-result';
+  renderInventory();
+  updateShopWizard();
+  updatePullButtons();
+}
+
+function updatePullButtons(){
+  document.querySelectorAll('.pull-btn').forEach(btn=>{
+    const tier=btn.classList.contains('pull-basic')?'basic':btn.classList.contains('pull-super')?'super':btn.classList.contains('pull-mega')?'mega':'divine';
+    btn.disabled=S.score<PULL_COST[tier];
+  });
+  document.getElementById('shopScore').textContent=S.score;
+}
+
+function openShop(returnTo){
+  S.returnTo=returnTo||'sumScreen';
+  S.activePowers=getActivePowers();
+  updateShopWizard();
+  renderInventory();
+  updatePullButtons();
+  showScreen('shopScreen');
+}
+
+function openShopFromGame(){
+  openShop('gameScreen');
+}
+
+function exitShop(){
+  S.activePowers=getActivePowers();
+  updateMiniWizard();
+  showScreen(S.returnTo);
+  if(S.returnTo==='gameScreen'){
+    updateHUD();
+    updatePowerupsBar();
+  }
+}
+
+// ===== POWER-UP HOOKS =====
+function applyRoundStartPowers(){
+  S.activePowers=getActivePowers();
+  S.freeHints=0;S.streakShielded=0;S.streakShieldMax=0;S.reviveUsed=false;
+  S.eliminateUsed=false;S.softLandingUsed=false;S.comboMisses=0;
+
+  // Restore hearts based on tier
+  if(hasPower('restoreHeart')){
+    const amt=getPowerScale('restoreHeart');
+    S.hearts=Math.min(S.hearts+amt,5);
+  }
+  // Free hints based on tier
+  if(hasPower('freeHint'))S.freeHints=getPowerScale('freeHint');
+  // Streak shield uses based on tier
+  if(hasPower('streakShield'))S.streakShieldMax=getPowerScale('streakShield');
+  // Combo extender tracked via S.comboMisses vs max
+  updatePowerupsBar();
+}
+
+function applyRevive(){
+  if(hasPower('revive')&&!S.reviveUsed&&S.hearts===0){
+    S.reviveUsed=true;
+    S.hearts=getPowerScale('revive'); // tier determines hearts restored
+    updateHUD();
+    return true;
+  }
+  return false;
+}
+
+function getBonusScoreFromPowers(){
+  let bonus=0;
+  if(hasPower('bonusScore'))bonus+=getPowerScale('bonusScore');
+  return bonus;
+}
+
+function getPointsMultiplier(){
+  let mult=1;
+  if(hasPower('doublePoints'))mult*=getPowerScale('doublePoints');
+  if(hasPower('xpMultiplier'))mult*=getPowerScale('xpMultiplier');
+  return mult;
+}
+
+init();
+</script>
+</body>
+</html>
