@@ -2090,10 +2090,14 @@ function buildRound(roundNum){
   showScreen('gameScreen');
   applyRoundStartPowers();
   updateMiniWizard();
-  // Show round story
+  // Show round story (some rounds like Sentence Challenge have no stories)
   const info=ROUND_INFO[roundNum];
-  const story=info.stories[0];
-  showStory(story.emoji,story.room,story.text);
+  if(info.stories&&info.stories.length>0){
+    const story=info.stories[Math.floor(Math.random()*info.stories.length)];
+    showStory(story.emoji,story.room,story.text);
+  } else {
+    showQuestion();
+  }
 }
 
 // ===== WEEKLY QUIZ =====
