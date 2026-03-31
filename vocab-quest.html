@@ -1157,7 +1157,7 @@ body{
       <div class="hud-score"><span class="icon">&#11088;</span><span class="val" id="hudScore">0</span></div>
       <div class="hud-hearts" id="hudHearts"></div>
       <div class="hud-streak" id="hudStreak"></div>
-      <div class="hud-rank" id="hudRank">Trainee</div>
+      <div class="hud-rank" id="hudRank">Apprentice</div>
       <button class="hud-menu-btn" onclick="confirmBackToMenu()" title="Back to Menu">✕</button>
     </div>
     <div class="powerups-bar" id="puBar"></div>
@@ -2092,10 +2092,14 @@ function buildRound(roundNum){
   showScreen('gameScreen');
   applyRoundStartPowers();
   updateMiniWizard();
-  // Show round story
+  // Show round story (some rounds like Sentence Challenge have no stories)
   const info=ROUND_INFO[roundNum];
-  const story=info.stories[0];
-  showStory(story.emoji,story.room,story.text);
+  if(info.stories&&info.stories.length>0){
+    const story=info.stories[Math.floor(Math.random()*info.stories.length)];
+    showStory(story.emoji,story.room,story.text);
+  } else {
+    showQuestion();
+  }
 }
 
 // ===== WEEKLY QUIZ =====
