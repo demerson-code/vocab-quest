@@ -3701,7 +3701,7 @@ function renderMatchingGame(){
 
   const prompt=document.createElement('div');
   prompt.className='q-prompt';
-  prompt.textContent='Tap a word, then tap its matching definition!';
+  prompt.textContent='Tap a word or definition, then tap its match!';
   card.appendChild(prompt);
 
   const scoreDiv=document.createElement('div');
@@ -3755,82 +3755,98 @@ function renderMatchingGame(){
   grid.appendChild(defCol);
   card.appendChild(grid);
 
+  let selected=null; // can be word OR def tile
   function handleMatchClick(tile){
     if(tile.classList.contains('matched'))return;
 
-    if(tile.dataset.type==='word'){
-      // Select/deselect word
+    // If nothing selected yet, select this tile (word OR def)
+    if(!selected){
       wordCol.querySelectorAll('.match-tile').forEach(t=>t.classList.remove('selected'));
-      if(selectedWord===tile){selectedWord=null;return}
+      defCol.querySelectorAll('.match-tile').forEach(t=>t.classList.remove('selected'));
       tile.classList.add('selected');
-      selectedWord=tile;
-    } else if(tile.dataset.type==='def'&&selectedWord){
-      // Check match
-      const wordEntry=batch.find(e=>e.word===selectedWord.dataset.word);
-      const isCorrect=tile.dataset.word===selectedWord.dataset.word;
+      selected=tile;
+      return;
+    }
 
-      if(!S.roundWords.includes(selectedWord.dataset.word))S.roundWords.push(selectedWord.dataset.word);
-      S.wordStats[selectedWord.dataset.word].att++;
-      S.answered++;S.roundTotal++;
+    // If clicking same tile, deselect
+    if(selected===tile){
+      tile.classList.remove('selected');
+      selected=null;
+      return;
+    }
 
-      if(isCorrect){
-        S.correct++;S.roundCorrect++;S.streak++;S.wrongRow=0;
-        if(S.streak>S.bestStreak)S.bestStreak=S.streak;
-        S.wordStats[selectedWord.dataset.word].cor++;
+    // If clicking same column, switch selection
+    if(selected.dataset.type===tile.dataset.type){
+      selected.classList.remove('selected');
+      tile.classList.add('selected');
+      selected=tile;
+      return;
+    }
 
-        let pts=5;
-        if(S.streak>=3)pts+=3;
-        pts+=2; // matching round bonus
-        pts+=getBonusScoreFromPowers();
-        if(hasPower('wordMaster')&&S.wordStats[selectedWord.dataset.word].mastered)pts+=getPowerScale('wordMaster');
-        pts=Math.round(pts*getPointsMultiplier()*getChapterMultiplier());
-        S.score+=pts;
+    // Two tiles from different columns — check match
+    const wordTile=selected.dataset.type==='word'?selected:tile;
+    const defTile=selected.dataset.type==='def'?selected:tile;
+    const wordEntry=batch.find(e=>e.word===wordTile.dataset.word);
+    const isCorrect=defTile.dataset.word===wordTile.dataset.word;
 
-        const s=S.wordStats[selectedWord.dataset.word];
-        if(s.cor>=2&&s.cor/s.att>=0.75)s.mastered=true;
+    if(!S.roundWords.includes(wordTile.dataset.word))S.roundWords.push(wordTile.dataset.word);
+    S.wordStats[wordTile.dataset.word].att++;
+    S.answered++;S.roundTotal++;
 
-        selectedWord.classList.add('matched');
-        tile.classList.add('matched');
-        selectedWord.classList.remove('selected');
-        selectedWord=null;
-        matchedCount++;
-        document.getElementById('matchProgress').textContent=`Matched: ${matchedCount} / ${batchSize}`;
-        showFB(true,wordEntry);
-        spawnSparkles();
-        updateHUD();
-        saveProgress();
+    if(isCorrect){
+      S.correct++;S.roundCorrect++;S.streak++;S.wrongRow=0;
+      if(S.streak>S.bestStreak)S.bestStreak=S.streak;
+      S.wordStats[wordTile.dataset.word].cor++;
 
-        // Check if batch complete
-        if(matchedCount===batchSize){
-          setTimeout(()=>{
-            S.qIndex+=batchSize;
-            showQuestion(); // next batch or summary
-          },1500);
-        }
-      } else {
-        // Wrong match
-        S.wrong++;S.wrongRow++;
-        if(hasPower('comboExtender')&&S.comboMisses<getPowerScale('comboExtender')){S.comboMisses++}
-        else if(hasPower('streakShield')&&S.streakShielded<S.streakShieldMax){S.streakShielded++}
-        else {S.streak=0;S.comboMisses=0}
-        if(hasPower('softLanding')&&!S.softLandingUsed){S.softLandingUsed=true}
-        else {S.hearts=Math.max(0,S.hearts-1)}
-        if(S.hearts===0)applyRevive();
+      let pts=5;
+      if(S.streak>=3)pts+=3;
+      pts+=2; // matching round bonus
+      pts+=getBonusScoreFromPowers();
+      if(hasPower('wordMaster')&&S.wordStats[wordTile.dataset.word].mastered)pts+=getPowerScale('wordMaster');
+      pts=Math.round(pts*getPointsMultiplier()*getChapterMultiplier());
+      S.score+=pts;
 
-        tile.classList.add('wrong-flash');
-        selectedWord.classList.add('wrong-flash');
-        selectedWord.classList.remove('selected');
-        const prevWord=selectedWord;
-        selectedWord=null;
-        showFB(false);
-        updateHUD();
-        document.getElementById('gameScreen').classList.add('shake');
+      const s=S.wordStats[wordTile.dataset.word];
+      if(s.cor>=2&&s.cor/s.att>=0.75)s.mastered=true;
+
+      wordTile.classList.add('matched');
+      defTile.classList.add('matched');
+      selected.classList.remove('selected');
+      selected=null;
+      matchedCount++;
+      document.getElementById('matchProgress').textContent=`Matched: ${matchedCount} / ${batchSize}`;
+      spawnSparkles();
+      updateHUD();
+      saveProgress();
+
+      // Check if batch complete
+      if(matchedCount===batchSize){
         setTimeout(()=>{
-          document.getElementById('gameScreen').classList.remove('shake');
-          tile.classList.remove('wrong-flash');
-          prevWord.classList.remove('wrong-flash');
-        },400);
+          S.qIndex+=batchSize;
+          showQuestion();
+        },800);
       }
+    } else {
+      // Wrong match
+      S.wrong++;S.wrongRow++;
+      if(hasPower('comboExtender')&&S.comboMisses<getPowerScale('comboExtender')){S.comboMisses++}
+      else if(hasPower('streakShield')&&S.streakShielded<S.streakShieldMax){S.streakShielded++}
+      else {S.streak=0;S.comboMisses=0}
+      if(hasPower('softLanding')&&!S.softLandingUsed){S.softLandingUsed=true}
+      else {S.hearts=Math.max(0,S.hearts-1)}
+      if(S.hearts===0)applyRevive();
+
+      wordTile.classList.add('wrong-flash');
+      defTile.classList.add('wrong-flash');
+      selected.classList.remove('selected');
+      selected=null;
+      updateHUD();
+      document.getElementById('gameScreen').classList.add('shake');
+      setTimeout(()=>{
+        document.getElementById('gameScreen').classList.remove('shake');
+        wordTile.classList.remove('wrong-flash');
+        defTile.classList.remove('wrong-flash');
+      },400);
     }
   }
 }
@@ -3895,11 +3911,11 @@ function processAnswer(isCorrect){
 
   saveProgress();
   if(isCorrect){
-    setTimeout(()=>{S.qIndex++;showQuestion()},2000);
+    setTimeout(()=>{S.qIndex++;showQuestion()},700);
   } else {
-    // Show learning card after feedback fades
+    // Show learning card quickly after wrong answer
     const entry2=entry;
-    setTimeout(()=>showLearnCard(entry2),2800);
+    setTimeout(()=>showLearnCard(entry2),800);
   }
 }
 
@@ -3926,24 +3942,7 @@ function dismissLearnCard(){
 
 // ===== FEEDBACK =====
 function showFB(good,entry){
-  const ov=document.getElementById('fb');
-  const t=document.getElementById('fbText');
-  if(good){
-    let msg=PRAISE[Math.floor(Math.random()*PRAISE.length)];
-    if(S.streak>=5)msg+=` ${S.streak}x MEGA COMBO!`;
-    else if(S.streak>=3)msg+=` ${S.streak}x streak!`;
-    // ~20% chance to show book quote bonus
-    if(entry&&BOOK_QUOTES[entry.word]&&Math.random()<0.2){
-      msg+=`\n\uD83D\uDCD6 "${BOOK_QUOTES[entry.word].slice(0,60)}..."`;
-    }
-    t.className='feedback-text fb-good';t.textContent=msg;
-  } else {
-    t.className='feedback-text fb-bad';
-    t.textContent=ENCOURAGE[Math.floor(Math.random()*ENCOURAGE.length)];
-  }
-  const cheerTime=hasPower('cheerBoost')?2500:1800;
-  ov.classList.add('show');
-  setTimeout(()=>ov.classList.remove('show'),good?cheerTime:2700);
+  // Speed mode: no overlay text, just visual cues (sparkles/shake)
 }
 
 function spawnSparkles(){
